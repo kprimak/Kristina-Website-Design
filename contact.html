@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Kristina</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FAF7F2',
+            'cream-dark': '#F2EDE4',
+            charcoal: '#1C1C1E',
+            'charcoal-soft': '#3A3A3C',
+            muted: '#6B6B70',
+            accent: '#2563EB',
+          },
+          fontFamily: {
+            heading: ['Archivo', 'sans-serif'],
+            body: ['Space Grotesk', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: #FAF7F2;
+    }
+
+    /* Animated underline on labels */
+    .field-group:focus-within .field-label {
+      color: #2563EB;
+    }
+
+    /* Float label animation */
+    .float-label {
+      position: absolute;
+      left: 0;
+      top: 1rem;
+      font-size: 1rem;
+      color: #6B6B70;
+      pointer-events: none;
+      transition: top 200ms ease, font-size 200ms ease, color 200ms ease;
+    }
+    .field-input:focus ~ .float-label,
+    .field-input:not(:placeholder-shown) ~ .float-label,
+    .field-textarea:focus ~ .float-label,
+    .field-textarea:not(:placeholder-shown) ~ .float-label {
+      top: -0.6rem;
+      font-size: 0.72rem;
+      color: #2563EB;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .field-input,
+    .field-textarea {
+      background: transparent;
+      border: none;
+      border-bottom: 1.5px solid #D1CBC0;
+      border-radius: 0;
+      outline: none;
+      width: 100%;
+      padding: 1rem 0 0.5rem 0;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      color: #1C1C1E;
+      transition: border-color 200ms ease;
+      caret-color: #2563EB;
+    }
+    .field-input:focus,
+    .field-textarea:focus {
+      border-bottom-color: #2563EB;
+    }
+    .field-input::placeholder,
+    .field-textarea::placeholder {
+      color: transparent;
+    }
+
+    /* Bottom border progress line */
+    .field-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      width: 0;
+      background-color: #2563EB;
+      transition: width 250ms ease;
+    }
+    .field-input:focus ~ .float-label ~ .field-line,
+    .field-textarea:focus ~ .float-label ~ .field-line {
+      width: 100%;
+    }
+
+    /* Submit button shimmer */
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .btn-submit {
+      background-color: #1C1C1E;
+      position: relative;
+      overflow: hidden;
+      transition: background-color 300ms ease, transform 150ms ease, box-shadow 300ms ease;
+    }
+    .btn-submit::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%);
+      background-size: 200% 100%;
+      opacity: 0;
+      transition: opacity 200ms ease;
+    }
+    .btn-submit:hover::after {
+      opacity: 1;
+      animation: shimmer 600ms ease forwards;
+    }
+    .btn-submit:hover {
+      background-color: #2563EB;
+      box-shadow: 0 8px 32px rgba(37, 99, 235, 0.22);
+      transform: translateY(-1px);
+    }
+    .btn-submit:active {
+      transform: translateY(0px);
+    }
+    .btn-submit:focus-visible {
+      outline: 2px solid #2563EB;
+      outline-offset: 3px;
+    }
+
+    /* Fade-up entrance */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up {
+      opacity: 0;
+      animation: fadeUp 600ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .delay-1 { animation-delay: 80ms; }
+    .delay-2 { animation-delay: 160ms; }
+    .delay-3 { animation-delay: 240ms; }
+    .delay-4 { animation-delay: 320ms; }
+    .delay-5 { animation-delay: 400ms; }
+    .delay-6 { animation-delay: 480ms; }
+    .delay-7 { animation-delay: 560ms; }
+
+    /* Success state */
+    .success-check {
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+      transition: stroke-dashoffset 600ms cubic-bezier(0.22, 1, 0.36, 1) 200ms;
+    }
+    .success-check.drawn {
+      stroke-dashoffset: 0;
+    }
+
+    /* Select styling */
+    select.field-input {
+      appearance: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6B70' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0 center;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-cream text-charcoal">
+
+  <!-- Top nav hint -->
+  <nav class="px-6 sm:px-10 lg:px-16 pt-8 pb-4 fade-up delay-1">
+    <a href="#" class="font-heading font-700 text-charcoal text-lg tracking-tight hover:text-accent transition-colors duration-200 cursor-pointer">
+      Kristina
+    </a>
+  </nav>
+
+  <!-- Main layout -->
+  <main class="max-w-5xl mx-auto px-6 sm:px-10 lg:px-16 py-12 sm:py-20">
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+
+      <!-- Left column: heading + meta -->
+      <div>
+        <p class="fade-up delay-1 font-body text-xs font-500 tracking-[0.18em] uppercase text-muted mb-6">
+          Get in touch
+        </p>
+
+        <h1 class="fade-up delay-2 font-heading font-700 text-charcoal leading-[1.05] tracking-[-0.03em] mb-8"
+            style="font-size: clamp(2.8rem, 6vw, 5rem);">
+          Let's work<br />together.
+        </h1>
+
+        <p class="fade-up delay-3 font-body text-muted leading-[1.7] text-base sm:text-lg max-w-sm">
+          Have a project in mind? I'd love to hear about it. Fill out the form and I'll get back to you within 24 hours.
+        </p>
+
+        <!-- Divider -->
+        <div class="fade-up delay-4 w-10 h-px bg-charcoal/20 my-10"></div>
+
+        <!-- Contact info links -->
+        <div class="fade-up delay-4 space-y-5">
+          <!-- Email -->
+          <a href="mailto:hello@kristina.design"
+             class="group flex items-center gap-4 cursor-pointer">
+            <span class="flex-shrink-0 w-10 h-10 rounded-full bg-cream-dark flex items-center justify-center transition-colors duration-200 group-hover:bg-accent/10">
+              <svg class="w-4 h-4 text-muted group-hover:text-accent transition-colors duration-200" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </span>
+            <div>
+              <p class="text-xs text-muted tracking-wide uppercase font-500 mb-0.5">Email</p>
+              <p class="text-sm text-charcoal-soft group-hover:text-accent transition-colors duration-200 font-500">hello@kristina.design</p>
+            </div>
+          </a>
+
+          <!-- Response time -->
+          <div class="group flex items-center gap-4">
+            <span class="flex-shrink-0 w-10 h-10 rounded-full bg-cream-dark flex items-center justify-center">
+              <svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </span>
+            <div>
+              <p class="text-xs text-muted tracking-wide uppercase font-500 mb-0.5">Response time</p>
+              <p class="text-sm text-charcoal-soft font-500">Within 24 hours</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column: form -->
+      <div class="fade-up delay-3">
+        <form id="contactForm" novalidate class="space-y-10" aria-label="Contact form">
+
+          <!-- Name + Email row -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-6">
+
+            <!-- Name -->
+            <div class="field-group relative">
+              <label for="name" class="sr-only">Your name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="field-input"
+                placeholder="Your name"
+                autocomplete="name"
+                aria-required="true"
+              />
+              <span class="float-label" aria-hidden="true">Your name</span>
+              <span class="field-line" aria-hidden="true"></span>
+              <p class="field-error hidden text-red-500 text-xs mt-2 font-500" role="alert" id="name-error">Please enter your name.</p>
+            </div>
+
+            <!-- Email -->
+            <div class="field-group relative">
+              <label for="email" class="sr-only">Email address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="field-input"
+                placeholder="Email address"
+                autocomplete="email"
+                aria-required="true"
+                aria-describedby="email-error"
+              />
+              <span class="float-label" aria-hidden="true">Email address</span>
+              <span class="field-line" aria-hidden="true"></span>
+              <p class="field-error hidden text-red-500 text-xs mt-2 font-500" role="alert" id="email-error">Please enter a valid email.</p>
+            </div>
+          </div>
+
+          <!-- Subject select -->
+          <div class="field-group relative">
+            <label for="subject" class="sr-only">Subject</label>
+            <select
+              id="subject"
+              name="subject"
+              class="field-input"
+              aria-required="true"
+            >
+              <option value="" disabled selected hidden></option>
+              <option value="web-design">Web Design</option>
+              <option value="branding">Branding &amp; Identity</option>
+              <option value="ux-audit">UX Audit</option>
+              <option value="collaboration">Collaboration</option>
+              <option value="other">Other</option>
+            </select>
+            <span class="float-label" aria-hidden="true">What can I help with?</span>
+            <span class="field-line" aria-hidden="true"></span>
+            <p class="field-error hidden text-red-500 text-xs mt-2 font-500" role="alert" id="subject-error">Please select a subject.</p>
+          </div>
+
+          <!-- Budget (optional) -->
+          <div class="field-group relative">
+            <label for="budget" class="sr-only">Budget range (optional)</label>
+            <input
+              type="text"
+              id="budget"
+              name="budget"
+              class="field-input"
+              placeholder="Budget range (optional)"
+              autocomplete="off"
+            />
+            <span class="float-label" aria-hidden="true">Budget range <span class="normal-case tracking-normal font-300">(optional)</span></span>
+            <span class="field-line" aria-hidden="true"></span>
+          </div>
+
+          <!-- Message -->
+          <div class="field-group relative">
+            <label for="message" class="sr-only">Your message</label>
+            <textarea
+              id="message"
+              name="message"
+              class="field-textarea"
+              placeholder="Your message"
+              rows="4"
+              aria-required="true"
+              aria-describedby="message-error"
+              style="resize: none; background: transparent; border: none; border-bottom: 1.5px solid #D1CBC0; border-radius: 0; outline: none; width: 100%; padding: 1rem 0 0.5rem 0; font-family: 'Space Grotesk', sans-serif; font-size: 1rem; color: #1C1C1E; transition: border-color 200ms ease; caret-color: #2563EB;"
+              onfocus="this.style.borderBottomColor='#2563EB'"
+              onblur="this.style.borderBottomColor='#D1CBC0'"
+            ></textarea>
+            <span class="float-label" aria-hidden="true">Your message</span>
+            <span class="field-line" aria-hidden="true"></span>
+            <p class="field-error hidden text-red-500 text-xs mt-2 font-500" role="alert" id="message-error">Please enter your message.</p>
+          </div>
+
+          <!-- Submit -->
+          <div class="pt-2 flex flex-col sm:flex-row sm:items-center gap-6">
+            <button
+              type="submit"
+              id="submitBtn"
+              class="btn-submit cursor-pointer text-white font-body font-600 text-sm tracking-wide px-10 py-4 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+              aria-label="Send message"
+            >
+              <span id="btnText" class="flex items-center gap-2">
+                Send message
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                </svg>
+              </span>
+              <!-- Loading state -->
+              <span id="btnLoading" class="hidden flex items-center gap-2">
+                <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.37 0 0 5.37 0 12h4z"/>
+                </svg>
+                Sending…
+              </span>
+            </button>
+
+            <p class="text-xs text-muted font-300 leading-relaxed">
+              I typically respond within 24 hours.<br class="hidden sm:inline"/>No spam, ever.
+            </p>
+          </div>
+
+        </form>
+
+        <!-- Success message (hidden initially) -->
+        <div id="successMsg" class="hidden text-center py-16 px-4" aria-live="polite">
+          <div class="flex justify-center mb-6">
+            <div class="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center">
+              <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path class="success-check" stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+          </div>
+          <h2 class="font-heading font-700 text-2xl text-charcoal tracking-tight mb-3">Message sent!</h2>
+          <p class="text-muted text-base leading-relaxed max-w-xs mx-auto">
+            Thanks for reaching out. I'll be in touch within 24 hours.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Subtle bottom decoration -->
+  <footer class="px-6 sm:px-10 lg:px-16 pb-10 mt-16 fade-up delay-7">
+    <div class="w-full h-px bg-charcoal/8"></div>
+    <p class="mt-6 text-xs text-muted/60 font-300">© 2025 Kristina. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const form = document.getElementById('contactForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnLoading = document.getElementById('btnLoading');
+    const successMsg = document.getElementById('successMsg');
+
+    // Animate select field-line on change
+    document.getElementById('subject').addEventListener('change', function () {
+      const line = this.parentElement.querySelector('.field-line');
+      if (line) { line.style.width = this.value ? '100%' : '0'; }
+    });
+
+    function validateField(field) {
+      const errorEl = document.getElementById(`${field.id}-error`);
+      let valid = true;
+      if (field.required && !field.value.trim()) {
+        valid = false;
+      } else if (field.type === 'email' && field.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)) {
+        valid = false;
+      }
+      if (errorEl) {
+        errorEl.classList.toggle('hidden', valid);
+        field.setAttribute('aria-invalid', String(!valid));
+      }
+      return valid;
+    }
+
+    // Validate on blur
+    form.querySelectorAll('[aria-required]').forEach(field => {
+      field.addEventListener('blur', () => validateField(field));
+      field.addEventListener('input', () => {
+        const errorEl = document.getElementById(`${field.id}-error`);
+        if (errorEl && !errorEl.classList.contains('hidden')) validateField(field);
+      });
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Validate all required fields
+      const required = form.querySelectorAll('[aria-required]');
+      let allValid = true;
+      required.forEach(f => { if (!validateField(f)) allValid = false; });
+      if (!allValid) {
+        const first = form.querySelector('[aria-invalid="true"]');
+        if (first) first.focus();
+        return;
+      }
+
+      // Loading state
+      submitBtn.disabled = true;
+      btnText.classList.add('hidden');
+      btnLoading.classList.remove('hidden');
+
+      // Simulate async submission
+      await new Promise(resolve => setTimeout(resolve, 1600));
+
+      // Show success
+      form.style.opacity = '0';
+      form.style.transform = 'translateY(-12px)';
+      form.style.transition = 'opacity 300ms ease, transform 300ms ease';
+
+      setTimeout(() => {
+        form.classList.add('hidden');
+        successMsg.classList.remove('hidden');
+        // Animate the checkmark
+        requestAnimationFrame(() => {
+          const check = successMsg.querySelector('.success-check');
+          if (check) check.classList.add('drawn');
+        });
+      }, 320);
+    });
+  </script>
+
+</body>
+</html>
