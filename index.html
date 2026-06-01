@@ -568,6 +568,304 @@
       50%       { opacity: 0.85; transform: rotate(45deg) translate(3px,3px); }
     }
 
+    /* ══════════════════════════════════════════════════════
+       FULL-SCREEN INTRO  —  Figma Wireframe Paper Rip
+       Sits before #scroll-section.  250vh scroll space,
+       100vh sticky viewport.
+    ══════════════════════════════════════════════════════ */
+    #intro-section { height: 250vh; }
+
+    #intro-viewport {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── LAYER 1 · Colorful gradient (base, always behind) ── */
+    .colorful-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      /* hot pink → deep purple → bright blue → yellow */
+      background: linear-gradient(135deg,
+        #FF2D78 0%,
+        #7B00D4 30%,
+        #004FFF 65%,
+        #FFE600 100%
+      );
+    }
+
+    /* ── LAYER 2 · Torn paper edge SVG (sits between bg and blueprint) ── */
+    .paper-tear-edge {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      /* shown when clip-path exposes the seam */
+    }
+
+    /* ── LAYER 3 · Dark Figma blueprint (rips away on scroll) ── */
+    .blueprint-top-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: #0d0d11;
+      /* 12-column CSS grid overlay */
+      background-image:
+        /* column guides (12 cols, ~8.33% each) */
+        repeating-linear-gradient(
+          90deg,
+          rgba(0,230,200,0.07) 0px, rgba(0,230,200,0.07) 1px,
+          transparent 1px, transparent calc(100% / 12)
+        ),
+        /* baseline rows every 48px */
+        repeating-linear-gradient(
+          0deg,
+          rgba(0,230,200,0.05) 0px, rgba(0,230,200,0.05) 1px,
+          transparent 1px, transparent 48px
+        );
+      /* full coverage; GSAP animates this to perform the rip */
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+      will-change: clip-path, transform, opacity;
+      transform-origin: center center;
+    }
+
+    /* Wireframe nav bar */
+    .wf-nav {
+      position: absolute;
+      top: 4.5%;
+      left: 5%;
+      right: 5%;
+      height: 6%;
+      border: 1px dashed rgba(0,230,200,0.45);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2%;
+    }
+    .wf-logo {
+      width: 10%;
+      height: 35%;
+      border: 1px solid rgba(0,230,200,0.55);
+      border-radius: 2px;
+    }
+    .wf-nav-links {
+      display: flex;
+      gap: 1.5%;
+    }
+    .wf-nav-links span {
+      display: block;
+      width: 55px;
+      height: 10px;
+      background: rgba(0,230,200,0.18);
+      border-radius: 2px;
+    }
+    .wf-cta-pill {
+      width: 9%;
+      height: 45%;
+      border: 1px solid rgba(0,230,200,0.7);
+      border-radius: 100px;
+      background: rgba(0,230,200,0.12);
+    }
+    /* Wireframe label text */
+    .wf-label {
+      position: absolute;
+      font-family: 'Courier New', monospace;
+      font-size: clamp(8px, 0.75vw, 12px);
+      letter-spacing: 0.08em;
+      color: rgba(0,230,200,0.55);
+      pointer-events: none;
+    }
+    .wf-label-nav  { top: 3%;  left: 5%; }
+    .wf-label-hero { top: 12%; left: 5%; }
+    .wf-label-work { top: 64%; left: 5%; }
+    /* Wireframe hero section */
+    .wf-hero-area {
+      position: absolute;
+      top: 13%;
+      left: 5%;
+      right: 5%;
+      height: 46%;
+      border: 1px dashed rgba(0,230,200,0.35);
+      display: flex;
+      gap: 2%;
+    }
+    .wf-hero-text-block {
+      width: 45%;
+      height: 100%;
+      border-right: 1px dashed rgba(0,230,200,0.2);
+      padding: 4% 3%;
+      display: flex;
+      flex-direction: column;
+      gap: 3%;
+    }
+    .wf-eyebrow {
+      width: 40%;
+      height: 6px;
+      background: rgba(0,230,200,0.22);
+      border-radius: 2px;
+    }
+    .wf-h1-a, .wf-h1-b {
+      height: 22px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 3px;
+    }
+    .wf-h1-a { width: 85%; }
+    .wf-h1-b { width: 65%; }
+    .wf-body-line {
+      height: 7px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 2px;
+      width: 90%;
+    }
+    .wf-body-line.short { width: 72%; }
+    .wf-btn-row {
+      display: flex;
+      gap: 3%;
+      margin-top: 2%;
+    }
+    .wf-pill-primary {
+      width: 28%;
+      height: 20px;
+      background: rgba(0,230,200,0.28);
+      border: 1px solid rgba(0,230,200,0.7);
+      border-radius: 100px;
+    }
+    .wf-pill-ghost {
+      width: 22%;
+      height: 20px;
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 100px;
+    }
+    .wf-hero-img-block {
+      flex: 1;
+      position: relative;
+      border: 1px dashed rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .wf-hero-img-block span {
+      font-family: 'Courier New', monospace;
+      font-size: clamp(7px, 0.7vw, 10px);
+      color: rgba(255,255,255,0.28);
+      text-align: center;
+      line-height: 1.6;
+    }
+    /* X-mark inside image placeholder */
+    .wf-x-mark {
+      position: absolute;
+      inset: 0;
+    }
+    .wf-x-mark::before, .wf-x-mark::after {
+      content: '';
+      position: absolute;
+      background: rgba(255,255,255,0.08);
+      width: 100%;
+      height: 1px;
+      top: 50%;
+      left: 0;
+      transform-origin: center center;
+    }
+    .wf-x-mark::before { transform: rotate(calc(atan2(100%, 100%))); }
+    .wf-x-mark::after  { transform: rotate(calc(-1 * atan2(100%, 100%))); }
+    /* Wireframe cards row */
+    .wf-cards-row {
+      position: absolute;
+      top: 65%;
+      left: 5%;
+      right: 5%;
+      bottom: 4%;
+      display: flex;
+      gap: 2%;
+    }
+    .wf-card {
+      flex: 1;
+      border: 1px dashed rgba(0,230,200,0.32);
+      display: flex;
+      flex-direction: column;
+    }
+    .wf-card-img {
+      flex: 0 0 62%;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px dashed rgba(0,230,200,0.22);
+    }
+    .wf-card-body {
+      flex: 1;
+      padding: 6% 8%;
+      background: rgba(0,230,200,0.03);
+    }
+
+    /* ── LAYER 4 · Intro hero text (cream, centred over blueprint) ── */
+    #intro-hero-text {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 0;
+      pointer-events: none;
+    }
+    #intro-eyebrow {
+      font-family: 'Archivo', sans-serif;
+      font-size: clamp(0.6rem, 1.2vw, 0.85rem);
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(0,230,200,0.75);
+      margin-bottom: 1.2rem;
+    }
+    #intro-headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.8rem, 6.5vw, 7rem);
+      color: #fff;
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+      margin-bottom: 1.4rem;
+    }
+    #intro-rule {
+      width: 40px;
+      height: 1.5px;
+      background: rgba(0,230,200,0.5);
+      margin: 0 auto 1.2rem;
+    }
+    #intro-sub {
+      font-size: clamp(0.7rem, 1.1vw, 0.9rem);
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.14em;
+    }
+
+    /* ── Intro fragment pieces ── */
+    .intro-frag {
+      position: absolute;
+      z-index: 6;
+      opacity: 0;
+      background: #0d0d11;
+      outline: 1px solid rgba(0,230,200,0.5);
+      overflow: hidden;
+    }
+    .intro-frag::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(0deg,   rgba(0,230,200,0.18) 0, rgba(0,230,200,0.18) 1px, transparent 1px, transparent 48px),
+        repeating-linear-gradient(90deg,  rgba(0,230,200,0.18) 0, rgba(0,230,200,0.18) 1px, transparent 1px, transparent 48px);
+    }
+    #if1 { width: 22vw; height: 16vh; top: 14vh; left:  8vw; }
+    #if2 { width: 14vw; height: 12vh; top:  8vh; left: 60vw; }
+    #if3 { width: 10vw; height: 14vh; top: 46vh; left: 36vw; }
+    #if4 { width: 18vw; height: 10vh; top: 30vh; left: 72vw; }
+
     /* ══════════════════════════════════
        AFTER SECTION
     ══════════════════════════════════ */
@@ -618,7 +916,93 @@
 <body>
 
 <!-- ═══════════════════════════════════════════════
-     SCROLLYTELLING — 500vh pinned section
+     INTRO — Full-screen Figma Wireframe Paper Rip
+     250vh scroll space · 100vh sticky viewport
+═══════════════════════════════════════════════ -->
+<section id="intro-section">
+  <div id="intro-viewport">
+
+    <!-- LAYER 1 · Colorful gradient base (always behind) -->
+    <div class="colorful-bg"></div>
+
+    <!-- LAYER 2 · Torn paper edge SVG — diagonal seam -->
+    <svg class="paper-tear-edge" viewBox="0 0 1440 900"
+         xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+      <!-- Shadow on the bottom face of the tear -->
+      <path d="M1440,0 L1390,20 L1340,7 L1290,24 L1240,8 L1190,22 L1140,6 L1090,26
+               L1040,10 L990,25 L940,7 L890,22 L840,8 L790,26 L740,10 L690,24 L640,7
+               L590,23 L540,9 L490,27 L440,11 L390,25 L340,7 L290,23 L240,9 L190,26
+               L140,8 L90,24 L40,7 L0,20 L0,900 L1440,900 Z"
+            fill="rgba(0,0,0,0.22)"/>
+      <!-- Bright jagged edge — the tear seam -->
+      <path d="M1440,0 L1390,20 L1340,7 L1290,24 L1240,8 L1190,22 L1140,6 L1090,26
+               L1040,10 L990,25 L940,7 L890,22 L840,8 L790,26 L740,10 L690,24 L640,7
+               L590,23 L540,9 L490,27 L440,11 L390,25 L340,7 L290,23 L240,9 L190,26
+               L140,8 L90,24 L40,7 L0,20"
+            fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="3"
+            stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Soft glow behind the seam -->
+      <path d="M1440,0 L1390,20 L1340,7 L1290,24 L1240,8 L1190,22 L1140,6 L1090,26
+               L1040,10 L990,25 L940,7 L890,22 L840,8 L790,26 L740,10 L690,24 L640,7
+               L590,23 L540,9 L490,27 L440,11 L390,25 L340,7 L290,23 L240,9 L190,26
+               L140,8 L90,24 L40,7 L0,20"
+            fill="none" stroke="white" stroke-width="14"
+            stroke-linecap="round" stroke-linejoin="round" opacity="0.12"/>
+    </svg>
+
+    <!-- LAYER 3 · Dark Figma blueprint (clip-path rips away on scroll) -->
+    <div class="blueprint-top-layer">
+      <span class="wf-label wf-label-nav">NAVIGATION</span>
+      <div class="wf-nav">
+        <div class="wf-logo"></div>
+        <div class="wf-nav-links"><span></span><span></span><span></span><span></span></div>
+        <div class="wf-cta-pill"></div>
+      </div>
+      <span class="wf-label wf-label-hero">HERO — FULL BLEED IMAGE + OVERLAY</span>
+      <div class="wf-hero-area">
+        <div class="wf-hero-text-block">
+          <div class="wf-eyebrow"></div>
+          <div class="wf-h1-a"></div>
+          <div class="wf-h1-b"></div>
+          <div class="wf-body-line"></div>
+          <div class="wf-body-line short"></div>
+          <div class="wf-btn-row">
+            <div class="wf-pill-primary"></div>
+            <div class="wf-pill-ghost"></div>
+          </div>
+        </div>
+        <div class="wf-hero-img-block">
+          <div class="wf-x-mark"></div>
+          <span>FEATURED IMAGE<br>1920 × 1080px</span>
+        </div>
+      </div>
+      <span class="wf-label wf-label-work">SELECTED WORK — 3 COLUMNS</span>
+      <div class="wf-cards-row">
+        <div class="wf-card"><div class="wf-card-img"></div><div class="wf-card-body"></div></div>
+        <div class="wf-card"><div class="wf-card-img"></div><div class="wf-card-body"></div></div>
+        <div class="wf-card"><div class="wf-card-img"></div><div class="wf-card-body"></div></div>
+      </div>
+    </div>
+
+    <!-- Fragment pieces that fly out during the rip -->
+    <div class="intro-frag" id="if1"></div>
+    <div class="intro-frag" id="if2"></div>
+    <div class="intro-frag" id="if3"></div>
+    <div class="intro-frag" id="if4"></div>
+
+    <!-- LAYER 4 · Hero text over the blueprint -->
+    <div id="intro-hero-text">
+      <p id="intro-eyebrow">Blueprint to Reality</p>
+      <h1 id="intro-headline">not just a website —<br>a story.</h1>
+      <div id="intro-rule"></div>
+      <p id="intro-sub">scroll to watch it come alive</p>
+    </div>
+
+  </div><!-- /intro-viewport -->
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SCROLLYTELLING — 220vh pinned section
 ═══════════════════════════════════════════════ -->
 <section id="scroll-section">
   <div id="sticky-viewport">
@@ -1229,52 +1613,16 @@
     },
   });
 
-  // ── 0.00–0.025  Hero text drifts upward and fades ──
-  // Blueprint scales forward simultaneously — builds tension before the rip.
+  // The intro (blueprint rip) now lives in #intro-section with its own timeline below.
+  // The MacBook scroll section starts with the finished site already revealed.
+  // Hero text fades in the first 3% of the main scroll, then the zoom dominates.
+  gsap.set(finLayer, { clipPath: 'inset(0 0% 0 0)' }); // finished site pre-revealed
+  gsap.set(bpLayer,  { opacity: 0 });                   // blueprint hidden from start
+
+  // ── 0.00–0.03  Hero text drifts up and fades (brief, just a trigger) ──
   tl.to(['#hero-eyebrow', '#hero-headline', '#hero-rule', '#hero-sub', '#scroll-hint'], {
-    opacity: 0, y: -30, duration: 0.025, ease: 'power2.inOut', stagger: 0.003,
+    opacity: 0, y: -30, duration: 0.03, ease: 'power2.inOut', stagger: 0.004,
   }, 0.00);
-  tl.to(bpLayer, { scale: 1.04, duration: 0.012, ease: 'power2.in', transformOrigin: 'center center' }, 0.00);
-
-  // ── 0.012–0.022  THE RIP — phase 1: upper-right corner torn away ──
-  // Clip-path collapses from full-rect to lower-left triangle.
-  // The top-right area of the blueprint vanishes along the diagonal seam,
-  // exposing the vibrant gradient underneath.
-  tl.to(bpLayer, {
-    clipPath: 'polygon(0% 0%, 0% 0%, 100% 100%, 0% 100%)',
-    duration: 0.010,
-    ease: 'power3.in',
-  }, 0.012);
-
-  // Torn edge seam appears at the rip line
-  tl.to('#torn-edge', { autoAlpha: 1, duration: 0.002 }, 0.012);
-
-  // Blueprint fragments burst outward from the tear zone
-  tl.fromTo('#bp-f1', { autoAlpha: 0 },
-    { autoAlpha: 1, x: '-130%', y: '-90%',  rotation: -30, duration: 0.012, ease: 'power2.out' }, 0.012);
-  tl.fromTo('#bp-f2', { autoAlpha: 0 },
-    { autoAlpha: 1, x:  '90%',  y: '-120%', rotation:  25, duration: 0.010, ease: 'power2.out' }, 0.013);
-  tl.fromTo('#bp-f3', { autoAlpha: 0 },
-    { autoAlpha: 1, x: '-80%',  y:  '90%',  rotation: -18, duration: 0.011, ease: 'power2.out' }, 0.013);
-  tl.fromTo('#bp-f4', { autoAlpha: 0 },
-    { autoAlpha: 1, x: '110%',  y: '-70%',  rotation:  38, duration: 0.012, ease: 'power2.out' }, 0.012);
-
-  // ── 0.022–0.03  THE RIP — phase 2: lower-left remnant falls away ──
-  // The remaining triangle collapses and the piece drops slightly,
-  // completing the physical paper-tear illusion.
-  tl.to(bpLayer, {
-    clipPath: 'polygon(0% 100%, 0% 100%, 0% 100%, 0% 100%)',
-    xPercent: -6, yPercent: 10, rotation: 4,
-    duration: 0.008,
-    ease: 'power2.in',
-  }, 0.022);
-  tl.to('#torn-edge',                     { autoAlpha: 0, duration: 0.005 }, 0.022);
-  tl.to(['#bp-f1','#bp-f2','#bp-f3','#bp-f4'], { autoAlpha: 0, duration: 0.006 }, 0.022);
-
-  // ── 0.020  Finished site wipes in as blueprint rips away ──
-  // Starts 2ms before phase 2 so gradient → finished site is seamless.
-  tl.to(finLayer, { clipPath: 'inset(0 0% 0 0)', duration: 0.022, ease: 'power2.out' }, 0.020);
-  // ── Intro + rip complete at 0.03 (3%) ──
 
   // ── 0.10–0.87  STATE 4 : MacBook zoom-out — the absolute main event (77%) ──
   // Reveal duration ≈ 0.11 → zoom duration 0.77 = 7× ratio.
@@ -1325,6 +1673,68 @@
   });
 
   // ════════════════════════════════════════
+  //  INTRO PAPER RIP — separate ScrollTrigger
+  //  #intro-section is 250vh; scrub: 1.5.
+  //  progress 0.00–0.20 : hero text + blueprint scale-forward
+  //  progress 0.20–0.55 : PHASE 1 — upper-right rips away
+  //  progress 0.55–0.80 : PHASE 2 — lower-left falls away
+  //  progress 0.75–1.00 : colorful gradient holds, fades to cream
+  // ════════════════════════════════════════
+  const bpEl    = document.querySelector('.blueprint-top-layer');
+  const introTl = gsap.timeline({
+    scrollTrigger: {
+      trigger:         '#intro-section',
+      start:           'top top',
+      end:             'bottom bottom',
+      scrub:           1.5,
+      fastScrollEnd:   true,
+    },
+  });
+
+  // 0.00 – 0.20 : hero text drifts upward, blueprint zooms forward (tension)
+  introTl.to('#intro-hero-text', {
+    opacity: 0, y: -40, duration: 0.18, ease: 'power2.inOut',
+  }, 0.00);
+  introTl.to(bpEl, {
+    scale: 1.06, duration: 0.20, ease: 'power2.in', transformOrigin: 'center center',
+  }, 0.00);
+
+  // 0.18 – 0.55 : PHASE 1 — upper-right corner torn away
+  // Clip-path collapses from full rectangle to lower-left triangle.
+  introTl.to(bpEl, {
+    clipPath: 'polygon(0% 0%, 0% 0%, 100% 100%, 0% 100%)',
+    duration: 0.37,
+    ease: 'power3.inOut',
+  }, 0.18);
+
+  // Fragments burst outward during the tear
+  introTl.fromTo('#if1', { autoAlpha: 0 },
+    { autoAlpha: 1, x: '-28vw', y: '-18vh', rotation: -28, duration: 0.28, ease: 'power2.out' }, 0.20);
+  introTl.fromTo('#if2', { autoAlpha: 0 },
+    { autoAlpha: 1, x:  '22vw', y: '-24vh', rotation:  22, duration: 0.24, ease: 'power2.out' }, 0.22);
+  introTl.fromTo('#if3', { autoAlpha: 0 },
+    { autoAlpha: 1, x: '-18vw', y:  '20vh', rotation: -16, duration: 0.26, ease: 'power2.out' }, 0.22);
+  introTl.fromTo('#if4', { autoAlpha: 0 },
+    { autoAlpha: 1, x:  '26vw', y: '-14vh', rotation:  35, duration: 0.27, ease: 'power2.out' }, 0.20);
+  introTl.to(['#if1','#if2','#if3','#if4'], { autoAlpha: 0, duration: 0.15 }, 0.48);
+
+  // 0.52 – 0.80 : PHASE 2 — lower-left remnant drops away
+  introTl.to(bpEl, {
+    clipPath: 'polygon(0% 100%, 0% 100%, 0% 100%, 0% 100%)',
+    xPercent: -8, yPercent: 12, rotation: 5,
+    duration: 0.28,
+    ease: 'power2.in',
+  }, 0.52);
+
+  // 0.80 – 1.00 : colorful gradient holds; intro viewport fades to cream
+  //               so the transition into #scroll-section is seamless
+  introTl.to('#intro-viewport', {
+    backgroundColor: 'rgba(250,247,242,1)',
+    duration: 0.20,
+    ease: 'power1.inOut',
+  }, 0.80);
+
+  // ════════════════════════════════════════
   //  REDUCED MOTION
   // ════════════════════════════════════════
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -1332,6 +1742,7 @@
     gsap.set(deviceScene, { scale: 0.85 });
     gsap.set(finLayer,    { clipPath: 'inset(0 0% 0 0)' });
     gsap.set(bpLayer,     { opacity: 0 });
+    gsap.set(bpEl,        { clipPath: 'polygon(0%100%,0%100%,0%100%,0%100%)', opacity: 0 });
     gsap.set(['#hero-eyebrow','#hero-headline','#hero-rule','#hero-sub'], { opacity: 1, y: 0 });
     gsap.set([tabletDev, phoneDev], { autoAlpha: 1, x: 0 });
   }
