@@ -1166,40 +1166,41 @@
   tl.to(finLayer, { clipPath: 'inset(0 0% 0 0)', duration: 0.025, ease: 'power2.out' }, 0.02);
   // ── Intro complete at 0.03 (3%) ──
 
-  // ── 0.03–0.55  STATE 4 : MacBook zoom-out — the massive main event (52%) ──
-  // Starts exactly at 0.03 so the zoom kicks off the moment the reveal begins.
-  // expo.inOut: imperceptibly slow at first, builds weight, decelerates into place.
+  // ── 0.12–0.78  STATE 4 : MacBook zoom-out — ultra-extended (66% of scroll) ──
+  // Overlaps the tail of the reveal by 2% so the screen fills with the
+  // finished site while the zoom is already underway — no dead gap.
+  // duration: 0.66 vs reveal duration ~0.11 = 6× ratio — heavy and cinematic.
+  // expo.inOut: glacially slow start, builds momentum, long deceleration.
   tl.to(deviceScene, {
     scale: 1,
-    duration: 0.52,
+    duration: 0.66,
     ease: 'expo.inOut',
-  }, 0.03);
+  }, 0.12);
 
-  // ── 0.54–0.92  STATE 5 : Pull-back to device grid (38%) ──
-  // 1% overlap with zoom-out end keeps the engine continuously busy.
+  // ── 0.76–0.94  STATE 5 : Pull-back to device grid (18%) ──
+  // Overlaps zoom-out by 2% to chain without any dead space.
   tl.to(deviceScene, {
     scale: 0.80,
-    duration: 0.38,
+    duration: 0.18,
     ease: 'power2.inOut',
-  }, 0.54);
+  }, 0.76);
 
-  // Devices enter while the laptop pull-back is still mid-motion (0.80),
-  // 12% before the zoom-out settles at ~0.92 — one continuous fluid arc.
-  // autoAlpha drives both opacity (0→1 fade) and visibility simultaneously.
-  tl.addLabel('deviceReveal', 0.80);
+  // Devices slide in mid-pull-back (0.82) — laptop still moving when they arrive.
+  // fromTo guarantees a clean opacity 0→1 fade regardless of prior GSAP state.
+  tl.addLabel('deviceReveal', 0.82);
   tl.fromTo(tabletDev,
     { autoAlpha: 0, x: 40 },
-    { autoAlpha: 1, x: 0, duration: 0.20, ease: 'back.out(1.2)' },
+    { autoAlpha: 1, x: 0, duration: 0.16, ease: 'back.out(1.2)' },
     'deviceReveal'
   );
   tl.fromTo(phoneDev,
     { autoAlpha: 0, x: -40 },
-    { autoAlpha: 1, x: 0, duration: 0.20, ease: 'back.out(1.2)' },
+    { autoAlpha: 1, x: 0, duration: 0.16, ease: 'back.out(1.2)' },
     'deviceReveal'
   );
 
   // Gentle upward float lands the final composition
-  tl.to(deviceScene, { y: -8, duration: 0.08, ease: 'sine.out' }, 0.92);
+  tl.to(deviceScene, { y: -8, duration: 0.06, ease: 'sine.out' }, 0.94);
 
   // ════════════════════════════════════════
   //  RESIZE — recompute + refresh
