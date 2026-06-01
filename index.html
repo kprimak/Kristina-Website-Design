@@ -67,8 +67,15 @@
       align-items: center;
       justify-content: center;
       transform-origin: center center;
-      will-change: transform;
+      will-change: transform, opacity;
       z-index: 1;
+    }
+
+    #laptop-wrap,
+    #laptop-screen-content,
+    #blueprint-layer,
+    #finished-layer {
+      will-change: transform, opacity;
     }
 
     #lateral-wrap {
@@ -1094,19 +1101,37 @@
   gsap.set(drawGlow, { attr: { 'stroke-dasharray': pathLenGlow, 'stroke-dashoffset': pathLenGlow } });
 
   // ════════════════════════════════════════
+  //  HARDWARE ACCELERATION
+  //  Force GPU compositing on every element the timeline touches so the
+  //  browser never drops to a software rasterise path during fast scrolls.
+  // ════════════════════════════════════════
+  gsap.set([deviceScene, '#laptop-wrap', '#laptop-screen-content', bpLayer, finLayer], {
+    willChange: 'transform, opacity',
+  });
+
+  // ════════════════════════════════════════
   //  MAIN SCROLL TIMELINE  —  3 / 97 split
   //  0.00–0.03 : intro (instant trigger, 3%)
   //  0.03–1.00 : laptop zoom sequence (97%, the entire main event)
-  //  scrub:2 for maximum smooth catch-up on fast scrolls
+  //
+  //  scrub: 2.5 — playhead chases scroll position over 2.5 s.
+  //  A warp-speed flick to the bottom forces the playhead to animate
+  //  through every intermediate state over those 2.5 s rather than snap.
+  //
+  //  preventOverlaps: "mainTimeline" — if a second ScrollTrigger fires
+  //  while this one is mid-scrub, GSAP queues it rather than colliding.
+  //
+  //  fastScrollEnd: true — once inertia stops, the playhead snaps to its
+  //  exact target so it never freezes mid-frame after a fast fling.
   // ════════════════════════════════════════
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger:         '#scroll-section',
       start:           'top top',
       end:             'bottom bottom',
-      scrub:           2,
+      scrub:           2.5,
       fastScrollEnd:   true,
-      preventOverlaps: true,
+      preventOverlaps: 'mainTimeline',
     },
   });
 
