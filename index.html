@@ -1153,19 +1153,10 @@
     ease: 'power2.inOut',
   }, 0.54);
 
-  // Tablet slides in at 34% into the pull-back phase
-  tl.to(tabletDev, {
-    autoAlpha: 1, x: 0,
-    duration: 0.22,
-    ease: 'back.out(1.2)',
-  }, 0.60);
-
-  // Phone follows 8% later
-  tl.to(phoneDev, {
-    autoAlpha: 1, x: 0,
-    duration: 0.22,
-    ease: 'back.out(1.2)',
-  }, 0.68);
+  // Tablet + phone reveal simultaneously — same position label "deviceReveal"
+  tl.addLabel('deviceReveal', 0.60);
+  tl.to(tabletDev, { autoAlpha: 1, x: 0, duration: 0.22, ease: 'back.out(1.2)' }, 'deviceReveal');
+  tl.to(phoneDev,  { autoAlpha: 1, x: 0, duration: 0.22, ease: 'back.out(1.2)' }, 'deviceReveal');
 
   // Gentle upward float to land the final composition
   tl.to(deviceScene, { y: -8, duration: 0.08, ease: 'sine.out' }, 0.92);
