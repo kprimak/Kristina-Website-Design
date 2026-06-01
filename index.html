@@ -1183,12 +1183,22 @@
     ease: 'power2.inOut',
   }, 0.54);
 
-  // Tablet + phone reveal simultaneously — same position label "deviceReveal"
-  tl.addLabel('deviceReveal', 0.60);
-  tl.to(tabletDev, { autoAlpha: 1, x: 0, duration: 0.22, ease: 'back.out(1.2)' }, 'deviceReveal');
-  tl.to(phoneDev,  { autoAlpha: 1, x: 0, duration: 0.22, ease: 'back.out(1.2)' }, 'deviceReveal');
+  // Devices enter while the laptop pull-back is still mid-motion (0.80),
+  // 12% before the zoom-out settles at ~0.92 — one continuous fluid arc.
+  // autoAlpha drives both opacity (0→1 fade) and visibility simultaneously.
+  tl.addLabel('deviceReveal', 0.80);
+  tl.fromTo(tabletDev,
+    { autoAlpha: 0, x: 40 },
+    { autoAlpha: 1, x: 0, duration: 0.20, ease: 'back.out(1.2)' },
+    'deviceReveal'
+  );
+  tl.fromTo(phoneDev,
+    { autoAlpha: 0, x: -40 },
+    { autoAlpha: 1, x: 0, duration: 0.20, ease: 'back.out(1.2)' },
+    'deviceReveal'
+  );
 
-  // Gentle upward float to land the final composition
+  // Gentle upward float lands the final composition
   tl.to(deviceScene, { y: -8, duration: 0.08, ease: 'sine.out' }, 0.92);
 
   // ════════════════════════════════════════
