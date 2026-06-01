@@ -1692,6 +1692,9 @@
   });
 
   // 0.00 – 0.20 : hero text drifts upward, blueprint zooms forward (tension)
+  // Lock the gradient at full visibility before anything starts
+  gsap.set('.colorful-bg', { opacity: 1, zIndex: 0 });
+
   introTl.to('#intro-hero-text', {
     opacity: 0, y: -40, duration: 0.18, ease: 'power2.inOut',
   }, 0.00);
@@ -1699,15 +1702,15 @@
     scale: 1.06, duration: 0.20, ease: 'power2.in', transformOrigin: 'center center',
   }, 0.00);
 
-  // 0.18 – 0.55 : PHASE 1 — upper-right corner torn away
-  // Clip-path collapses from full rectangle to lower-left triangle.
+  // 0.18–0.55 : PHASE 1 — upper-right piece tears away
+  // Clip-path collapses from full rectangle to lower-left triangle only.
   introTl.to(bpEl, {
     clipPath: 'polygon(0% 0%, 0% 0%, 100% 100%, 0% 100%)',
     duration: 0.37,
     ease: 'power3.inOut',
   }, 0.18);
 
-  // Fragments burst outward during the tear
+  // Fragments burst outward
   introTl.fromTo('#if1', { autoAlpha: 0 },
     { autoAlpha: 1, x: '-28vw', y: '-18vh', rotation: -28, duration: 0.28, ease: 'power2.out' }, 0.20);
   introTl.fromTo('#if2', { autoAlpha: 0 },
@@ -1716,18 +1719,28 @@
     { autoAlpha: 1, x: '-18vw', y:  '20vh', rotation: -16, duration: 0.26, ease: 'power2.out' }, 0.22);
   introTl.fromTo('#if4', { autoAlpha: 0 },
     { autoAlpha: 1, x:  '26vw', y: '-14vh', rotation:  35, duration: 0.27, ease: 'power2.out' }, 0.20);
-  introTl.to(['#if1','#if2','#if3','#if4'], { autoAlpha: 0, duration: 0.15 }, 0.48);
+  introTl.to(['#if1','#if2','#if3','#if4'], { autoAlpha: 0, duration: 0.12 }, 0.50);
 
-  // 0.52 – 0.80 : PHASE 2 — lower-left remnant drops away
+  // 0.52–0.72 : PHASE 2 — lower-left remnant flies off screen completely.
+  // clip-path collapses to a true zero-area point (0%,0% all corners)
+  // AND the element translates off-screen so no pixel survives in the viewport.
+  // opacity → 0 kills any sub-pixel antialiasing artifact at the edges.
   introTl.to(bpEl, {
-    clipPath: 'polygon(0% 100%, 0% 100%, 0% 100%, 0% 100%)',
-    xPercent: -8, yPercent: 12, rotation: 5,
-    duration: 0.28,
-    ease: 'power2.in',
+    clipPath: 'polygon(0% 0%, 0% 0%, 0% 0%, 0% 0%)',
+    xPercent: -110,
+    yPercent:  110,
+    rotation:   8,
+    opacity:    0,
+    duration: 0.20,
+    ease: 'power3.in',
   }, 0.52);
 
-  // 0.80 – 1.00 : colorful gradient holds; intro viewport fades to cream
-  //               so the transition into #scroll-section is seamless
+  // 0.72 : Blueprint is 100% gone — colorful bg fully floods the screen.
+  // Hide the element from layout so nothing lingers in the stacking context.
+  introTl.set(bpEl, { display: 'none' }, 0.73);
+
+  // 0.80–1.00 : Gradient holds, then viewport fades to cream for a
+  //             seamless handoff into the scroll section.
   introTl.to('#intro-viewport', {
     backgroundColor: 'rgba(250,247,242,1)',
     duration: 0.20,
