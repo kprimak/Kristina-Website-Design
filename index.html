@@ -123,14 +123,72 @@
       position: absolute;
       inset: 0;
       z-index: 2;
-      will-change: opacity, transform;
+      will-change: clip-path, opacity, transform;
       transform-origin: center center;
+      /* full coverage at start — GSAP animates this to perform the rip */
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
     }
     #blueprint-svg {
       width: 100%;
       height: 100%;
       display: block;
     }
+
+    /* ══════════════════════════════════
+       GRADIENT BASE LAYER
+       Revealed when blueprint rips away
+    ══════════════════════════════════ */
+    #gradient-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      /* Electric orange → deep purple → rich blue → yellow */
+      background: linear-gradient(135deg,
+        #FF4D00 0%,
+        #8B00D4 28%,
+        #0047FF 62%,
+        #FFD600 100%
+      );
+    }
+
+    /* ══════════════════════════════════
+       TORN PAPER EDGE
+       Diagonal seam SVG — top-right → bottom-left
+    ══════════════════════════════════ */
+    #torn-edge {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    /* ══════════════════════════════════
+       BLUEPRINT FRAGMENTS
+       Scatter during the rip
+    ══════════════════════════════════ */
+    .bp-frag {
+      position: absolute;
+      z-index: 6;
+      opacity: 0;
+      background: #0C0F14;
+      outline: 1px solid rgba(37,99,235,0.55);
+      overflow: hidden;
+    }
+    .bp-frag::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(0deg,   rgba(37,99,235,0.22) 0, rgba(37,99,235,0.22) 1px, transparent 1px, transparent 40px),
+        repeating-linear-gradient(90deg,  rgba(37,99,235,0.22) 0, rgba(37,99,235,0.22) 1px, transparent 1px, transparent 40px);
+    }
+    /* Each fragment: different size + position for natural scatter feel */
+    #bp-f1 { width: 24%; height: 20%; top: 12%; left:  8%; }
+    #bp-f2 { width: 16%; height: 14%; top:  6%; left: 58%; }
+    #bp-f3 { width: 12%; height: 16%; top: 44%; left: 36%; }
+    #bp-f4 { width: 20%; height: 12%; top: 28%; left: 70%; }
 
     /* ══════════════════════════════════
        FINISHED SITE LAYER
@@ -622,6 +680,9 @@
           <!-- ③ SCREEN CONTENT -->
           <div id="laptop-screen-content">
 
+            <!-- Gradient base — revealed when blueprint rips away -->
+            <div id="gradient-bg"></div>
+
             <!-- Blueprint layer -->
             <div id="blueprint-layer">
               <svg id="blueprint-svg" viewBox="0 0 820 510"
@@ -788,6 +849,39 @@
                 </g>
               </svg>
             </div><!-- /blueprint-layer -->
+
+            <!-- Torn paper edge — diagonal seam top-right → bottom-left -->
+            <!-- SVG viewBox matches blueprint: 820 × 510                 -->
+            <svg id="torn-edge" viewBox="0 0 820 510" xmlns="http://www.w3.org/2000/svg"
+                 preserveAspectRatio="none" aria-hidden="true">
+              <!-- Shadow on lower-right face of the tear -->
+              <path d="M820,0 L780,22 L740,55 L700,70 L660,105 L620,120
+                       L580,155 L540,170 L500,205 L460,220 L420,254
+                       L380,269 L340,304 L300,319 L260,354 L220,369
+                       L180,404 L140,419 L100,452 L60,468 L20,502 L0,510
+                       L820,510 Z"
+                    fill="rgba(0,0,0,0.22)"/>
+              <!-- Jagged tear edge — bright highlight -->
+              <path d="M820,0 L780,22 L740,55 L700,70 L660,105 L620,120
+                       L580,155 L540,170 L500,205 L460,220 L420,254
+                       L380,269 L340,304 L300,319 L260,354 L220,369
+                       L180,404 L140,419 L100,452 L60,468 L20,502 L0,510"
+                    fill="none" stroke="rgba(255,255,255,0.90)" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Soft glow along the edge -->
+              <path d="M820,0 L780,22 L740,55 L700,70 L660,105 L620,120
+                       L580,155 L540,170 L500,205 L460,220 L420,254
+                       L380,269 L340,304 L300,319 L260,354 L220,369
+                       L180,404 L140,419 L100,452 L60,468 L20,502 L0,510"
+                    fill="none" stroke="white" stroke-width="6"
+                    stroke-linecap="round" stroke-linejoin="round" opacity="0.18"/>
+            </svg>
+
+            <!-- Blueprint fragments — scatter as the paper tears -->
+            <div class="bp-frag" id="bp-f1"></div>
+            <div class="bp-frag" id="bp-f2"></div>
+            <div class="bp-frag" id="bp-f3"></div>
+            <div class="bp-frag" id="bp-f4"></div>
 
             <!-- ─────────────────────────────────────────
                  FINISHED INNER SITE — "Your Future Website"
@@ -1135,36 +1229,52 @@
     },
   });
 
-  // ── 0.00–0.025  Hero text drifts up + fades out ──
-  // Simultaneous: blueprint layer gently scales up ("moving into screen")
+  // ── 0.00–0.025  Hero text drifts upward and fades ──
+  // Blueprint scales forward simultaneously — builds tension before the rip.
   tl.to(['#hero-eyebrow', '#hero-headline', '#hero-rule', '#hero-sub', '#scroll-hint'], {
-    opacity: 0, y: -30,
-    duration: 0.025,
-    ease: 'power2.inOut',
-    stagger: 0.003,
+    opacity: 0, y: -30, duration: 0.025, ease: 'power2.inOut', stagger: 0.003,
   }, 0.00);
-  tl.to(bpLayer, { scale: 1.05, duration: 0.025, ease: 'power2.in', transformOrigin: 'center center' }, 0.00);
+  tl.to(bpLayer, { scale: 1.04, duration: 0.012, ease: 'power2.in', transformOrigin: 'center center' }, 0.00);
 
-  // ── 0.01–0.03  Blueprint draws (overlaps with text fade — zero dead space) ──
-  tl.to(cursorEl,        { opacity: 1, duration: 0.005 }, 0.01);
-  tl.to('#anchor-start', { attr: { opacity: 1 }, duration: 0.005 }, 0.01);
-  tl.to(drawPath, { attr: { 'stroke-dashoffset': 0 }, duration: 0.02, ease: 'none' }, 0.01);
-  tl.to(drawGlow, { attr: { 'stroke-dashoffset': 0 }, duration: 0.02, ease: 'none' }, 0.01);
-  tl.to(cursorEl, {
-    duration: 0.02, ease: 'none',
-    motionPath: { path: '#draw-path', align: '#draw-path', alignOrigin: [0,0], autoRotate: false },
-  }, 0.01);
-  tl.to('#anchor-mid1', { attr: { opacity: 1 }, duration: 0.005 }, 0.015);
-  tl.to('#anchor-mid2', { attr: { opacity: 1 }, duration: 0.005 }, 0.02);
-  tl.to('#anchor-end',  { attr: { opacity: 1 }, duration: 0.005 }, 0.025);
+  // ── 0.012–0.022  THE RIP — phase 1: upper-right corner torn away ──
+  // Clip-path collapses from full-rect to lower-left triangle.
+  // The top-right area of the blueprint vanishes along the diagonal seam,
+  // exposing the vibrant gradient underneath.
+  tl.to(bpLayer, {
+    clipPath: 'polygon(0% 0%, 0% 0%, 100% 100%, 0% 100%)',
+    duration: 0.010,
+    ease: 'power3.in',
+  }, 0.012);
 
-  // ── 0.02–0.04  Blueprint cross-fades into finished site ──
-  // finLayer fades in (opacity 0→1) while blueprint simultaneously fades out —
-  // a true cross-fade rather than a cut.
-  tl.to(cursorEl, { opacity: 0, scale: 0.6, duration: 0.01, ease: 'power2.in', transformOrigin: 'center center' }, 0.02);
-  tl.to(bpLayer,  { opacity: 0, duration: 0.02, ease: 'power2.inOut' }, 0.02);
-  tl.to(finLayer, { clipPath: 'inset(0 0% 0 0)', duration: 0.025, ease: 'power2.out' }, 0.02);
-  // ── Intro complete at 0.03 (3%) ──
+  // Torn edge seam appears at the rip line
+  tl.to('#torn-edge', { autoAlpha: 1, duration: 0.002 }, 0.012);
+
+  // Blueprint fragments burst outward from the tear zone
+  tl.fromTo('#bp-f1', { autoAlpha: 0 },
+    { autoAlpha: 1, x: '-130%', y: '-90%',  rotation: -30, duration: 0.012, ease: 'power2.out' }, 0.012);
+  tl.fromTo('#bp-f2', { autoAlpha: 0 },
+    { autoAlpha: 1, x:  '90%',  y: '-120%', rotation:  25, duration: 0.010, ease: 'power2.out' }, 0.013);
+  tl.fromTo('#bp-f3', { autoAlpha: 0 },
+    { autoAlpha: 1, x: '-80%',  y:  '90%',  rotation: -18, duration: 0.011, ease: 'power2.out' }, 0.013);
+  tl.fromTo('#bp-f4', { autoAlpha: 0 },
+    { autoAlpha: 1, x: '110%',  y: '-70%',  rotation:  38, duration: 0.012, ease: 'power2.out' }, 0.012);
+
+  // ── 0.022–0.03  THE RIP — phase 2: lower-left remnant falls away ──
+  // The remaining triangle collapses and the piece drops slightly,
+  // completing the physical paper-tear illusion.
+  tl.to(bpLayer, {
+    clipPath: 'polygon(0% 100%, 0% 100%, 0% 100%, 0% 100%)',
+    xPercent: -6, yPercent: 10, rotation: 4,
+    duration: 0.008,
+    ease: 'power2.in',
+  }, 0.022);
+  tl.to('#torn-edge',                     { autoAlpha: 0, duration: 0.005 }, 0.022);
+  tl.to(['#bp-f1','#bp-f2','#bp-f3','#bp-f4'], { autoAlpha: 0, duration: 0.006 }, 0.022);
+
+  // ── 0.020  Finished site wipes in as blueprint rips away ──
+  // Starts 2ms before phase 2 so gradient → finished site is seamless.
+  tl.to(finLayer, { clipPath: 'inset(0 0% 0 0)', duration: 0.022, ease: 'power2.out' }, 0.020);
+  // ── Intro + rip complete at 0.03 (3%) ──
 
   // ── 0.10–0.87  STATE 4 : MacBook zoom-out — the absolute main event (77%) ──
   // Reveal duration ≈ 0.11 → zoom duration 0.77 = 7× ratio.
