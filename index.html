@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Not just a website — a story.</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Archivo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
@@ -19,6 +21,10 @@
       --charcoal: #1C1C1E;
       --muted:    #6B6B70;
       --accent:   #2563EB;
+      --bp-bg:    #0C0F14;
+      --bp-line:  rgba(37,99,235,0.55);
+      --bp-dim:   rgba(37,99,235,0.22);
+      --bp-label: rgba(37,99,235,0.50);
     }
 
     html { scroll-behavior: auto; }
@@ -28,28 +34,33 @@
       overflow-x: hidden;
     }
 
-    /* ══════════════════════════════════════════
-       SCROLL SECTION  (500vh scroll space)
-    ══════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════
+       SCROLL SECTION  — 500vh
+    ═══════════════════════════════════════════ */
     #scroll-section { height: 500vh; }
 
-    /* ── Sticky viewport ── */
     #sticky-viewport {
       position: sticky;
       top: 0;
       width: 100%;
       height: 100vh;
       overflow: hidden;
-      /* Desk surface visible once MacBook zooms back */
-      background: radial-gradient(ellipse at 50% 30%, #eee8de 0%, #FAF7F2 80%);
+      background: var(--cream);
     }
 
-    /* ══════════════════════════════════════════
-       DEVICE SCENE
-       This is the element GSAP scales.
-       Starts large (screen fills viewport),
-       pulls back to reveal the MacBook frame.
-    ══════════════════════════════════════════ */
+    /* Subtle desk surface — becomes visible on MacBook reveal */
+    #sticky-viewport::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% 40%, #ede8df 0%, var(--cream) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ═══════════════════════════════════════════
+       DEVICE SCENE  — GSAP scales this element
+    ═══════════════════════════════════════════ */
     #device-scene {
       position: absolute;
       inset: 0;
@@ -58,9 +69,9 @@
       justify-content: center;
       transform-origin: center center;
       will-change: transform;
+      z-index: 1;
     }
 
-    /* Lateral wrap — holds all 3 devices in a row */
     #lateral-wrap {
       position: relative;
       display: flex;
@@ -68,31 +79,27 @@
       justify-content: center;
     }
 
-    /* ── MacBook wrap ── */
+    /* ═══════════════════════════════════════════
+       MACBOOK WRAP
+       SVG viewBox: 1000 × 680
+       Screen area: x=90 y=30 w=820 h=510
+    ═══════════════════════════════════════════ */
     #laptop-wrap {
       position: relative;
-      /* SVG viewBox 1000×680 → aspect ratio 1000:680 */
       width: min(960px, 90vw);
       aspect-ratio: 1000 / 680;
       flex-shrink: 0;
-      /* Elegant shadow — only visible once MacBook zooms back */
-      filter: drop-shadow(0 32px 64px rgba(0,0,0,0.22))
-              drop-shadow(0 8px 16px rgba(0,0,0,0.12));
+      filter:
+        drop-shadow(0 40px 80px rgba(0,0,0,0.25))
+        drop-shadow(0 10px 20px rgba(0,0,0,0.12));
     }
 
-    /* ══════════════════════════════════════════
-       LAPTOP SCREEN CONTENT
-       Sits behind the MacBook SVG frame.
-       Positioned to align exactly with the
-       screen hole in the SVG (see maths below).
-
-       SVG viewBox: 1000 × 680
-       Screen rect:  x=90  y=30  w=820  h=510
-       ─ left%  = 90/1000      = 9%
-       ─ top%   = 30/680       = 4.41%
-       ─ width% = 820/1000     = 82%
-       ─ height%= 510/680      = 75%
-    ══════════════════════════════════════════ */
+    /* ── Screen content (sits behind the MacBook SVG frame) ──
+       left%   = 90/1000      = 9%
+       top%    = 30/680       = 4.41%
+       width%  = 820/1000     = 82%
+       height% = 510/680      = 75%
+    ── */
     #laptop-screen-content {
       position: absolute;
       left:   9%;
@@ -100,126 +107,228 @@
       width:  82%;
       height: 75%;
       overflow: hidden;
-      background: #0a0a0a;
+      background: var(--bp-bg);
       z-index: 1;
     }
 
-    /* ── Meadow photo — fills the screen ── */
-    #meadow-img {
+    /* ═══════════════════════════════════════════
+       BLUEPRINT LAYER
+       Full SVG wireframe. Fades out in State 3.
+    ═══════════════════════════════════════════ */
+    #blueprint-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      will-change: opacity;
+    }
+
+    #blueprint-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* ═══════════════════════════════════════════
+       FINISHED SITE LAYER
+       Luxury website. Reveals left→right via
+       clip-path wipe in State 3.
+    ═══════════════════════════════════════════ */
+    #finished-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      clip-path: inset(0 100% 0 0);
+      will-change: clip-path;
+      overflow: hidden;
+    }
+
+    /* ── Finished website layout ── */
+    .fin-site {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: 'Archivo', sans-serif;
+      background: #0f0f10;
+    }
+
+    .fin-nav {
+      flex-shrink: 0;
+      height: 9%;
+      min-height: 30px;
+      background: rgba(12,12,14,0.96);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4%;
+    }
+    .fin-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(9px, 1.5vw, 14px);
+      letter-spacing: 0.14em;
+      color: #fff;
+    }
+    .fin-nav-links {
+      display: flex;
+      gap: clamp(6px, 1.2vw, 14px);
+      font-size: clamp(7px, 1vw, 10px);
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.05em;
+    }
+    .fin-nav-cta {
+      background: var(--accent);
+      color: #fff;
+      font-size: clamp(6px, 0.9vw, 9px);
+      font-weight: 600;
+      padding: 0.3em 0.9em;
+      border-radius: 3px;
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+    }
+
+    .fin-hero {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .fin-hero-img {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center 60%;
+      object-position: center 50%;
       display: block;
     }
-
-    /* ── Berry bush — right side, hidden until bee arrives ── */
-    #berry-bush-container {
+    .fin-hero-overlay {
       position: absolute;
-      right: 6%;
-      bottom: 4%;
-      width: 26%;
-      height: 48%;
-      opacity: 0;
-      transform: scale(0.88) translateY(10px);
-      will-change: opacity, transform;
-      z-index: 3;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        rgba(10,10,12,0.82) 0%,
+        rgba(10,10,12,0.55) 55%,
+        rgba(10,10,12,0.20) 100%
+      );
     }
-    #berry-bush-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 48% 52% 44% 56% / 42% 44% 56% 58%;
-      /* Vignette blend to make it feel embedded in the scene */
-      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.4));
-    }
-
-    /* ── Bee ── */
-    #bee-container {
+    .fin-hero-content {
       position: absolute;
-      /* Starting position: lower-left, on a flower */
-      left: 21%;
-      top:  56%;
-      width: 72px;
-      height: 72px;
-      transform-origin: center center;
-      will-change: transform;
-      z-index: 5;
-    }
-    /* Separate visual wrapper so GSAP (position) and CSS (wiggle) don't conflict */
-    #bee-visual {
-      width: 100%;
-      height: 100%;
-    }
-    #bee-visual img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-      filter: drop-shadow(0 3px 12px rgba(0,0,0,0.5));
-    }
-
-    /* Flying wiggle — applied via JS class toggle */
-    .bee-flying #bee-visual {
-      animation: beeWiggle 0.18s ease-in-out infinite;
-    }
-    @keyframes beeWiggle {
-      0%, 100% { transform: translateY(0)   rotate(-6deg) scale(1);    filter: blur(0.4px); }
-      50%       { transform: translateY(-5px) rotate(6deg)  scale(1.04); filter: blur(1px);   }
-    }
-
-    /* ── E-commerce nav overlay (fades in when MacBook is revealed) ── */
-    #ecom-nav {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 13%;
+      inset: 0;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 5%;
-      background: rgba(18, 18, 20, 0.88);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      opacity: 0;
-      will-change: opacity;
-      z-index: 6;
+      flex-direction: column;
+      justify-content: center;
+      padding: 5% 6%;
+      max-width: 62%;
     }
-    .ecom-brand {
+    .fin-eyebrow {
+      font-size: clamp(6px, 0.85vw, 9px);
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.6em;
+    }
+    .fin-heading {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      font-size: clamp(0.55rem, 1.1vw, 0.9rem);
-      letter-spacing: 0.12em;
+      font-size: clamp(18px, 3.8vw, 40px);
       color: #fff;
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.5em;
     }
-    .ecom-links {
-      display: flex;
-      gap: clamp(0.5rem, 1.2vw, 1.2rem);
-      font-size: clamp(0.42rem, 0.8vw, 0.7rem);
+    .fin-sub {
+      font-size: clamp(7px, 1vw, 11px);
       color: rgba(255,255,255,0.65);
-      letter-spacing: 0.08em;
+      line-height: 1.6;
+      margin-bottom: 1em;
     }
-    .ecom-cta {
+    .fin-btn-row {
+      display: flex;
+      gap: clamp(6px, 1vw, 12px);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .fin-btn-primary {
       background: var(--accent);
       color: #fff;
       font-family: 'Archivo', sans-serif;
-      font-size: clamp(0.38rem, 0.7vw, 0.62rem);
+      font-size: clamp(6px, 0.9vw, 10px);
       font-weight: 600;
-      padding: 0.3em 0.8em;
+      padding: 0.5em 1.1em;
       border-radius: 3px;
       border: none;
       cursor: pointer;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .fin-btn-ghost {
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      font-size: clamp(6px, 0.85vw, 9px);
+      border: none;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
     }
 
-    /* ══════════════════════════════════════════
-       MACBOOK SVG FRAME
-       Renders on top of screen-content.
-       The screen area in the SVG is intentionally
-       left empty (transparent) so screen-content
-       shows through.
-    ══════════════════════════════════════════ */
+    .fin-products {
+      flex-shrink: 0;
+      height: 28%;
+      min-height: 60px;
+      background: var(--cream);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      border-top: 1px solid rgba(0,0,0,0.08);
+    }
+    .fin-card {
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .fin-card-thumb {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .fin-card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .fin-card-info {
+      flex-shrink: 0;
+      padding: 4% 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--cream);
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    .fin-card-name {
+      font-size: clamp(6px, 0.9vw, 9px);
+      color: var(--charcoal);
+      font-weight: 500;
+    }
+    .fin-card-price {
+      font-size: clamp(6px, 0.9vw, 9px);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ═══════════════════════════════════════════
+       MACBOOK SVG FRAME  (z-index above screen)
+    ═══════════════════════════════════════════ */
     #laptop-svg {
       position: absolute;
       inset: 0;
@@ -229,37 +338,37 @@
       pointer-events: none;
     }
 
-    /* ══════════════════════════════════════════
-       TABLET  (left of laptop)
-    ══════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════
+       TABLET  (left side device)
+    ═══════════════════════════════════════════ */
     #tablet-device {
       position: absolute;
-      right: calc(100% + 24px);
+      right: calc(100% + 22px);
       top: 50%;
-      transform: translateY(-50%) translateX(30px);
-      width: 20%;
-      min-width: 120px;
+      transform: translateY(-50%) translateX(40px);
+      width: 19%;
+      min-width: 100px;
       opacity: 0;
       will-change: opacity, transform;
     }
 
-    /* ══════════════════════════════════════════
-       PHONE  (right of laptop)
-    ══════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════
+       PHONE  (right side device)
+    ═══════════════════════════════════════════ */
     #phone-device {
       position: absolute;
-      left: calc(100% + 20px);
+      left: calc(100% + 18px);
       top: 50%;
-      transform: translateY(-50%) translateX(-30px);
-      width: 10%;
-      min-width: 60px;
+      transform: translateY(-50%) translateX(-40px);
+      width: 9.5%;
+      min-width: 56px;
       opacity: 0;
       will-change: opacity, transform;
     }
 
-    /* ══════════════════════════════════════════
-       HERO TEXT  (floats above everything)
-    ══════════════════════════════════════════ */
+    /* ═══════════════════════════════════════════
+       HERO TEXT  (floats above device scene)
+    ═══════════════════════════════════════════ */
     #hero-text {
       position: absolute;
       inset: 0;
@@ -271,25 +380,45 @@
       pointer-events: none;
       text-align: center;
       padding: 2rem;
+      gap: 0;
     }
+
+    #hero-eyebrow {
+      font-family: 'Archivo', sans-serif;
+      font-size: clamp(0.6rem, 1vw, 0.78rem);
+      font-weight: 500;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: rgba(250,247,242,0.55);
+      margin-bottom: 1.1rem;
+      will-change: opacity, transform;
+    }
+
     #hero-headline {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+      font-size: clamp(2.4rem, 5.5vw, 5.8rem);
       color: #fff;
-      letter-spacing: -0.04em;
-      line-height: 1.05;
-      text-shadow: 0 2px 40px rgba(0,0,0,0.4), 0 1px 6px rgba(0,0,0,0.25);
+      letter-spacing: -0.045em;
+      line-height: 1.02;
+      text-shadow: 0 2px 48px rgba(0,0,0,0.5), 0 1px 8px rgba(0,0,0,0.3);
       will-change: opacity, transform;
     }
+
+    #hero-rule {
+      width: 40px;
+      height: 2px;
+      background: var(--accent);
+      margin: 1.6rem auto 1.4rem;
+      will-change: opacity, transform;
+    }
+
     #hero-sub {
-      margin-top: 1.4rem;
       font-family: 'Archivo', sans-serif;
+      font-size: clamp(0.75rem, 1.2vw, 1rem);
       font-weight: 300;
-      font-size: clamp(0.8rem, 1.4vw, 1.1rem);
-      color: rgba(255,255,255,0.7);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
+      color: rgba(250,247,242,0.55);
+      letter-spacing: 0.05em;
       will-change: opacity;
     }
 
@@ -304,30 +433,31 @@
       flex-direction: column;
       align-items: center;
       gap: 8px;
+      pointer-events: none;
     }
     #scroll-hint span {
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       font-weight: 500;
-      letter-spacing: 0.22em;
+      letter-spacing: 0.24em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
+      color: rgba(250,247,242,0.45);
     }
     .scroll-arrow {
-      width: 18px;
-      height: 18px;
-      border-right: 1.5px solid rgba(255,255,255,0.45);
-      border-bottom: 1.5px solid rgba(255,255,255,0.45);
+      width: 16px;
+      height: 16px;
+      border-right: 1.5px solid rgba(250,247,242,0.35);
+      border-bottom: 1.5px solid rgba(250,247,242,0.35);
       transform: rotate(45deg);
-      animation: arrowPulse 1.7s ease-in-out infinite;
+      animation: arrowPulse 1.8s ease-in-out infinite;
     }
     @keyframes arrowPulse {
-      0%, 100% { transform: rotate(45deg) translate(0,0);   opacity: 0.4; }
-      50%       { transform: rotate(45deg) translate(3px,3px); opacity: 1;   }
+      0%, 100% { opacity: 0.3; transform: rotate(45deg) translate(0, 0); }
+      50%       { opacity: 0.9; transform: rotate(45deg) translate(3px, 3px); }
     }
 
-    /* ══════════════════════════════════════════
+    /* ═══════════════════════════════════════════
        AFTER SECTION
-    ══════════════════════════════════════════ */
+    ═══════════════════════════════════════════ */
     #after-section {
       background: var(--cream);
       text-align: center;
@@ -339,13 +469,13 @@
       font-size: clamp(2rem, 4vw, 3.8rem);
       color: var(--charcoal);
       letter-spacing: -0.04em;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.4rem;
     }
     #after-section p {
       max-width: 500px;
-      margin: 0 auto 2.5rem;
+      margin: 0 auto 2.6rem;
       color: var(--muted);
-      line-height: 1.75;
+      line-height: 1.78;
       font-size: 1.05rem;
     }
     .cta-btn {
@@ -356,28 +486,27 @@
       font-weight: 600;
       font-size: 0.9rem;
       letter-spacing: 0.04em;
-      padding: 1rem 2.4rem;
+      padding: 1rem 2.5rem;
       border-radius: 100px;
       text-decoration: none;
       transition: background 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
     }
     .cta-btn:hover {
       background: var(--accent);
-      box-shadow: 0 8px 32px rgba(37,99,235,0.28);
+      box-shadow: 0 8px 36px rgba(37,99,235,0.28);
       transform: translateY(-2px);
     }
 
     /* ── Reduced motion ── */
     @media (prefers-reduced-motion: reduce) {
-      .bee-flying #bee-visual,
       .scroll-arrow { animation: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════════
-     SCROLLYTELLING SECTION  — 500vh scroll space
+<!-- ═══════════════════════════════════════════════════════
+     SCROLLYTELLING SECTION
 ═══════════════════════════════════════════════════════ -->
 <section id="scroll-section">
   <div id="sticky-viewport">
@@ -387,206 +516,429 @@
 
         <!-- ① TABLET — left, hidden until State 5 -->
         <div id="tablet-device" aria-hidden="true">
-          <svg viewBox="0 0 220 300" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <clipPath id="tabClip"><rect x="14" y="20" width="192" height="256" rx="3"/></clipPath>
-            </defs>
-            <!-- Body -->
-            <rect x="2" y="2" width="216" height="296" rx="18" fill="#2a2a2e"/>
-            <rect x="2" y="2" width="216" height="296" rx="18" fill="none" stroke="#444" stroke-width="1.5"/>
-            <!-- Home button strip -->
-            <circle cx="110" cy="282" r="9" fill="#3a3a3e" stroke="#555" stroke-width="1"/>
-            <!-- Screen -->
-            <rect x="14" y="20" width="192" height="256" rx="3" fill="#0a0a0a"/>
-            <!-- Website inside screen -->
-            <image href="https://images.unsplash.com/photo-1490750967868-88df5691cc08?auto=format&fit=crop&w=400&q=80"
-                   x="14" y="20" width="192" height="256" clip-path="url(#tabClip)" preserveAspectRatio="xMidYMid slice"/>
-            <!-- Nav overlay -->
-            <rect x="14" y="20" width="192" height="28" fill="rgba(18,18,20,0.85)"/>
-            <text x="24" y="37" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="white" letter-spacing="1">FLORA</text>
-            <rect x="160" y="27" width="38" height="13" rx="3" fill="#2563EB"/>
-            <text x="168" y="37" font-family="Archivo,sans-serif" font-size="7" fill="white">Shop</text>
-            <!-- Hero text overlay -->
-            <rect x="14" y="160" width="192" height="116" fill="url(#tabGrad)"/>
-            <defs>
-              <linearGradient id="tabGrad" x1="0" y1="0" x2="0" y2="1">
+              <clipPath id="tabClip"><rect x="12" y="20" width="176" height="226" rx="3"/></clipPath>
+              <linearGradient id="tabHeroGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stop-color="transparent"/>
-                <stop offset="100%" stop-color="rgba(18,18,20,0.9)"/>
+                <stop offset="100%" stop-color="rgba(10,10,12,0.88)"/>
               </linearGradient>
             </defs>
-            <text x="24" y="228" font-family="Space Grotesk,sans-serif" font-size="12" font-weight="700" fill="white">Where Nature</text>
-            <text x="24" y="244" font-family="Space Grotesk,sans-serif" font-size="12" font-weight="700" fill="white">Meets Home.</text>
-            <rect x="24" y="252" width="56" height="14" rx="3" fill="#2563EB"/>
-            <text x="32" y="262" font-family="Archivo,sans-serif" font-size="7" fill="white">Shop now</text>
+            <rect x="2" y="2" width="196" height="266" rx="18" fill="#1e1e22"/>
+            <rect x="2" y="2" width="196" height="266" rx="18" fill="none" stroke="#3a3a3e" stroke-width="1.2"/>
+            <circle cx="100" cy="258" r="8" fill="#2a2a2e" stroke="#444" stroke-width="1"/>
+            <rect x="12" y="20" width="176" height="226" rx="3" fill="#0c0f14"/>
+            <image href="https://images.unsplash.com/photo-1490750967868-88df5691cc08?auto=format&fit=crop&w=400&q=80"
+                   x="12" y="20" width="176" height="226" clip-path="url(#tabClip)" preserveAspectRatio="xMidYMid slice"/>
+            <rect x="12" y="20" width="176" height="22" fill="rgba(10,10,12,0.92)"/>
+            <text x="20" y="34" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white" letter-spacing="1.5">FLORA</text>
+            <rect x="154" y="25" width="28" height="10" rx="2.5" fill="#2563EB"/>
+            <text x="160" y="33" font-family="Archivo,sans-serif" font-size="6" fill="white">Cart</text>
+            <rect x="12" y="165" width="176" height="81" fill="url(#tabHeroGrad)"/>
+            <text x="22" y="202" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Where Nature</text>
+            <text x="22" y="216" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Meets Home.</text>
+            <rect x="22" y="224" width="50" height="13" rx="3" fill="#2563EB"/>
+            <text x="30" y="233" font-family="Archivo,sans-serif" font-size="6.5" fill="white">Shop Now</text>
           </svg>
         </div>
 
-        <!-- ② LAPTOP — the main device -->
+        <!-- ② LAPTOP — main device -->
         <div id="laptop-wrap">
 
-          <!-- ③ SCREEN CONTENT — lives inside the MacBook screen -->
+          <!-- ③ SCREEN CONTENT — everything lives in here -->
           <div id="laptop-screen-content">
 
-            <!-- Real meadow photo -->
-            <img
-              id="meadow-img"
-              src="https://images.unsplash.com/photo-1490750967868-88df5691cc08?auto=format&fit=crop&w=1920&q=85"
-              alt="Vibrant wildflower meadow"
-            />
+            <!-- ── Blueprint layer ── -->
+            <div id="blueprint-layer">
+              <svg id="blueprint-svg" viewBox="0 0 820 510"
+                   xmlns="http://www.w3.org/2000/svg"
+                   preserveAspectRatio="xMidYMid meet"
+                   aria-hidden="true">
+                <defs>
+                  <!-- Dot grid pattern -->
+                  <pattern id="dotGrid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <circle cx="20" cy="20" r="1.2" fill="rgba(37,99,235,0.28)"/>
+                  </pattern>
+                  <!-- Glow filter for the drawn path -->
+                  <filter id="lineGlow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur"/>
+                    <feFlood flood-color="#2563EB" flood-opacity="0.75" result="color"/>
+                    <feComposite in="color" in2="blur" operator="in" result="softGlow"/>
+                    <feMerge><feMergeNode in="softGlow"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                  <!-- Anchor dot glow -->
+                  <filter id="dotGlow" x="-100%" y="-100%" width="300%" height="300%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+                    <feFlood flood-color="#2563EB" flood-opacity="0.9" result="c"/>
+                    <feComposite in="c" in2="blur" operator="in" result="g"/>
+                    <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
 
-            <!-- Berry bush photo — bee landing target (right side) -->
-            <div id="berry-bush-container">
-              <img
-                src="https://images.unsplash.com/photo-1601004890657-7b5bf8eb1f95?auto=format&fit=crop&w=600&q=85"
-                alt="Wild berry bush"
-              />
-            </div>
+                <!-- Background + dot grid -->
+                <rect width="820" height="510" fill="#0C0F14"/>
+                <rect width="820" height="510" fill="url(#dotGrid)"/>
 
-            <!-- Bee — starts on a flower in the lower-left of meadow -->
-            <div id="bee-container">
-              <div id="bee-visual">
-                <img
-                  src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=300&q=90"
-                  alt="Macro photograph of a bee"
-                />
+                <!-- ── Axis rulers (left + top) ── -->
+                <line x1="0" y1="20" x2="820" y2="20" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
+                <line x1="20" y1="0" x2="20" y2="510" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
+
+                <!-- Ruler ticks (top) -->
+                <g stroke="rgba(37,99,235,0.25)" stroke-width="0.7">
+                  <line x1="100" y1="16" x2="100" y2="20"/>
+                  <line x1="200" y1="16" x2="200" y2="20"/>
+                  <line x1="300" y1="16" x2="300" y2="20"/>
+                  <line x1="400" y1="16" x2="400" y2="20"/>
+                  <line x1="500" y1="16" x2="500" y2="20"/>
+                  <line x1="600" y1="16" x2="600" y2="20"/>
+                  <line x1="700" y1="16" x2="700" y2="20"/>
+                  <line x1="800" y1="16" x2="800" y2="20"/>
+                </g>
+                <g font-family="'Courier New',monospace" font-size="7" fill="rgba(37,99,235,0.38)" text-anchor="middle">
+                  <text x="100" y="14">100</text>
+                  <text x="200" y="14">200</text>
+                  <text x="400" y="14">400</text>
+                  <text x="600" y="14">600</text>
+                  <text x="800" y="14">800</text>
+                </g>
+                <!-- Origin label -->
+                <text x="3" y="17" font-family="'Courier New',monospace" font-size="7" fill="rgba(37,99,235,0.5)">0,0</text>
+
+                <!-- ── Wireframe: Navigation Bar ── -->
+                <rect x="30" y="28" width="760" height="44"
+                      fill="rgba(37,99,235,0.05)" stroke="rgba(37,99,235,0.45)"
+                      stroke-width="0.8" stroke-dasharray="5,3"/>
+                <!-- Nav: logo placeholder -->
+                <rect x="44" y="38" width="60" height="10" rx="2"
+                      fill="rgba(37,99,235,0.15)" stroke="rgba(37,99,235,0.4)" stroke-width="0.6"/>
+                <!-- Nav: link placeholders -->
+                <rect x="280" y="40" width="36" height="7" rx="2" fill="rgba(37,99,235,0.1)" stroke="rgba(37,99,235,0.3)" stroke-width="0.5"/>
+                <rect x="326" y="40" width="46" height="7" rx="2" fill="rgba(37,99,235,0.1)" stroke="rgba(37,99,235,0.3)" stroke-width="0.5"/>
+                <rect x="382" y="40" width="36" height="7" rx="2" fill="rgba(37,99,235,0.1)" stroke="rgba(37,99,235,0.3)" stroke-width="0.5"/>
+                <!-- Nav: CTA button placeholder -->
+                <rect x="714" y="37" width="62" height="16" rx="3"
+                      fill="rgba(37,99,235,0.2)" stroke="rgba(37,99,235,0.6)" stroke-width="0.8"/>
+                <text x="745" y="48" font-family="'Courier New',monospace" font-size="6.5"
+                      fill="rgba(37,99,235,0.8)" text-anchor="middle">CTA</text>
+                <!-- Nav label -->
+                <text x="30" y="24" font-family="'Courier New',monospace" font-size="7.5"
+                      fill="rgba(37,99,235,0.55)" letter-spacing="0.06em">NAVIGATION</text>
+
+                <!-- ── Wireframe: Hero Section ── -->
+                <!-- Full-width hero box -->
+                <rect x="30" y="84" width="760" height="210"
+                      fill="rgba(37,99,235,0.04)" stroke="rgba(37,99,235,0.35)"
+                      stroke-width="0.8" stroke-dasharray="5,3"/>
+                <text x="30" y="80" font-family="'Courier New',monospace" font-size="7.5"
+                      fill="rgba(37,99,235,0.55)" letter-spacing="0.06em">HERO — FULL BLEED IMAGE + OVERLAY</text>
+
+                <!-- Hero: text block (left) -->
+                <rect x="46" y="102" width="340" height="170"
+                      fill="rgba(37,99,235,0.07)" stroke="rgba(37,99,235,0.30)"
+                      stroke-width="0.7" stroke-dasharray="3,3"/>
+                <!-- Eyebrow text line -->
+                <rect x="62" y="116" width="90" height="6" rx="1.5"
+                      fill="rgba(37,99,235,0.2)" stroke="none"/>
+                <!-- Heading lines -->
+                <rect x="62" y="130" width="260" height="16" rx="2"
+                      fill="rgba(37,99,235,0.12)" stroke="rgba(37,99,235,0.25)" stroke-width="0.5"/>
+                <rect x="62" y="152" width="200" height="16" rx="2"
+                      fill="rgba(37,99,235,0.12)" stroke="rgba(37,99,235,0.25)" stroke-width="0.5"/>
+                <!-- Body text lines -->
+                <rect x="62" y="178" width="240" height="5" rx="1" fill="rgba(37,99,235,0.12)"/>
+                <rect x="62" y="188" width="210" height="5" rx="1" fill="rgba(37,99,235,0.12)"/>
+                <rect x="62" y="198" width="190" height="5" rx="1" fill="rgba(37,99,235,0.12)"/>
+                <!-- CTA buttons -->
+                <rect x="62" y="216" width="96" height="22" rx="3"
+                      fill="rgba(37,99,235,0.22)" stroke="rgba(37,99,235,0.6)" stroke-width="0.8"/>
+                <rect x="168" y="216" width="80" height="22" rx="3"
+                      fill="none" stroke="rgba(37,99,235,0.35)" stroke-width="0.8"/>
+
+                <!-- Hero: image placeholder (right) -->
+                <rect x="410" y="102" width="364" height="170"
+                      fill="rgba(37,99,235,0.06)" stroke="rgba(37,99,235,0.28)"
+                      stroke-width="0.7" stroke-dasharray="3,3"/>
+                <!-- Image placeholder X -->
+                <line x1="410" y1="102" x2="774" y2="272" stroke="rgba(37,99,235,0.15)" stroke-width="0.8"/>
+                <line x1="774" y1="102" x2="410" y2="272" stroke="rgba(37,99,235,0.15)" stroke-width="0.8"/>
+                <text x="592" y="192" font-family="'Courier New',monospace" font-size="8"
+                      fill="rgba(37,99,235,0.35)" text-anchor="middle">FEATURED IMAGE</text>
+                <text x="592" y="203" font-family="'Courier New',monospace" font-size="7"
+                      fill="rgba(37,99,235,0.25)" text-anchor="middle">1600 × 900px</text>
+
+                <!-- ── Wireframe: Product Cards ── -->
+                <text x="30" y="313" font-family="'Courier New',monospace" font-size="7.5"
+                      fill="rgba(37,99,235,0.55)" letter-spacing="0.06em">PRODUCT GRID — 3 COLUMNS</text>
+                <!-- Card 1 -->
+                <rect x="30" y="318" width="232" height="162"
+                      fill="rgba(37,99,235,0.04)" stroke="rgba(37,99,235,0.32)"
+                      stroke-width="0.8" stroke-dasharray="4,3"/>
+                <rect x="30" y="318" width="232" height="100"
+                      fill="rgba(37,99,235,0.07)" stroke="none"/>
+                <line x1="30" y1="318" x2="262" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
+                <line x1="262" y1="318" x2="30" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
+                <rect x="48" y="428" width="120" height="6" rx="1.5" fill="rgba(37,99,235,0.15)"/>
+                <rect x="48" y="440" width="60"  height="6" rx="1.5" fill="rgba(37,99,235,0.22)"/>
+                <rect x="192" y="436" width="52" height="16" rx="2.5"
+                      fill="rgba(37,99,235,0.2)" stroke="rgba(37,99,235,0.4)" stroke-width="0.6"/>
+                <!-- Card 2 -->
+                <rect x="294" y="318" width="232" height="162"
+                      fill="rgba(37,99,235,0.04)" stroke="rgba(37,99,235,0.32)"
+                      stroke-width="0.8" stroke-dasharray="4,3"/>
+                <rect x="294" y="318" width="232" height="100"
+                      fill="rgba(37,99,235,0.07)" stroke="none"/>
+                <line x1="294" y1="318" x2="526" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
+                <line x1="526" y1="318" x2="294" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
+                <rect x="312" y="428" width="120" height="6" rx="1.5" fill="rgba(37,99,235,0.15)"/>
+                <rect x="312" y="440" width="60"  height="6" rx="1.5" fill="rgba(37,99,235,0.22)"/>
+                <rect x="456" y="436" width="52" height="16" rx="2.5"
+                      fill="rgba(37,99,235,0.2)" stroke="rgba(37,99,235,0.4)" stroke-width="0.6"/>
+                <!-- Card 3 -->
+                <rect x="558" y="318" width="232" height="162"
+                      fill="rgba(37,99,235,0.04)" stroke="rgba(37,99,235,0.32)"
+                      stroke-width="0.8" stroke-dasharray="4,3"/>
+                <rect x="558" y="318" width="232" height="100"
+                      fill="rgba(37,99,235,0.07)" stroke="none"/>
+                <line x1="558" y1="318" x2="790" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
+                <line x1="790" y1="318" x2="558" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
+                <rect x="576" y="428" width="120" height="6" rx="1.5" fill="rgba(37,99,235,0.15)"/>
+                <rect x="576" y="440" width="60"  height="6" rx="1.5" fill="rgba(37,99,235,0.22)"/>
+                <rect x="720" y="436" width="52" height="16" rx="2.5"
+                      fill="rgba(37,99,235,0.2)" stroke="rgba(37,99,235,0.4)" stroke-width="0.6"/>
+
+                <!-- ── Dimension annotation lines ── -->
+                <!-- Width annotation -->
+                <line x1="30" y1="498" x2="790" y2="498"
+                      stroke="rgba(37,99,235,0.22)" stroke-width="0.7" stroke-dasharray="2,4"/>
+                <line x1="30"  y1="494" x2="30"  y2="502" stroke="rgba(37,99,235,0.35)" stroke-width="0.8"/>
+                <line x1="790" y1="494" x2="790" y2="502" stroke="rgba(37,99,235,0.35)" stroke-width="0.8"/>
+                <text x="410" y="497" font-family="'Courier New',monospace" font-size="6.5"
+                      fill="rgba(37,99,235,0.40)" text-anchor="middle">1440px — FULL WIDTH LAYOUT</text>
+
+                <!-- ── The animated bezier draw path ── -->
+                <!-- Glow (wider, behind) -->
+                <path id="draw-path-glow"
+                      d="M 68,50 C 120,80 160,160 280,190 C 380,215 460,200 560,248 C 640,285 700,370 752,454"
+                      stroke="#2563EB" stroke-width="6" fill="none" opacity="0.35"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+                <!-- Crisp line (on top) -->
+                <path id="draw-path"
+                      d="M 68,50 C 120,80 160,160 280,190 C 380,215 460,200 560,248 C 640,285 700,370 752,454"
+                      stroke="#2563EB" stroke-width="1.8" fill="none"
+                      filter="url(#lineGlow)"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+
+                <!-- Anchor points — appear along the path -->
+                <circle id="anchor-start" cx="68"  cy="50"  r="5" fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" opacity="0" filter="url(#dotGlow)"/>
+                <circle id="anchor-mid1"  cx="280" cy="190" r="4.5" fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1" opacity="0" filter="url(#dotGlow)"/>
+                <circle id="anchor-mid2"  cx="560" cy="248" r="4.5" fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1" opacity="0" filter="url(#dotGlow)"/>
+                <circle id="anchor-end"   cx="752" cy="454" r="5" fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" opacity="0" filter="url(#dotGlow)"/>
+
+                <!-- Bezier handle lines (appear mid-animation, subtle) -->
+                <line id="handle-1" x1="68" y1="50" x2="120" y2="80"
+                      stroke="rgba(37,99,235,0.35)" stroke-width="0.8" stroke-dasharray="2,2" opacity="0"/>
+                <line id="handle-2" x1="752" y1="454" x2="700" y2="370"
+                      stroke="rgba(37,99,235,0.35)" stroke-width="0.8" stroke-dasharray="2,2" opacity="0"/>
+
+                <!-- ── Cursor (SVG pen tool, animates along path) ── -->
+                <g id="cursor-el" opacity="0">
+                  <!-- Shadow for depth -->
+                  <path d="M 0,0 L 0,19 L 5.5,14.5 L 8.5,22 L 11,21 L 8,13.5 L 14.5,13.5 Z"
+                        fill="rgba(0,0,0,0.3)" transform="translate(1.5,1.5)"/>
+                  <!-- Arrow body -->
+                  <path d="M 0,0 L 0,19 L 5.5,14.5 L 8.5,22 L 11,21 L 8,13.5 L 14.5,13.5 Z"
+                        fill="white" stroke="rgba(30,30,40,0.5)" stroke-width="0.6"
+                        stroke-linejoin="round"/>
+                  <!-- Bezier anchor indicator (blue dot) -->
+                  <circle cx="0" cy="0" r="4.5" fill="#2563EB" stroke="white" stroke-width="1.8"/>
+                  <circle cx="0" cy="0" r="2"   fill="white" opacity="0.6"/>
+                </g>
+
+              </svg>
+            </div><!-- /blueprint-layer -->
+
+            <!-- ── Finished luxury website layer ── -->
+            <div id="finished-layer">
+              <div class="fin-site">
+
+                <!-- Nav -->
+                <nav class="fin-nav">
+                  <span class="fin-brand">FLORA</span>
+                  <div class="fin-nav-links">
+                    <span>Shop</span><span>Collections</span><span>About</span><span>Journal</span>
+                  </div>
+                  <button class="fin-nav-cta">Cart (2)</button>
+                </nav>
+
+                <!-- Hero -->
+                <div class="fin-hero">
+                  <img
+                    class="fin-hero-img"
+                    src="https://images.unsplash.com/photo-1490750967868-88df5691cc08?auto=format&fit=crop&w=1920&q=85"
+                    alt="Vibrant wildflower meadow"
+                  />
+                  <div class="fin-hero-overlay"></div>
+                  <div class="fin-hero-content">
+                    <span class="fin-eyebrow">New Collection — 2025</span>
+                    <h2 class="fin-heading">Where Nature<br>Meets Home.</h2>
+                    <p class="fin-sub">Handcrafted objects that bring the living world indoors.</p>
+                    <div class="fin-btn-row">
+                      <button class="fin-btn-primary">Shop the Collection</button>
+                      <button class="fin-btn-ghost">View Lookbook →</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Product cards -->
+                <div class="fin-products">
+                  <div class="fin-card">
+                    <div class="fin-card-thumb">
+                      <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=400&q=80" alt="Botanical arrangement"/>
+                    </div>
+                    <div class="fin-card-info">
+                      <span class="fin-card-name">Botanical Wreath</span>
+                      <span class="fin-card-price">$58</span>
+                    </div>
+                  </div>
+                  <div class="fin-card">
+                    <div class="fin-card-thumb">
+                      <img src="https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?auto=format&fit=crop&w=400&q=80" alt="Cedar candle"/>
+                    </div>
+                    <div class="fin-card-info">
+                      <span class="fin-card-name">Cedar Candle</span>
+                      <span class="fin-card-price">$34</span>
+                    </div>
+                  </div>
+                  <div class="fin-card">
+                    <div class="fin-card-thumb">
+                      <img src="https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?auto=format&fit=crop&w=400&q=80" alt="Ceramic vase"/>
+                    </div>
+                    <div class="fin-card-info">
+                      <span class="fin-card-name">Ceramic Vase</span>
+                      <span class="fin-card-price">$46</span>
+                    </div>
+                  </div>
+                </div>
+
               </div>
-            </div>
-
-            <!-- E-commerce nav — fades in when MacBook is revealed -->
-            <div id="ecom-nav" aria-hidden="true">
-              <span class="ecom-brand">FLORA</span>
-              <div class="ecom-links">
-                <span>Shop</span><span>Collections</span><span>About</span><span>Journal</span>
-              </div>
-              <button class="ecom-cta">View Cart</button>
-            </div>
+            </div><!-- /finished-layer -->
 
           </div><!-- /laptop-screen-content -->
 
-          <!-- ④ MACBOOK SVG FRAME — rendered above screen-content.
-               The screen area (x=90 y=30 w=820 h=510) is intentionally
-               left empty so screen-content shows through. -->
+          <!-- ④ MACBOOK SVG FRAME — screen area (x=90 y=30 w=820 h=510) left transparent -->
           <svg id="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
               <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%"   stop-color="#e0e0e0"/>
-                <stop offset="100%" stop-color="#b8b8b8"/>
+                <stop offset="0%"   stop-color="#e2e2e2"/>
+                <stop offset="100%" stop-color="#bababa"/>
               </linearGradient>
               <linearGradient id="baseGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%"   stop-color="#d8d8d8"/>
-                <stop offset="100%" stop-color="#a8a8a8"/>
-              </linearGradient>
-              <linearGradient id="lidEdge" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%"   stop-color="#c8c8c8"/>
-                <stop offset="100%" stop-color="#909090"/>
+                <stop offset="0%"   stop-color="#d6d6d6"/>
+                <stop offset="100%" stop-color="#a4a4a4"/>
               </linearGradient>
             </defs>
 
-            <!-- ── LID ── -->
-            <!-- Outer aluminum body -->
+            <!-- Outer aluminum lid -->
             <rect x="44" y="4" width="912" height="558" rx="14" fill="url(#lidGrad)"/>
-            <!-- Subtle edge highlight -->
-            <rect x="44" y="4" width="912" height="558" rx="14" fill="none" stroke="#999" stroke-width="1.2"/>
-            <!-- Inner lid face (slightly darker) -->
-            <rect x="52" y="10" width="896" height="548" rx="10" fill="#c8c8c8"/>
+            <rect x="44" y="4" width="912" height="558" rx="14" fill="none" stroke="#9a9a9a" stroke-width="1.2"/>
+            <rect x="52" y="10" width="896" height="548" rx="10" fill="#c4c4c4"/>
 
-            <!-- ── BEZEL  (dark frame around screen) ── -->
-            <!-- Top bezel -->
-            <rect x="70" y="18" width="860" height="14" fill="#1a1a1e"/>
-            <!-- Left bezel -->
-            <rect x="70" y="18" width="20" height="528" fill="#1a1a1e"/>
-            <!-- Right bezel -->
-            <rect x="910" y="18" width="20" height="528" fill="#1a1a1e"/>
-            <!-- Bottom bezel -->
-            <rect x="70" y="542" width="860" height="16" fill="#1a1a1e"/>
+            <!-- Bezel — top -->
+            <rect x="70" y="18" width="860" height="14" fill="#141416"/>
+            <!-- Bezel — left -->
+            <rect x="70" y="18" width="20" height="530" fill="#141416"/>
+            <!-- Bezel — right -->
+            <rect x="910" y="18" width="20" height="530" fill="#141416"/>
+            <!-- Bezel — bottom -->
+            <rect x="70" y="544" width="860" height="14" fill="#141416"/>
 
-            <!-- Screen area: x=90 y=30 w=820 h=510 is left transparent -->
-            <!-- Camera dot -->
-            <circle cx="500" cy="12" r="4.5" fill="#2a2a2e"/>
-            <circle cx="500" cy="12" r="2"   fill="#111" opacity="0.6"/>
+            <!-- Screen area x=90 y=30 w=820 h=510 is transparent — screen-content shows through -->
 
-            <!-- ── HINGE ── -->
-            <rect x="34"  y="558" width="932" height="10" rx="3" fill="#888"/>
-            <rect x="44"  y="560" width="912" height="6"  fill="#aaa" opacity="0.5"/>
+            <!-- Camera -->
+            <circle cx="500" cy="12" r="4.5" fill="#222"/>
+            <circle cx="500" cy="12" r="2"   fill="#0a0a0a" opacity="0.7"/>
 
-            <!-- ── BASE ── -->
-            <!-- Main base shape -->
-            <path d="M20,568 Q20,572 24,574 L976,574 Q980,572 980,568 Z" fill="#c0c0c0"/>
-            <path d="M24,574 L976,574 L956,618 Q952,628 920,630 L80,630 Q48,628 44,618 Z" fill="url(#baseGrad)" stroke="#999" stroke-width="0.8"/>
-            <!-- Keyboard -->
-            <rect x="90" y="578" width="820" height="40" rx="4" fill="#b0b0b0" opacity="0.45"/>
+            <!-- Hinge -->
+            <rect x="34"  y="558" width="932" height="10" rx="2.5" fill="#868686"/>
+            <rect x="44"  y="561" width="912" height="5"  fill="#a8a8a8" opacity="0.4"/>
+
+            <!-- Base body -->
+            <path d="M 18,568 Q 18,572 22,574 L 978,574 Q 982,572 982,568 Z" fill="#bcbcbc"/>
+            <path d="M 22,574 L 978,574 L 958,620 Q 954,630 920,632 L 80,632 Q 46,630 42,620 Z" fill="url(#baseGrad)" stroke="#9a9a9a" stroke-width="0.8"/>
+
+            <!-- Keyboard area -->
+            <rect x="88"  y="578" width="824" height="38" rx="3" fill="#b0b0b0" opacity="0.4"/>
             <!-- Trackpad -->
-            <rect x="380" y="582" width="240" height="28" rx="6" fill="#b8b8b8" stroke="#aaa" stroke-width="0.8"/>
-            <!-- Speaker grilles left -->
-            <g fill="#888" opacity="0.7">
-              <rect x="100" y="584" width="2" height="20" rx="1"/>
-              <rect x="106" y="584" width="2" height="20" rx="1"/>
-              <rect x="112" y="584" width="2" height="20" rx="1"/>
-              <rect x="118" y="584" width="2" height="20" rx="1"/>
-              <rect x="124" y="584" width="2" height="20" rx="1"/>
-              <rect x="130" y="584" width="2" height="20" rx="1"/>
+            <rect x="378" y="582" width="244" height="26" rx="5.5" fill="#b4b4b4" stroke="#a0a0a0" stroke-width="0.8"/>
+
+            <!-- Speaker grilles — left -->
+            <g fill="#888" opacity="0.65">
+              <rect x="100" y="585" width="2" height="18" rx="1"/>
+              <rect x="107" y="585" width="2" height="18" rx="1"/>
+              <rect x="114" y="585" width="2" height="18" rx="1"/>
+              <rect x="121" y="585" width="2" height="18" rx="1"/>
+              <rect x="128" y="585" width="2" height="18" rx="1"/>
+              <rect x="135" y="585" width="2" height="18" rx="1"/>
             </g>
-            <!-- Speaker grilles right -->
-            <g fill="#888" opacity="0.7">
-              <rect x="856" y="584" width="2" height="20" rx="1"/>
-              <rect x="862" y="584" width="2" height="20" rx="1"/>
-              <rect x="868" y="584" width="2" height="20" rx="1"/>
-              <rect x="874" y="584" width="2" height="20" rx="1"/>
-              <rect x="880" y="584" width="2" height="20" rx="1"/>
-              <rect x="886" y="584" width="2" height="20" rx="1"/>
+            <!-- Speaker grilles — right -->
+            <g fill="#888" opacity="0.65">
+              <rect x="853" y="585" width="2" height="18" rx="1"/>
+              <rect x="860" y="585" width="2" height="18" rx="1"/>
+              <rect x="867" y="585" width="2" height="18" rx="1"/>
+              <rect x="874" y="585" width="2" height="18" rx="1"/>
+              <rect x="881" y="585" width="2" height="18" rx="1"/>
+              <rect x="888" y="585" width="2" height="18" rx="1"/>
             </g>
-            <!-- Front rubber feet -->
-            <ellipse cx="100"  cy="630" rx="14" ry="5" fill="#777" opacity="0.7"/>
-            <ellipse cx="900"  cy="630" rx="14" ry="5" fill="#777" opacity="0.7"/>
-            <!-- Bottom chamfer -->
-            <path d="M44,630 Q44,638 56,640 L944,640 Q956,638 956,630 Z" fill="#b8b8b8"/>
+
+            <!-- Rubber feet -->
+            <ellipse cx="102"  cy="632" rx="14" ry="5" fill="#747474" opacity="0.7"/>
+            <ellipse cx="898"  cy="632" rx="14" ry="5" fill="#747474" opacity="0.7"/>
+
+            <!-- Front chamfer -->
+            <path d="M 42,632 Q 42,640 54,642 L 946,642 Q 958,640 958,632 Z" fill="#b8b8b8"/>
           </svg>
 
         </div><!-- /laptop-wrap -->
 
         <!-- ⑤ PHONE — right, hidden until State 5 -->
         <div id="phone-device" aria-hidden="true">
-          <svg viewBox="0 0 110 220" xmlns="http://www.w3.org/2000/svg">
+          <svg viewBox="0 0 108 218" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <clipPath id="phoneClip"><rect x="8" y="16" width="94" height="188" rx="8"/></clipPath>
-            </defs>
-            <!-- Body -->
-            <rect x="1" y="1" width="108" height="218" rx="20" fill="#1a1a1e"/>
-            <rect x="1" y="1" width="108" height="218" rx="20" fill="none" stroke="#3a3a3e" stroke-width="1.5"/>
-            <!-- Dynamic island -->
-            <rect x="38" y="7" width="34" height="8" rx="4" fill="#111"/>
-            <!-- Screen -->
-            <rect x="8" y="16" width="94" height="188" rx="8" fill="#0a0a0a"/>
-            <!-- Meadow photo clipped to screen -->
-            <image href="https://images.unsplash.com/photo-1490750967868-88df5691cc08?auto=format&fit=crop&w=400&q=80"
-                   x="8" y="16" width="94" height="188" clip-path="url(#phoneClip)" preserveAspectRatio="xMidYMid slice"/>
-            <!-- Nav -->
-            <rect x="8" y="16" width="94" height="22" fill="rgba(18,18,20,0.85)"/>
-            <text x="16" y="30" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="white" letter-spacing="1">FLORA</text>
-            <!-- Bottom gradient + CTA -->
-            <defs>
-              <linearGradient id="phoneGrad" x1="0" y1="0" x2="0" y2="1">
+              <clipPath id="phoneClip"><rect x="7" y="14" width="94" height="190" rx="8"/></clipPath>
+              <linearGradient id="phoneHeroGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stop-color="transparent"/>
-                <stop offset="100%" stop-color="rgba(18,18,20,0.92)"/>
+                <stop offset="100%" stop-color="rgba(10,10,12,0.92)"/>
               </linearGradient>
             </defs>
-            <rect x="8" y="140" width="94" height="64" fill="url(#phoneGrad)"/>
-            <text x="16" y="168" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="white">Nature</text>
-            <text x="16" y="180" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="white">Meets Home.</text>
-            <rect x="16" y="184" width="48" height="13" rx="3" fill="#2563EB"/>
-            <text x="24" y="193" font-family="Archivo,sans-serif" font-size="6" fill="white">Shop now</text>
+            <rect x="0" y="0" width="108" height="218" rx="20" fill="#1a1a1e"/>
+            <rect x="0" y="0" width="108" height="218" rx="20" fill="none" stroke="#333" stroke-width="1.2"/>
+            <rect x="38" y="6" width="32" height="8" rx="4" fill="#111"/>
+            <rect x="7" y="14" width="94" height="190" rx="8" fill="#0a0a0a"/>
+            <image href="https://images.unsplash.com/photo-1490750967868-88df5691cc08?auto=format&fit=crop&w=400&q=80"
+                   x="7" y="14" width="94" height="190" clip-path="url(#phoneClip)" preserveAspectRatio="xMidYMid slice"/>
+            <!-- Nav -->
+            <rect x="7" y="14" width="94" height="20" fill="rgba(10,10,12,0.92)"/>
+            <text x="16" y="27" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="white" letter-spacing="1.2">FLORA</text>
+            <!-- Bottom overlay -->
+            <rect x="7" y="140" width="94" height="64" fill="url(#phoneHeroGrad)"/>
+            <text x="16" y="168" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Where Nature</text>
+            <text x="16" y="180" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Meets Home.</text>
+            <rect x="16" y="186" width="46" height="12" rx="3" fill="#2563EB"/>
+            <text x="24" y="195" font-family="Archivo,sans-serif" font-size="6" fill="white">Shop Now</text>
             <!-- Home indicator -->
-            <rect x="40" y="207" width="30" height="3" rx="1.5" fill="#444"/>
+            <rect x="39" y="206" width="30" height="3" rx="1.5" fill="#333"/>
           </svg>
         </div>
 
       </div><!-- /lateral-wrap -->
     </div><!-- /device-scene -->
 
-    <!-- ⑥ HERO TEXT — floats above, fades out on scroll -->
-    <div id="hero-text">
+    <!-- ── HERO TEXT (highest z-index, fades out on scroll) ── -->
+    <div id="hero-text" aria-live="polite">
+      <p id="hero-eyebrow">Blueprint to Reality</p>
       <h1 id="hero-headline">not just a website —<br/>a story.</h1>
-      <p id="hero-sub">scroll to discover</p>
+      <div id="hero-rule"></div>
+      <p id="hero-sub">scroll to watch it come alive</p>
     </div>
 
     <!-- Scroll hint -->
@@ -596,183 +948,216 @@
     </div>
 
   </div><!-- /sticky-viewport -->
-</section><!-- /scroll-section -->
+</section>
 
-<!-- ══════════════════════════════════════════
-     AFTER SECTION
-══════════════════════════════════════════ -->
+<!-- ── AFTER SECTION ── -->
 <section id="after-section">
-  <h2>Your story, beautifully told.</h2>
-  <p>Every great brand deserves a website that doesn't just exist — it captivates, guides, and converts. Across every device, every screen, every scroll.</p>
-  <a href="#" class="cta-btn">Let's work together</a>
+  <h2>Your story, beautifully crafted.</h2>
+  <p>From the first wireframe to the final pixel — every element designed with intention, every interaction built for impact. Across every device, every screen, every scroll.</p>
+  <a href="contact.html" class="cta-btn">Start your project</a>
 </section>
 
 
 <script>
   gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
-  // ── References ──
-  const deviceScene      = document.getElementById('device-scene');
-  const beeContainer     = document.getElementById('bee-container');
-  const berryBush        = document.getElementById('berry-bush-container');
-  const ecomNav          = document.getElementById('ecom-nav');
-  const heroHeadline     = document.getElementById('hero-headline');
-  const heroSub          = document.getElementById('hero-sub');
-  const scrollHint       = document.getElementById('scroll-hint');
-  const tabletDevice     = document.getElementById('tablet-device');
-  const phoneDevice      = document.getElementById('phone-device');
+  // ── Element references ──
+  const deviceScene  = document.getElementById('device-scene');
+  const bpLayer      = document.getElementById('blueprint-layer');
+  const finLayer     = document.getElementById('finished-layer');
+  const cursorEl     = document.getElementById('cursor-el');
+  const drawPath     = document.getElementById('draw-path');
+  const drawGlow     = document.getElementById('draw-path-glow');
+  const tabletDev    = document.getElementById('tablet-device');
+  const phoneDev     = document.getElementById('phone-device');
 
-  // ════════════════════════════════════════════════
-  //  COMPUTE INITIAL SCALE
-  //  Goal: make the MacBook screen fill the viewport
+  // ═══════════════════════════════════════════════════
+  //  INITIAL SCALE
+  //  Scales device-scene up so the MacBook screen
+  //  fills the full viewport on load.
   //
-  //  Laptop wrap width at 1× = min(960, 90vw)
-  //  Screen width at 1×  = laptopW × 0.82  (= 820/1000)
-  //  Screen height at 1× = laptopW × 0.51  (= 510/1000)
-  // ════════════════════════════════════════════════
+  //  Laptop wrap at 1×: min(960, 90vw)
+  //  Screen width  at 1×: laptopW × 0.82  (= 820/1000)
+  //  Screen height at 1×: laptopW × 0.51  (= 510/1000)
+  // ═══════════════════════════════════════════════════
   function computeInitialScale() {
-    const laptopW  = Math.min(960, window.innerWidth * 0.9);
-    const screenW  = laptopW * 0.82;
-    const screenH  = laptopW * 0.51;
-    const scaleX   = window.innerWidth  / screenW;
-    const scaleY   = window.innerHeight / screenH;
-    return Math.max(scaleX, scaleY) * 1.015; // 1.5% overscan prevents any edge gaps
+    const W = Math.min(960, window.innerWidth * 0.9);
+    return Math.max(
+      window.innerWidth  / (W * 0.82),
+      window.innerHeight / (W * 0.51)
+    ) * 1.018;
   }
 
   let INITIAL_SCALE = computeInitialScale();
-
-  // Apply initial scale immediately (before scroll)
   gsap.set(deviceScene, { scale: INITIAL_SCALE, transformOrigin: 'center center' });
 
-  // ════════════════════════════════════════════════
-  //  MAIN TIMELINE — scrubbed to scroll position
-  // ════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════
+  //  PATH LENGTH — needed for stroke-dashoffset draw
+  // ═══════════════════════════════════════════════════
+  const pathLen     = drawPath.getTotalLength();
+  const pathLenGlow = drawGlow.getTotalLength();
+
+  gsap.set(drawPath, {
+    attr: { 'stroke-dasharray': pathLen, 'stroke-dashoffset': pathLen }
+  });
+  gsap.set(drawGlow, {
+    attr: { 'stroke-dasharray': pathLenGlow, 'stroke-dashoffset': pathLenGlow }
+  });
+
+  // ═══════════════════════════════════════════════════
+  //  MAIN SCROLL TIMELINE
+  //  All animation scrubbed to scroll position.
+  //  scrub: 1.1 → slight lag for silky feel
+  // ═══════════════════════════════════════════════════
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: '#scroll-section',
       start:   'top top',
       end:     'bottom bottom',
-      scrub:   1.3,
-      onUpdate: (self) => {
-        // Only run wing animation while bee is in-flight
-        const p = self.progress;
-        beeContainer.classList.toggle('bee-flying', p > 0.09 && p < 0.36);
-      },
-    },
+      scrub:   1.1,
+    }
   });
 
-  // ─── 0.00 → 0.12  :  Hero text fades out ───
-  tl.to([heroHeadline, heroSub], {
+  // ─── 0.00–0.10  :  STATE 1 → 2  —  Hero text fades out ───
+  tl.to(['#hero-eyebrow', '#hero-headline', '#hero-rule', '#hero-sub', '#scroll-hint'], {
     opacity: 0,
-    y: -24,
-    duration: 0.10,
+    y: -22,
+    duration: 0.09,
     ease: 'power2.in',
-  }, 0.00)
-  .to(scrollHint, {
-    opacity: 0,
-    duration: 0.06,
-    ease: 'power2.in',
-  }, 0.00);
+    stagger: 0.015,
+  }, 0.04);
 
-  // ─── 0.07 → 0.20  :  Berry bush appears ───
-  tl.to(berryBush, {
+  // ─── 0.10–0.14  :  Cursor appears + anchor start ───
+  tl.to(cursorEl, {
     opacity: 1,
-    scale: 1,
-    y: 0,
-    duration: 0.14,
-    ease: 'back.out(1.3)',
-  }, 0.07);
+    duration: 0.04,
+    ease: 'power2.out',
+  }, 0.10);
 
-  // ─── 0.10 → 0.36  :  BEE FLIES ARC PATH ───
-  //  Coordinates are pixel offsets from the bee's
-  //  initial CSS position (left:21%, top:56%) inside
-  //  screen-content. Berry bush center is approx
-  //  right:6%+13% = right:19% = left:81%, bottom:4%+24%=28%.
-  //  At a 820×510 screen: bee start ≈ (172, 286).
-  //  Berry bush centre ≈ (664, 360). Delta ≈ (492, 74).
-  tl.to(beeContainer, {
-    duration: 0.26,
+  tl.to('#anchor-start', {
+    attr: { opacity: 1 },
+    duration: 0.03,
+    ease: 'power2.out',
+  }, 0.10);
+
+  // ─── 0.10–0.44  :  STATE 2  —  Path draws + cursor moves ───
+  // Both the glow and crisp line draw in sync
+  tl.to(drawPath, {
+    attr: { 'stroke-dashoffset': 0 },
+    duration: 0.34,
+    ease: 'power1.inOut',
+  }, 0.10);
+
+  tl.to(drawGlow, {
+    attr: { 'stroke-dashoffset': 0 },
+    duration: 0.34,
+    ease: 'power1.inOut',
+  }, 0.10);
+
+  // Cursor follows the path (coordinates in SVG space — GSAP aligns automatically)
+  tl.to(cursorEl, {
+    duration: 0.34,
     ease: 'power1.inOut',
     motionPath: {
-      path: [
-        { x: 0,   y: 0   },
-        { x: 90,  y: -130 },
-        { x: 240, y: -155 },
-        { x: 370, y: -90  },
-        { x: 492, y: 74   },
-      ],
-      curviness: 1.25,
-      autoRotate: true,
+      path: '#draw-path',
+      align: '#draw-path',
+      alignOrigin: [0, 0],
+      autoRotate: false,
     },
   }, 0.10);
 
-  // ─── 0.36 → 0.62  :  ZOOM-OUT — MacBook revealed ───
+  // Anchor dots appear progressively along the path
+  tl.to('#anchor-mid1', { attr: { opacity: 1 }, duration: 0.04, ease: 'power2.out' }, 0.24);
+  tl.to('#handle-1',    { attr: { opacity: 1 }, duration: 0.06, ease: 'power2.out' }, 0.24);
+  tl.to('#anchor-mid2', { attr: { opacity: 1 }, duration: 0.04, ease: 'power2.out' }, 0.34);
+  tl.to('#anchor-end',  { attr: { opacity: 1 }, duration: 0.04, ease: 'power2.out' }, 0.42);
+  tl.to('#handle-2',    { attr: { opacity: 1 }, duration: 0.06, ease: 'power2.out' }, 0.42);
+
+  // ─── 0.44–0.62  :  STATE 3  —  Reality Reveal ───
+  // Cursor flashes then disappears
+  tl.to(cursorEl, {
+    opacity: 0,
+    scale: 0,
+    duration: 0.05,
+    ease: 'power2.in',
+    transformOrigin: 'center center',
+  }, 0.44);
+
+  // Blueprint fades out
+  tl.to(bpLayer, {
+    opacity: 0,
+    duration: 0.14,
+    ease: 'power2.in',
+  }, 0.44);
+
+  // Finished site wipes in left → right
+  tl.to(finLayer, {
+    clipPath: 'inset(0 0% 0 0)',
+    duration: 0.18,
+    ease: 'power2.out',
+  }, 0.46);
+
+  // ─── 0.60–0.76  :  STATE 4  —  Zoom-out: MacBook reveal ───
   tl.to(deviceScene, {
     scale: 1,
-    duration: 0.26,
+    duration: 0.22,
     ease: 'expo.inOut',
-  }, 0.36);
+  }, 0.60);
 
-  // Ecom nav fades in as frame becomes visible
-  tl.to(ecomNav, {
-    opacity: 1,
-    duration: 0.14,
-    ease: 'power2.out',
-  }, 0.52);
-
-  // ─── 0.64 → 0.84  :  FULL PULL-BACK — all devices ───
+  // ─── 0.76–0.92  :  STATE 5  —  Full pull-back + side devices ───
   tl.to(deviceScene, {
     scale: 0.80,
-    duration: 0.20,
+    duration: 0.18,
     ease: 'power2.inOut',
-  }, 0.64);
+  }, 0.76);
 
   // Tablet slides in from left
-  tl.to(tabletDevice, {
+  tl.to(tabletDev, {
     opacity: 1,
     x: 0,
-    duration: 0.18,
+    duration: 0.16,
     ease: 'back.out(1.2)',
-  }, 0.68);
+  }, 0.79);
 
   // Phone slides in from right
-  tl.to(phoneDevice, {
+  tl.to(phoneDev, {
     opacity: 1,
     x: 0,
-    duration: 0.18,
-    ease: 'back.out(1.2)',
-  }, 0.72);
-
-  // Gentle ambient float at rest
-  tl.to(deviceScene, {
-    y: -6,
     duration: 0.16,
-    ease: 'sine.inOut',
-  }, 0.86);
+    ease: 'back.out(1.2)',
+  }, 0.83);
 
-  // ════════════════════════════════════════════════
-  //  RESIZE — recompute scale and refresh triggers
-  // ════════════════════════════════════════════════
+  // Gentle final float
+  tl.to(deviceScene, {
+    y: -8,
+    duration: 0.10,
+    ease: 'sine.out',
+  }, 0.90);
+
+  // ═══════════════════════════════════════════════════
+  //  RESIZE — recompute scale & refresh ScrollTrigger
+  // ═══════════════════════════════════════════════════
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       INITIAL_SCALE = computeInitialScale();
-      // Only reset to initial scale if scroll is at top
-      if (window.scrollY < 50) {
+      if (window.scrollY < 60) {
         gsap.set(deviceScene, { scale: INITIAL_SCALE });
       }
       ScrollTrigger.refresh();
-    }, 200);
+    }, 220);
   });
 
-  // ════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════
   //  REDUCED MOTION
-  // ════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     ScrollTrigger.getAll().forEach(st => st.kill());
-    gsap.set(deviceScene, { scale: 0.85 });
-    gsap.set([heroHeadline, heroSub, scrollHint], { opacity: 1, y: 0 });
+    gsap.set(deviceScene,  { scale: 0.85 });
+    gsap.set(finLayer,     { clipPath: 'inset(0 0% 0 0)' });
+    gsap.set(bpLayer,      { opacity: 0 });
+    gsap.set(['#hero-eyebrow','#hero-headline','#hero-rule','#hero-sub'], { opacity: 1, y: 0 });
   }
 </script>
 
