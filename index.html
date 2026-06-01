@@ -1093,102 +1093,82 @@
   gsap.set(drawGlow, { attr: { 'stroke-dasharray': pathLenGlow, 'stroke-dashoffset': pathLenGlow } });
 
   // ════════════════════════════════════════
-  //  MAIN SCROLL TIMELINE — scrubbed
-  //  220vh section. scrub:1.2 = smooth lag that forces the playhead to
-  //  chase scroll position, so fast scrollers still see every state.
-  //  fastScrollEnd snaps the playhead to its target when inertia ends,
-  //  preventing a stuck mid-animation on momentum scrollers.
+  //  MAIN SCROLL TIMELINE
+  //  Budget: 0.00–0.10 = intro (States 1-3, "quick trigger")
+  //          0.10–1.00 = laptop sequence (States 4-5, "main event", 90%)
+  //  scrub:1.5 ensures the playhead always catches up through every
+  //  intermediate frame, even on fast scrolls.
   // ════════════════════════════════════════
   const tl = gsap.timeline({
     scrollTrigger: {
-      trigger:      '#scroll-section',
-      start:        'top top',
-      end:          'bottom bottom',
-      scrub:        1.2,
-      fastScrollEnd: true,
+      trigger:         '#scroll-section',
+      start:           'top top',
+      end:             'bottom bottom',
+      scrub:           1.5,
+      fastScrollEnd:   true,
       preventOverlaps: true,
     },
   });
 
-  // ── 0.00–0.04  STATE 1  :  Hero text exits immediately on scroll ──
+  // ── 0.00–0.03  Hero text + scroll hint vanish instantly ──
   tl.to(['#hero-eyebrow', '#hero-headline', '#hero-rule', '#hero-sub', '#scroll-hint'], {
-    opacity: 0,
-    y: -22,
-    duration: 0.04,
-    ease: 'power2.in',
-    stagger: 0.006,
+    opacity: 0, y: -22,
+    duration: 0.03,
+    ease: 'power3.in',
+    stagger: 0.004,
   }, 0.00);
 
-  // ── 0.03  :  Cursor + start anchor appear (overlaps hero exit slightly) ──
-  tl.to(cursorEl,        { opacity: 1, duration: 0.02, ease: 'power2.out' }, 0.03);
-  tl.to('#anchor-start', { attr: { opacity: 1 }, duration: 0.01 }, 0.03);
+  // ── 0.02–0.06  Blueprint draws + cursor follows ──
+  tl.to(cursorEl,        { opacity: 1, duration: 0.01 }, 0.02);
+  tl.to('#anchor-start', { attr: { opacity: 1 }, duration: 0.01 }, 0.02);
 
-  // ── 0.03–0.11  STATE 2  :  Path draws + cursor follows ──
-  tl.to(drawPath, {
-    attr: { 'stroke-dashoffset': 0 },
-    duration: 0.08,
-    ease: 'power1.inOut',
-  }, 0.03);
-  tl.to(drawGlow, {
-    attr: { 'stroke-dashoffset': 0 },
-    duration: 0.08,
-    ease: 'power1.inOut',
-  }, 0.03);
+  tl.to(drawPath, { attr: { 'stroke-dashoffset': 0 }, duration: 0.04, ease: 'none' }, 0.02);
+  tl.to(drawGlow, { attr: { 'stroke-dashoffset': 0 }, duration: 0.04, ease: 'none' }, 0.02);
   tl.to(cursorEl, {
-    duration: 0.08,
-    ease: 'power1.inOut',
-    motionPath: {
-      path: '#draw-path',
-      align: '#draw-path',
-      alignOrigin: [0, 0],
-      autoRotate: false,
-    },
-  }, 0.03);
+    duration: 0.04, ease: 'none',
+    motionPath: { path: '#draw-path', align: '#draw-path', alignOrigin: [0,0], autoRotate: false },
+  }, 0.02);
 
-  // Anchor dots scattered across drawing window
-  tl.to('#anchor-mid1', { attr: { opacity: 1 }, duration: 0.01 }, 0.06);
-  tl.to('#handle-1',    { attr: { opacity: 1 }, duration: 0.02 }, 0.06);
-  tl.to('#anchor-mid2', { attr: { opacity: 1 }, duration: 0.01 }, 0.09);
-  tl.to('#anchor-end',  { attr: { opacity: 1 }, duration: 0.01 }, 0.10);
-  tl.to('#handle-2',    { attr: { opacity: 1 }, duration: 0.02 }, 0.10);
+  tl.to('#anchor-mid1', { attr: { opacity: 1 }, duration: 0.01 }, 0.03);
+  tl.to('#handle-1',    { attr: { opacity: 1 }, duration: 0.01 }, 0.03);
+  tl.to('#anchor-mid2', { attr: { opacity: 1 }, duration: 0.01 }, 0.04);
+  tl.to('#anchor-end',  { attr: { opacity: 1 }, duration: 0.01 }, 0.05);
+  tl.to('#handle-2',    { attr: { opacity: 1 }, duration: 0.01 }, 0.05);
 
-  // ── 0.11–0.17  STATE 3  :  Reality Reveal ──
-  // Overlap: cursor exits at 0.11, wipe starts at 0.12 (blueprint still mid-fade)
-  // so the engine has continuous work and can't drop a frame gap.
-  tl.to(cursorEl, { opacity: 0, scale: 0.6, duration: 0.02, ease: 'power2.in', transformOrigin: 'center center' }, 0.11);
-  tl.to(bpLayer,  { opacity: 0, duration: 0.07, ease: 'power2.in' }, 0.11);
-  tl.to(finLayer, { clipPath: 'inset(0 0% 0 0)', duration: 0.07, ease: 'power2.out' }, 0.12);
-  // ── States 1–3 done at 0.17 (37vh ≈ 2 scrolls) ──
+  // ── 0.06–0.10  Blueprint fades + clip-wipe reveals finished site ──
+  tl.to(cursorEl, { opacity: 0, scale: 0.6, duration: 0.02, ease: 'power2.in', transformOrigin: 'center center' }, 0.06);
+  tl.to(bpLayer,  { opacity: 0, duration: 0.04, ease: 'power2.in' }, 0.06);
+  tl.to(finLayer, { clipPath: 'inset(0 0% 0 0)', duration: 0.05, ease: 'power2.out' }, 0.07);
+  // ── Intro done at 0.10 — just a quick trigger ──
 
-  // ── 0.15–0.58  STATE 4  :  Zoom-out begins while wipe is still finishing ──
-  // Leading overlap at 0.15 (2% before reveal ends) chains states without a gap.
+  // ── 0.09–0.55  STATE 4  :  MacBook zoom-out (main event, 46% of scroll) ──
+  // Starts 1% before the wipe finishes so there's zero dead space.
+  // expo.inOut gives a heavy, weighty feel — slow start, accelerates, slow end.
   tl.to(deviceScene, {
     scale: 1,
-    duration: 0.43,
+    duration: 0.46,
     ease: 'expo.inOut',
-  }, 0.15);
+  }, 0.09);
 
-  // ── 0.57–0.90  STATE 5  :  Full pull-back + side devices ──
-  // Overlap at 0.57 (1% before zoom ends) keeps the engine busy during handoff.
+  // ── 0.54–0.90  STATE 5  :  Pull-back to device grid (36% of scroll) ──
+  // Overlaps zoom-out by 1% to chain continuously.
   tl.to(deviceScene, {
     scale: 0.80,
-    duration: 0.33,
+    duration: 0.36,
     ease: 'power2.inOut',
-  }, 0.57);
+  }, 0.54);
 
   tl.to(tabletDev, {
-    autoAlpha: 1,
-    x: 0,
-    duration: 0.18,
+    autoAlpha: 1, x: 0,
+    duration: 0.20,
     ease: 'back.out(1.2)',
-  }, 0.63);
+  }, 0.59);
 
   tl.to(phoneDev, {
-    autoAlpha: 1,
-    x: 0,
-    duration: 0.18,
+    autoAlpha: 1, x: 0,
+    duration: 0.20,
     ease: 'back.out(1.2)',
-  }, 0.70);
+  }, 0.67);
 
   // Gentle final float
   tl.to(deviceScene, { y: -8, duration: 0.10, ease: 'sine.out' }, 0.90);
