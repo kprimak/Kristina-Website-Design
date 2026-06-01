@@ -802,18 +802,23 @@
       background: rgba(0,230,200,0.03);
     }
 
-    /* ── LAYER 4 · Intro hero text — floats above ALL moving layers ── */
+    /* ── LAYER 4 · Intro hero text — viewport-fixed, above ALL moving layers ──
+       position:fixed takes it out of #intro-viewport's stacking context
+       entirely, so clip-path / transform on siblings cannot affect it.     */
     #intro-hero-text {
-      position: absolute;
-      inset: 0;
-      z-index: 100;   /* above blueprint (2), tear SVG (1), fragments (6) */
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9000;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      gap: 0;
       pointer-events: none;
+      /* isolate ensures this element's compositing layer is independent */
+      isolation: isolate;
     }
     #intro-eyebrow {
       font-family: 'Archivo', sans-serif;
@@ -1766,6 +1771,14 @@
     duration: 0.20,
     ease: 'power1.inOut',
   }, 0.80);
+
+  // 0.88–0.96 : Fade the fixed text out before the scroll section appears,
+  //             so it doesn't float over the MacBook scrollytelling.
+  introTl.to('#intro-hero-text', {
+    autoAlpha: 0,
+    duration: 0.08,
+    ease: 'power2.in',
+  }, 0.88);
 
   // ════════════════════════════════════════
   //  REDUCED MOTION
