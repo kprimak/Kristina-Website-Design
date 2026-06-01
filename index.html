@@ -802,11 +802,11 @@
       background: rgba(0,230,200,0.03);
     }
 
-    /* ── LAYER 4 · Intro hero text (cream, centred over blueprint) ── */
+    /* ── LAYER 4 · Intro hero text — floats above ALL moving layers ── */
     #intro-hero-text {
       position: absolute;
       inset: 0;
-      z-index: 3;
+      z-index: 100;   /* above blueprint (2), tear SVG (1), fragments (6) */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1695,12 +1695,32 @@
   // Lock the gradient at full visibility before anything starts
   gsap.set('.colorful-bg', { opacity: 1, zIndex: 0 });
 
-  introTl.to('#intro-hero-text', {
-    opacity: 0, y: -40, duration: 0.18, ease: 'power2.inOut',
-  }, 0.00);
+  // Text stays pinned — only the blueprint moves.
+  // Blueprint scales forward to build tension before the rip.
   introTl.to(bpEl, {
     scale: 1.06, duration: 0.20, ease: 'power2.in', transformOrigin: 'center center',
   }, 0.00);
+
+  // 0.18 : Color-shift — text snaps from blueprint palette to match the
+  //         vibrant gradient revealed underneath. GSAP animates color directly.
+  introTl.to('#intro-headline', {
+    color: '#FFE600',         // bright yellow — pops on pink/purple/blue gradient
+    duration: 0.08,
+    ease: 'power2.out',
+  }, 0.18);
+  introTl.to('#intro-eyebrow', {
+    color: '#FF2D78',         // hot pink — matches gradient start
+    duration: 0.08,
+    ease: 'power2.out',
+  }, 0.18);
+  introTl.to('#intro-rule', {
+    backgroundColor: '#FF2D78',
+    duration: 0.08,
+  }, 0.18);
+  introTl.to('#intro-sub', {
+    color: 'rgba(255,255,255,0.65)',
+    duration: 0.10,
+  }, 0.20);
 
   // 0.18–0.55 : PHASE 1 — upper-right piece tears away
   // Clip-path collapses from full rectangle to lower-left triangle only.
