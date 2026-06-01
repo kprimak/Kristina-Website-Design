@@ -116,7 +116,8 @@
       position: absolute;
       inset: 0;
       z-index: 2;
-      will-change: opacity;
+      will-change: opacity, transform;
+      transform-origin: center center;
     }
     #blueprint-svg {
       width: 100%;
@@ -1109,15 +1110,17 @@
     },
   });
 
-  // ── 0.00–0.02  Intro: hero text vanishes the instant scroll begins ──
+  // ── 0.00–0.025  Hero text drifts up + fades out ──
+  // Simultaneous: blueprint layer gently scales up ("moving into screen")
   tl.to(['#hero-eyebrow', '#hero-headline', '#hero-rule', '#hero-sub', '#scroll-hint'], {
-    opacity: 0, y: -22,
-    duration: 0.02,
-    ease: 'power3.in',
-    stagger: 0.002,
+    opacity: 0, y: -30,
+    duration: 0.025,
+    ease: 'power2.inOut',
+    stagger: 0.003,
   }, 0.00);
+  tl.to(bpLayer, { scale: 1.05, duration: 0.025, ease: 'power2.in', transformOrigin: 'center center' }, 0.00);
 
-  // ── 0.01–0.03  Blueprint flash: draws and immediately exits ──
+  // ── 0.01–0.03  Blueprint draws (overlaps with text fade — zero dead space) ──
   tl.to(cursorEl,        { opacity: 1, duration: 0.005 }, 0.01);
   tl.to('#anchor-start', { attr: { opacity: 1 }, duration: 0.005 }, 0.01);
   tl.to(drawPath, { attr: { 'stroke-dashoffset': 0 }, duration: 0.02, ease: 'none' }, 0.01);
@@ -1130,10 +1133,12 @@
   tl.to('#anchor-mid2', { attr: { opacity: 1 }, duration: 0.005 }, 0.02);
   tl.to('#anchor-end',  { attr: { opacity: 1 }, duration: 0.005 }, 0.025);
 
-  // ── 0.025–0.04  Blueprint out + site reveal (overlaps into zoom) ──
-  tl.to(cursorEl, { opacity: 0, scale: 0.6, duration: 0.01, ease: 'power2.in', transformOrigin: 'center center' }, 0.025);
-  tl.to(bpLayer,  { opacity: 0, duration: 0.015, ease: 'power2.in' }, 0.025);
-  tl.to(finLayer, { clipPath: 'inset(0 0% 0 0)', duration: 0.02, ease: 'power2.out' }, 0.03);
+  // ── 0.02–0.04  Blueprint cross-fades into finished site ──
+  // finLayer fades in (opacity 0→1) while blueprint simultaneously fades out —
+  // a true cross-fade rather than a cut.
+  tl.to(cursorEl, { opacity: 0, scale: 0.6, duration: 0.01, ease: 'power2.in', transformOrigin: 'center center' }, 0.02);
+  tl.to(bpLayer,  { opacity: 0, duration: 0.02, ease: 'power2.inOut' }, 0.02);
+  tl.to(finLayer, { clipPath: 'inset(0 0% 0 0)', duration: 0.025, ease: 'power2.out' }, 0.02);
   // ── Intro complete at 0.03 (3%) ──
 
   // ── 0.03–0.55  STATE 4 : MacBook zoom-out — the massive main event (52%) ──
