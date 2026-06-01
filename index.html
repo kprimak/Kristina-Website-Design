@@ -112,7 +112,7 @@
       width:  82%;
       height: 75%;
       overflow: hidden;
-      background: var(--bp-bg);
+      background: transparent; /* #gradient-bg child provides the color */
       z-index: 1;
     }
 
@@ -142,12 +142,12 @@
       position: absolute;
       inset: 0;
       z-index: 0;
-      /* Electric orange → deep purple → rich blue → yellow */
+      /* Exact match to .colorful-bg — seamless handoff from intro to laptop */
       background: linear-gradient(135deg,
-        #FF4D00 0%,
-        #8B00D4 28%,
-        #0047FF 62%,
-        #FFD600 100%
+        #FF2D78 0%,
+        #7B00D4 30%,
+        #004FFF 65%,
+        #FFE600 100%
       );
     }
 
@@ -1618,16 +1618,26 @@
     },
   });
 
-  // The intro (blueprint rip) now lives in #intro-section with its own timeline below.
-  // The MacBook scroll section starts with the finished site already revealed.
-  // Hero text fades in the first 3% of the main scroll, then the zoom dominates.
-  gsap.set(finLayer, { clipPath: 'inset(0 0% 0 0)' }); // finished site pre-revealed
-  gsap.set(bpLayer,  { opacity: 0 });                   // blueprint hidden from start
+  // MacBook screen starts showing the colorful gradient (matching the intro),
+  // not the cream finished site. The finished site wipes in during the zoom.
+  // This creates a direct color handoff: intro gradient → laptop gradient → site.
+  gsap.set(finLayer, { clipPath: 'inset(0 100% 0 0)' }); // finished site hidden at start
+  gsap.set(bpLayer,  { opacity: 0 });                    // blueprint hidden from start
 
   // ── 0.00–0.03  Hero text drifts up and fades (brief, just a trigger) ──
   tl.to(['#hero-eyebrow', '#hero-headline', '#hero-rule', '#hero-sub', '#scroll-hint'], {
     opacity: 0, y: -30, duration: 0.03, ease: 'power2.inOut', stagger: 0.004,
   }, 0.00);
+
+  // ── 0.25–0.45  Finished site wipes in while MacBook is still zooming ──
+  // The colorful gradient shows from 0.00 → 0.25, then the cream "Your Future
+  // Website" sweeps in from left, giving the gradient a brief "breathing" moment
+  // before the polished site takes over.
+  tl.to(finLayer, {
+    clipPath: 'inset(0 0% 0 0)',
+    duration: 0.20,
+    ease: 'power2.inOut',
+  }, 0.25);
 
   // ── 0.10–0.87  STATE 4 : MacBook zoom-out — the absolute main event (77%) ──
   // Reveal duration ≈ 0.11 → zoom duration 0.77 = 7× ratio.
