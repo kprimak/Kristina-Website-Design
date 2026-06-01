@@ -19,12 +19,10 @@
     :root {
       --cream:    #FAF7F2;
       --charcoal: #1C1C1E;
+      --charcoal-soft: #3A3A3C;
       --muted:    #6B6B70;
       --accent:   #2563EB;
       --bp-bg:    #0C0F14;
-      --bp-line:  rgba(37,99,235,0.55);
-      --bp-dim:   rgba(37,99,235,0.22);
-      --bp-label: rgba(37,99,235,0.50);
     }
 
     html { scroll-behavior: auto; }
@@ -34,9 +32,9 @@
       overflow-x: hidden;
     }
 
-    /* ═══════════════════════════════════════════
+    /* ══════════════════════════════════
        SCROLL SECTION  — 500vh
-    ═══════════════════════════════════════════ */
+    ══════════════════════════════════ */
     #scroll-section { height: 500vh; }
 
     #sticky-viewport {
@@ -47,8 +45,6 @@
       overflow: hidden;
       background: var(--cream);
     }
-
-    /* Subtle desk surface — becomes visible on MacBook reveal */
     #sticky-viewport::before {
       content: '';
       position: absolute;
@@ -58,9 +54,9 @@
       z-index: 0;
     }
 
-    /* ═══════════════════════════════════════════
-       DEVICE SCENE  — GSAP scales this element
-    ═══════════════════════════════════════════ */
+    /* ══════════════════════════════════
+       DEVICE SCENE  — GSAP scales this
+    ══════════════════════════════════ */
     #device-scene {
       position: absolute;
       inset: 0;
@@ -79,27 +75,26 @@
       justify-content: center;
     }
 
-    /* ═══════════════════════════════════════════
+    /* ══════════════════════════════════
        MACBOOK WRAP
        SVG viewBox: 1000 × 680
        Screen area: x=90 y=30 w=820 h=510
-    ═══════════════════════════════════════════ */
+         left%   = 9%    (90/1000)
+         top%    = 4.41% (30/680)
+         width%  = 82%   (820/1000)
+         height% = 75%   (510/680)
+    ══════════════════════════════════ */
     #laptop-wrap {
       position: relative;
       width: min(960px, 90vw);
       aspect-ratio: 1000 / 680;
       flex-shrink: 0;
       filter:
-        drop-shadow(0 40px 80px rgba(0,0,0,0.25))
+        drop-shadow(0 40px 80px rgba(0,0,0,0.24))
         drop-shadow(0 10px 20px rgba(0,0,0,0.12));
     }
 
-    /* ── Screen content (sits behind the MacBook SVG frame) ──
-       left%   = 90/1000      = 9%
-       top%    = 30/680       = 4.41%
-       width%  = 820/1000     = 82%
-       height% = 510/680      = 75%
-    ── */
+    /* Screen content behind the MacBook SVG */
     #laptop-screen-content {
       position: absolute;
       left:   9%;
@@ -111,28 +106,25 @@
       z-index: 1;
     }
 
-    /* ═══════════════════════════════════════════
+    /* ══════════════════════════════════
        BLUEPRINT LAYER
-       Full SVG wireframe. Fades out in State 3.
-    ═══════════════════════════════════════════ */
+    ══════════════════════════════════ */
     #blueprint-layer {
       position: absolute;
       inset: 0;
       z-index: 2;
       will-change: opacity;
     }
-
     #blueprint-svg {
       width: 100%;
       height: 100%;
       display: block;
     }
 
-    /* ═══════════════════════════════════════════
+    /* ══════════════════════════════════
        FINISHED SITE LAYER
-       Luxury website. Reveals left→right via
-       clip-path wipe in State 3.
-    ═══════════════════════════════════════════ */
+       Reveals left → right via clip-path
+    ══════════════════════════════════ */
     #finished-layer {
       position: absolute;
       inset: 0;
@@ -142,7 +134,11 @@
       overflow: hidden;
     }
 
-    /* ── Finished website layout ── */
+    /* ══════════════════════════════════
+       INNER PORTFOLIO WEBSITE
+       "Your Future Website"
+       Cream bg · Charcoal text · Blue accents
+    ══════════════════════════════════ */
     .fin-site {
       width: 100%;
       height: 100%;
@@ -150,15 +146,16 @@
       flex-direction: column;
       overflow: hidden;
       font-family: 'Archivo', sans-serif;
-      background: #0f0f10;
+      background: var(--cream);
     }
 
+    /* — Navigation — */
     .fin-nav {
       flex-shrink: 0;
       height: 9%;
-      min-height: 30px;
-      background: rgba(12,12,14,0.96);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+      min-height: 32px;
+      background: var(--cream);
+      border-bottom: 1px solid rgba(28,28,30,0.08);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -167,33 +164,38 @@
     .fin-brand {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      font-size: clamp(9px, 1.5vw, 14px);
-      letter-spacing: 0.14em;
-      color: #fff;
+      font-size: clamp(9px, 1.4vw, 13px);
+      letter-spacing: -0.03em;
+      color: var(--charcoal);
+    }
+    .fin-brand span {
+      color: var(--accent);
     }
     .fin-nav-links {
       display: flex;
       gap: clamp(6px, 1.2vw, 14px);
-      font-size: clamp(7px, 1vw, 10px);
-      color: rgba(255,255,255,0.55);
-      letter-spacing: 0.05em;
+      font-size: clamp(6px, 0.95vw, 9px);
+      color: var(--muted);
+      letter-spacing: 0.04em;
     }
     .fin-nav-cta {
       background: var(--accent);
       color: #fff;
-      font-size: clamp(6px, 0.9vw, 9px);
+      font-family: 'Archivo', sans-serif;
+      font-size: clamp(5.5px, 0.85vw, 8.5px);
       font-weight: 600;
-      padding: 0.3em 0.9em;
-      border-radius: 3px;
+      padding: 0.35em 1em;
+      border-radius: 100px;
       border: none;
       cursor: pointer;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
     }
 
+    /* — Hero — */
     .fin-hero {
       position: relative;
-      flex: 1;
-      min-height: 0;
+      flex: 0 0 52%;
       overflow: hidden;
     }
     .fin-hero-img {
@@ -202,17 +204,18 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center 50%;
+      object-position: center 40%;
       display: block;
     }
+    /* Gradient: left side darker for text legibility, right stays photographic */
     .fin-hero-overlay {
       position: absolute;
       inset: 0;
       background: linear-gradient(
-        105deg,
-        rgba(10,10,12,0.82) 0%,
-        rgba(10,10,12,0.55) 55%,
-        rgba(10,10,12,0.20) 100%
+        100deg,
+        rgba(12,15,20,0.78) 0%,
+        rgba(12,15,20,0.52) 45%,
+        rgba(12,15,20,0.15) 100%
       );
     }
     .fin-hero-content {
@@ -222,45 +225,49 @@
       flex-direction: column;
       justify-content: center;
       padding: 5% 6%;
-      max-width: 62%;
+      max-width: 65%;
     }
     .fin-eyebrow {
-      font-size: clamp(6px, 0.85vw, 9px);
+      font-size: clamp(5.5px, 0.78vw, 7.5px);
       font-weight: 500;
-      letter-spacing: 0.22em;
-      color: var(--accent);
+      letter-spacing: 0.24em;
+      color: rgba(255,255,255,0.55);
       text-transform: uppercase;
-      margin-bottom: 0.6em;
+      margin-bottom: 0.7em;
     }
     .fin-heading {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      font-size: clamp(18px, 3.8vw, 40px);
+      font-size: clamp(15px, 3.2vw, 34px);
       color: #fff;
       line-height: 1.04;
-      letter-spacing: -0.04em;
-      margin-bottom: 0.5em;
+      letter-spacing: -0.045em;
+      margin-bottom: 0.55em;
+    }
+    .fin-heading em {
+      font-style: normal;
+      color: rgba(255,255,255,0.55);
     }
     .fin-sub {
-      font-size: clamp(7px, 1vw, 11px);
-      color: rgba(255,255,255,0.65);
-      line-height: 1.6;
-      margin-bottom: 1em;
+      font-size: clamp(6px, 0.88vw, 9px);
+      color: rgba(255,255,255,0.58);
+      line-height: 1.65;
+      margin-bottom: 1.1em;
+      max-width: 90%;
     }
     .fin-btn-row {
       display: flex;
-      gap: clamp(6px, 1vw, 12px);
+      gap: clamp(5px, 0.9vw, 10px);
       align-items: center;
-      flex-wrap: wrap;
     }
     .fin-btn-primary {
       background: var(--accent);
       color: #fff;
       font-family: 'Archivo', sans-serif;
-      font-size: clamp(6px, 0.9vw, 10px);
+      font-size: clamp(5.5px, 0.82vw, 8.5px);
       font-weight: 600;
-      padding: 0.5em 1.1em;
-      border-radius: 3px;
+      padding: 0.5em 1.2em;
+      border-radius: 100px;
       border: none;
       cursor: pointer;
       letter-spacing: 0.04em;
@@ -268,67 +275,111 @@
     }
     .fin-btn-ghost {
       background: transparent;
-      color: rgba(255,255,255,0.7);
-      font-size: clamp(6px, 0.85vw, 9px);
-      border: none;
+      color: rgba(255,255,255,0.6);
+      font-size: clamp(5.5px, 0.82vw, 8.5px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 100px;
+      padding: 0.5em 1em;
       cursor: pointer;
       letter-spacing: 0.04em;
       white-space: nowrap;
     }
 
-    .fin-products {
-      flex-shrink: 0;
-      height: 28%;
-      min-height: 60px;
-      background: var(--cream);
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      border-top: 1px solid rgba(0,0,0,0.08);
-    }
-    .fin-card {
+    /* — Work grid — */
+    .fin-work {
+      flex: 1;
+      min-height: 0;
       background: var(--cream);
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      padding: 2.5% 4% 2%;
+      gap: 2%;
     }
-    .fin-card-thumb {
+    .fin-work-label {
+      font-size: clamp(5px, 0.72vw, 7px);
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .fin-cards {
       flex: 1;
       min-height: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(4px, 0.7vw, 8px);
     }
-    .fin-card-thumb img {
+    .fin-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 3px;
+      background: #e8e2d8;
+      display: flex;
+      flex-direction: column;
+    }
+    .fin-card-img {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .fin-card-img img {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      transition: transform 0.4s ease;
     }
-    .fin-card-info {
+    .fin-card-tag {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: rgba(255,255,255,0.9);
+      color: var(--charcoal);
+      font-size: clamp(4px, 0.6vw, 6px);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25em 0.6em;
+      border-radius: 2px;
+    }
+    .fin-card-footer {
       flex-shrink: 0;
-      padding: 4% 5%;
+      padding: 3% 4%;
+      background: var(--cream);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(28,28,30,0.07);
+    }
+    .fin-card-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(6px, 0.9vw, 8.5px);
+      font-weight: 600;
+      color: var(--charcoal);
+      letter-spacing: -0.02em;
+    }
+    .fin-card-arrow {
+      width: clamp(10px, 1.4vw, 14px);
+      height: clamp(10px, 1.4vw, 14px);
+      border-radius: 50%;
+      background: var(--accent);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      background: var(--cream);
-      border-top: 1px solid rgba(0,0,0,0.06);
+      justify-content: center;
+      flex-shrink: 0;
     }
-    .fin-card-name {
-      font-size: clamp(6px, 0.9vw, 9px);
-      color: var(--charcoal);
-      font-weight: 500;
-    }
-    .fin-card-price {
-      font-size: clamp(6px, 0.9vw, 9px);
-      color: var(--accent);
-      font-weight: 700;
+    .fin-card-arrow svg {
+      width: 55%;
+      height: 55%;
     }
 
-    /* ═══════════════════════════════════════════
+    /* ══════════════════════════════════
        MACBOOK SVG FRAME  (z-index above screen)
-    ═══════════════════════════════════════════ */
+    ══════════════════════════════════ */
     #laptop-svg {
       position: absolute;
       inset: 0;
@@ -338,37 +389,37 @@
       pointer-events: none;
     }
 
-    /* ═══════════════════════════════════════════
-       TABLET  (left side device)
-    ═══════════════════════════════════════════ */
+    /* ══════════════════════════════════
+       SIDE DEVICES
+       visibility:hidden until GSAP reveals them
+       so they never ghost at the edges
+    ══════════════════════════════════ */
+    #tablet-device,
+    #phone-device {
+      visibility: hidden; /* GSAP autoAlpha manages this */
+    }
+
     #tablet-device {
       position: absolute;
-      right: calc(100% + 22px);
+      right: calc(100% + 20px);
       top: 50%;
-      transform: translateY(-50%) translateX(40px);
-      width: 19%;
-      min-width: 100px;
-      opacity: 0;
-      will-change: opacity, transform;
+      transform: translateY(-50%);
+      width: 20%;
+      min-width: 110px;
     }
 
-    /* ═══════════════════════════════════════════
-       PHONE  (right side device)
-    ═══════════════════════════════════════════ */
     #phone-device {
       position: absolute;
-      left: calc(100% + 18px);
+      left: calc(100% + 16px);
       top: 50%;
-      transform: translateY(-50%) translateX(-40px);
+      transform: translateY(-50%);
       width: 9.5%;
-      min-width: 56px;
-      opacity: 0;
-      will-change: opacity, transform;
+      min-width: 58px;
     }
 
-    /* ═══════════════════════════════════════════
-       HERO TEXT  (floats above device scene)
-    ═══════════════════════════════════════════ */
+    /* ══════════════════════════════════
+       HERO TEXT  (floats above scene)
+    ══════════════════════════════════ */
     #hero-text {
       position: absolute;
       inset: 0;
@@ -380,20 +431,16 @@
       pointer-events: none;
       text-align: center;
       padding: 2rem;
-      gap: 0;
     }
-
     #hero-eyebrow {
-      font-family: 'Archivo', sans-serif;
-      font-size: clamp(0.6rem, 1vw, 0.78rem);
+      font-size: clamp(0.58rem, 0.9vw, 0.76rem);
       font-weight: 500;
-      letter-spacing: 0.26em;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: rgba(250,247,242,0.55);
-      margin-bottom: 1.1rem;
+      color: rgba(250,247,242,0.45);
+      margin-bottom: 1rem;
       will-change: opacity, transform;
     }
-
     #hero-headline {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
@@ -404,60 +451,57 @@
       text-shadow: 0 2px 48px rgba(0,0,0,0.5), 0 1px 8px rgba(0,0,0,0.3);
       will-change: opacity, transform;
     }
-
     #hero-rule {
-      width: 40px;
+      width: 36px;
       height: 2px;
       background: var(--accent);
-      margin: 1.6rem auto 1.4rem;
+      margin: 1.5rem auto 1.3rem;
       will-change: opacity, transform;
     }
-
     #hero-sub {
-      font-family: 'Archivo', sans-serif;
-      font-size: clamp(0.75rem, 1.2vw, 1rem);
+      font-size: clamp(0.72rem, 1.1vw, 0.95rem);
       font-weight: 300;
-      color: rgba(250,247,242,0.55);
+      color: rgba(250,247,242,0.48);
       letter-spacing: 0.05em;
       will-change: opacity;
     }
 
-    /* ── Scroll hint ── */
+    /* Scroll hint */
     #scroll-hint {
       position: absolute;
-      bottom: 2.4rem;
+      bottom: 2.2rem;
       left: 50%;
       transform: translateX(-50%);
       z-index: 50;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
       pointer-events: none;
     }
     #scroll-hint span {
-      font-size: 0.58rem;
+      font-size: 0.56rem;
       font-weight: 500;
-      letter-spacing: 0.24em;
+      letter-spacing: 0.26em;
       text-transform: uppercase;
-      color: rgba(250,247,242,0.45);
+      color: rgba(250,247,242,0.38);
     }
     .scroll-arrow {
-      width: 16px;
-      height: 16px;
-      border-right: 1.5px solid rgba(250,247,242,0.35);
-      border-bottom: 1.5px solid rgba(250,247,242,0.35);
+      width: 15px;
+      height: 15px;
+      border-right: 1.5px solid rgba(250,247,242,0.3);
+      border-bottom: 1.5px solid rgba(250,247,242,0.3);
       transform: rotate(45deg);
       animation: arrowPulse 1.8s ease-in-out infinite;
     }
     @keyframes arrowPulse {
-      0%, 100% { opacity: 0.3; transform: rotate(45deg) translate(0, 0); }
-      50%       { opacity: 0.9; transform: rotate(45deg) translate(3px, 3px); }
+      0%, 100% { opacity: 0.25; transform: rotate(45deg) translate(0,0); }
+      50%       { opacity: 0.85; transform: rotate(45deg) translate(3px,3px); }
     }
 
-    /* ═══════════════════════════════════════════
+    /* ══════════════════════════════════
        AFTER SECTION
-    ═══════════════════════════════════════════ */
+    ══════════════════════════════════ */
     #after-section {
       background: var(--cream);
       text-align: center;
@@ -497,7 +541,6 @@
       transform: translateY(-2px);
     }
 
-    /* ── Reduced motion ── */
     @media (prefers-reduced-motion: reduce) {
       .scroll-arrow { animation: none; }
     }
@@ -505,68 +548,85 @@
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════
-     SCROLLYTELLING SECTION
-═══════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════
+     SCROLLYTELLING — 500vh pinned section
+═══════════════════════════════════════════════ -->
 <section id="scroll-section">
   <div id="sticky-viewport">
 
     <div id="device-scene">
       <div id="lateral-wrap">
 
-        <!-- ① TABLET — left, hidden until State 5 -->
+        <!-- ① TABLET — left, hidden via autoAlpha until State 5 -->
         <div id="tablet-device" aria-hidden="true">
           <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <clipPath id="tabClip"><rect x="12" y="20" width="176" height="226" rx="3"/></clipPath>
-              <linearGradient id="tabHeroGrad" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="tabFade" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stop-color="transparent"/>
-                <stop offset="100%" stop-color="rgba(10,10,12,0.88)"/>
+                <stop offset="100%" stop-color="rgba(12,15,20,0.85)"/>
               </linearGradient>
             </defs>
+            <!-- Body -->
             <rect x="2" y="2" width="196" height="266" rx="18" fill="#1e1e22"/>
-            <rect x="2" y="2" width="196" height="266" rx="18" fill="none" stroke="#3a3a3e" stroke-width="1.2"/>
-            <circle cx="100" cy="258" r="8" fill="#2a2a2e" stroke="#444" stroke-width="1"/>
-            <rect x="12" y="20" width="176" height="226" rx="3" fill="#0c0f14"/>
-            <image href="https://images.unsplash.com/photo-1490750967868-88df5691cc08?auto=format&fit=crop&w=400&q=80"
-                   x="12" y="20" width="176" height="226" clip-path="url(#tabClip)" preserveAspectRatio="xMidYMid slice"/>
-            <rect x="12" y="20" width="176" height="22" fill="rgba(10,10,12,0.92)"/>
-            <text x="20" y="34" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white" letter-spacing="1.5">FLORA</text>
-            <rect x="154" y="25" width="28" height="10" rx="2.5" fill="#2563EB"/>
-            <text x="160" y="33" font-family="Archivo,sans-serif" font-size="6" fill="white">Cart</text>
-            <rect x="12" y="165" width="176" height="81" fill="url(#tabHeroGrad)"/>
-            <text x="22" y="202" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Where Nature</text>
-            <text x="22" y="216" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Meets Home.</text>
-            <rect x="22" y="224" width="50" height="13" rx="3" fill="#2563EB"/>
-            <text x="30" y="233" font-family="Archivo,sans-serif" font-size="6.5" fill="white">Shop Now</text>
+            <rect x="2" y="2" width="196" height="266" rx="18" fill="none" stroke="#38383c" stroke-width="1.2"/>
+            <circle cx="100" cy="258" r="8" fill="#2a2a2e" stroke="#3a3a3e" stroke-width="1"/>
+            <!-- Screen -->
+            <rect x="12" y="20" width="176" height="226" rx="3" fill="#FAF7F2"/>
+            <!-- Hero image -->
+            <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80"
+                   x="12" y="66" width="176" height="108" clip-path="url(#tabClip2)" preserveAspectRatio="xMidYMid slice"/>
+            <defs><clipPath id="tabClip2"><rect x="12" y="66" width="176" height="108"/></clipPath></defs>
+            <rect x="12" y="66" width="176" height="108" fill="rgba(12,15,20,0.55)"/>
+            <!-- Nav bar on cream -->
+            <rect x="12" y="20" width="176" height="44" fill="#FAF7F2"/>
+            <rect x="12" y="63" width="176" height="1" fill="rgba(28,28,30,0.08)"/>
+            <text x="22" y="45" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="#1C1C1E" letter-spacing="-0.5">Your Future</text>
+            <text x="22" y="58" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="#2563EB" letter-spacing="-0.5">Website.</text>
+            <!-- Hero text over image -->
+            <text x="22" y="106" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="white">Crafting Digital</text>
+            <text x="22" y="119" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="white">Luxuries.</text>
+            <rect x="22" y="126" width="48" height="13" rx="6" fill="#2563EB"/>
+            <text x="30" y="135.5" font-family="Archivo,sans-serif" font-size="6" fill="white">View Work</text>
+            <!-- Cards on cream -->
+            <rect x="12" y="174" width="176" height="72" fill="#FAF7F2"/>
+            <rect x="14" y="178" width="54" height="64" rx="2" fill="#e8e2d8"/>
+            <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=200&q=70"
+                   x="14" y="178" width="54" height="64" clip-path="url(#tc1)" preserveAspectRatio="xMidYMid slice"/>
+            <defs><clipPath id="tc1"><rect x="14" y="178" width="54" height="64" rx="2"/></clipPath></defs>
+            <rect x="74" y="178" width="54" height="64" rx="2" fill="#e8e2d8"/>
+            <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=200&q=70"
+                   x="74" y="178" width="54" height="64" clip-path="url(#tc2)" preserveAspectRatio="xMidYMid slice"/>
+            <defs><clipPath id="tc2"><rect x="74" y="178" width="54" height="64" rx="2"/></clipPath></defs>
+            <rect x="134" y="178" width="54" height="64" rx="2" fill="#e8e2d8"/>
+            <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=200&q=70"
+                   x="134" y="178" width="54" height="64" clip-path="url(#tc3)" preserveAspectRatio="xMidYMid slice"/>
+            <defs><clipPath id="tc3"><rect x="134" y="178" width="54" height="64" rx="2"/></clipPath></defs>
           </svg>
         </div>
 
-        <!-- ② LAPTOP — main device -->
+        <!-- ② MACBOOK — main device -->
         <div id="laptop-wrap">
 
-          <!-- ③ SCREEN CONTENT — everything lives in here -->
+          <!-- ③ SCREEN CONTENT -->
           <div id="laptop-screen-content">
 
-            <!-- ── Blueprint layer ── -->
+            <!-- Blueprint layer -->
             <div id="blueprint-layer">
               <svg id="blueprint-svg" viewBox="0 0 820 510"
                    xmlns="http://www.w3.org/2000/svg"
                    preserveAspectRatio="xMidYMid meet"
                    aria-hidden="true">
                 <defs>
-                  <!-- Dot grid pattern -->
                   <pattern id="dotGrid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
                     <circle cx="20" cy="20" r="1.2" fill="rgba(37,99,235,0.28)"/>
                   </pattern>
-                  <!-- Glow filter for the drawn path -->
                   <filter id="lineGlow" x="-30%" y="-30%" width="160%" height="160%">
                     <feGaussianBlur in="SourceAlpha" stdDeviation="5" result="blur"/>
                     <feFlood flood-color="#2563EB" flood-opacity="0.75" result="color"/>
                     <feComposite in="color" in2="blur" operator="in" result="softGlow"/>
                     <feMerge><feMergeNode in="softGlow"/><feMergeNode in="SourceGraphic"/></feMerge>
                   </filter>
-                  <!-- Anchor dot glow -->
                   <filter id="dotGlow" x="-100%" y="-100%" width="300%" height="300%">
                     <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
                     <feFlood flood-color="#2563EB" flood-opacity="0.9" result="c"/>
@@ -575,15 +635,13 @@
                   </filter>
                 </defs>
 
-                <!-- Background + dot grid -->
+                <!-- Background + grid -->
                 <rect width="820" height="510" fill="#0C0F14"/>
                 <rect width="820" height="510" fill="url(#dotGrid)"/>
 
-                <!-- ── Axis rulers (left + top) ── -->
+                <!-- Ruler lines -->
                 <line x1="0" y1="20" x2="820" y2="20" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
                 <line x1="20" y1="0" x2="20" y2="510" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
-
-                <!-- Ruler ticks (top) -->
                 <g stroke="rgba(37,99,235,0.25)" stroke-width="0.7">
                   <line x1="100" y1="16" x2="100" y2="20"/>
                   <line x1="200" y1="16" x2="200" y2="20"/>
@@ -601,64 +659,50 @@
                   <text x="600" y="14">600</text>
                   <text x="800" y="14">800</text>
                 </g>
-                <!-- Origin label -->
                 <text x="3" y="17" font-family="'Courier New',monospace" font-size="7" fill="rgba(37,99,235,0.5)">0,0</text>
 
-                <!-- ── Wireframe: Navigation Bar ── -->
+                <!-- Navigation wireframe -->
                 <rect x="30" y="28" width="760" height="44"
                       fill="rgba(37,99,235,0.05)" stroke="rgba(37,99,235,0.45)"
                       stroke-width="0.8" stroke-dasharray="5,3"/>
-                <!-- Nav: logo placeholder -->
-                <rect x="44" y="38" width="60" height="10" rx="2"
+                <rect x="44" y="38" width="70" height="10" rx="2"
                       fill="rgba(37,99,235,0.15)" stroke="rgba(37,99,235,0.4)" stroke-width="0.6"/>
-                <!-- Nav: link placeholders -->
-                <rect x="280" y="40" width="36" height="7" rx="2" fill="rgba(37,99,235,0.1)" stroke="rgba(37,99,235,0.3)" stroke-width="0.5"/>
-                <rect x="326" y="40" width="46" height="7" rx="2" fill="rgba(37,99,235,0.1)" stroke="rgba(37,99,235,0.3)" stroke-width="0.5"/>
-                <rect x="382" y="40" width="36" height="7" rx="2" fill="rgba(37,99,235,0.1)" stroke="rgba(37,99,235,0.3)" stroke-width="0.5"/>
-                <!-- Nav: CTA button placeholder -->
-                <rect x="714" y="37" width="62" height="16" rx="3"
-                      fill="rgba(37,99,235,0.2)" stroke="rgba(37,99,235,0.6)" stroke-width="0.8"/>
-                <text x="745" y="48" font-family="'Courier New',monospace" font-size="6.5"
+                <rect x="280" y="40" width="40" height="7" rx="2" fill="rgba(37,99,235,0.1)" stroke="rgba(37,99,235,0.3)" stroke-width="0.5"/>
+                <rect x="330" y="40" width="40" height="7" rx="2" fill="rgba(37,99,235,0.1)" stroke="rgba(37,99,235,0.3)" stroke-width="0.5"/>
+                <rect x="380" y="40" width="40" height="7" rx="2" fill="rgba(37,99,235,0.1)" stroke="rgba(37,99,235,0.3)" stroke-width="0.5"/>
+                <rect x="714" y="37" width="66" height="18" rx="9"
+                      fill="rgba(37,99,235,0.22)" stroke="rgba(37,99,235,0.6)" stroke-width="0.8"/>
+                <text x="747" y="49" font-family="'Courier New',monospace" font-size="6.5"
                       fill="rgba(37,99,235,0.8)" text-anchor="middle">CTA</text>
-                <!-- Nav label -->
                 <text x="30" y="24" font-family="'Courier New',monospace" font-size="7.5"
                       fill="rgba(37,99,235,0.55)" letter-spacing="0.06em">NAVIGATION</text>
 
-                <!-- ── Wireframe: Hero Section ── -->
-                <!-- Full-width hero box -->
+                <!-- Hero wireframe -->
                 <rect x="30" y="84" width="760" height="210"
                       fill="rgba(37,99,235,0.04)" stroke="rgba(37,99,235,0.35)"
                       stroke-width="0.8" stroke-dasharray="5,3"/>
                 <text x="30" y="80" font-family="'Courier New',monospace" font-size="7.5"
                       fill="rgba(37,99,235,0.55)" letter-spacing="0.06em">HERO — FULL BLEED IMAGE + OVERLAY</text>
-
-                <!-- Hero: text block (left) -->
+                <!-- Hero text block -->
                 <rect x="46" y="102" width="340" height="170"
                       fill="rgba(37,99,235,0.07)" stroke="rgba(37,99,235,0.30)"
                       stroke-width="0.7" stroke-dasharray="3,3"/>
-                <!-- Eyebrow text line -->
-                <rect x="62" y="116" width="90" height="6" rx="1.5"
-                      fill="rgba(37,99,235,0.2)" stroke="none"/>
-                <!-- Heading lines -->
+                <rect x="62" y="116" width="90" height="6" rx="1.5" fill="rgba(37,99,235,0.2)"/>
                 <rect x="62" y="130" width="260" height="16" rx="2"
                       fill="rgba(37,99,235,0.12)" stroke="rgba(37,99,235,0.25)" stroke-width="0.5"/>
                 <rect x="62" y="152" width="200" height="16" rx="2"
                       fill="rgba(37,99,235,0.12)" stroke="rgba(37,99,235,0.25)" stroke-width="0.5"/>
-                <!-- Body text lines -->
                 <rect x="62" y="178" width="240" height="5" rx="1" fill="rgba(37,99,235,0.12)"/>
                 <rect x="62" y="188" width="210" height="5" rx="1" fill="rgba(37,99,235,0.12)"/>
                 <rect x="62" y="198" width="190" height="5" rx="1" fill="rgba(37,99,235,0.12)"/>
-                <!-- CTA buttons -->
-                <rect x="62" y="216" width="96" height="22" rx="3"
+                <rect x="62" y="216" width="100" height="22" rx="11"
                       fill="rgba(37,99,235,0.22)" stroke="rgba(37,99,235,0.6)" stroke-width="0.8"/>
-                <rect x="168" y="216" width="80" height="22" rx="3"
+                <rect x="172" y="216" width="80" height="22" rx="11"
                       fill="none" stroke="rgba(37,99,235,0.35)" stroke-width="0.8"/>
-
-                <!-- Hero: image placeholder (right) -->
+                <!-- Hero image box -->
                 <rect x="410" y="102" width="364" height="170"
                       fill="rgba(37,99,235,0.06)" stroke="rgba(37,99,235,0.28)"
                       stroke-width="0.7" stroke-dasharray="3,3"/>
-                <!-- Image placeholder X -->
                 <line x1="410" y1="102" x2="774" y2="272" stroke="rgba(37,99,235,0.15)" stroke-width="0.8"/>
                 <line x1="774" y1="102" x2="410" y2="272" stroke="rgba(37,99,235,0.15)" stroke-width="0.8"/>
                 <text x="592" y="192" font-family="'Courier New',monospace" font-size="8"
@@ -666,48 +710,35 @@
                 <text x="592" y="203" font-family="'Courier New',monospace" font-size="7"
                       fill="rgba(37,99,235,0.25)" text-anchor="middle">1600 × 900px</text>
 
-                <!-- ── Wireframe: Product Cards ── -->
+                <!-- Cards wireframe -->
                 <text x="30" y="313" font-family="'Courier New',monospace" font-size="7.5"
-                      fill="rgba(37,99,235,0.55)" letter-spacing="0.06em">PRODUCT GRID — 3 COLUMNS</text>
-                <!-- Card 1 -->
+                      fill="rgba(37,99,235,0.55)" letter-spacing="0.06em">SELECTED WORK — 3 COLUMNS</text>
                 <rect x="30" y="318" width="232" height="162"
                       fill="rgba(37,99,235,0.04)" stroke="rgba(37,99,235,0.32)"
                       stroke-width="0.8" stroke-dasharray="4,3"/>
-                <rect x="30" y="318" width="232" height="100"
-                      fill="rgba(37,99,235,0.07)" stroke="none"/>
+                <rect x="30" y="318" width="232" height="100" fill="rgba(37,99,235,0.07)" stroke="none"/>
                 <line x1="30" y1="318" x2="262" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
                 <line x1="262" y1="318" x2="30" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
                 <rect x="48" y="428" width="120" height="6" rx="1.5" fill="rgba(37,99,235,0.15)"/>
-                <rect x="48" y="440" width="60"  height="6" rx="1.5" fill="rgba(37,99,235,0.22)"/>
-                <rect x="192" y="436" width="52" height="16" rx="2.5"
-                      fill="rgba(37,99,235,0.2)" stroke="rgba(37,99,235,0.4)" stroke-width="0.6"/>
-                <!-- Card 2 -->
+                <rect x="48" y="440" width="60" height="6" rx="1.5" fill="rgba(37,99,235,0.22)"/>
                 <rect x="294" y="318" width="232" height="162"
                       fill="rgba(37,99,235,0.04)" stroke="rgba(37,99,235,0.32)"
                       stroke-width="0.8" stroke-dasharray="4,3"/>
-                <rect x="294" y="318" width="232" height="100"
-                      fill="rgba(37,99,235,0.07)" stroke="none"/>
+                <rect x="294" y="318" width="232" height="100" fill="rgba(37,99,235,0.07)" stroke="none"/>
                 <line x1="294" y1="318" x2="526" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
                 <line x1="526" y1="318" x2="294" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
                 <rect x="312" y="428" width="120" height="6" rx="1.5" fill="rgba(37,99,235,0.15)"/>
-                <rect x="312" y="440" width="60"  height="6" rx="1.5" fill="rgba(37,99,235,0.22)"/>
-                <rect x="456" y="436" width="52" height="16" rx="2.5"
-                      fill="rgba(37,99,235,0.2)" stroke="rgba(37,99,235,0.4)" stroke-width="0.6"/>
-                <!-- Card 3 -->
+                <rect x="312" y="440" width="60" height="6" rx="1.5" fill="rgba(37,99,235,0.22)"/>
                 <rect x="558" y="318" width="232" height="162"
                       fill="rgba(37,99,235,0.04)" stroke="rgba(37,99,235,0.32)"
                       stroke-width="0.8" stroke-dasharray="4,3"/>
-                <rect x="558" y="318" width="232" height="100"
-                      fill="rgba(37,99,235,0.07)" stroke="none"/>
+                <rect x="558" y="318" width="232" height="100" fill="rgba(37,99,235,0.07)" stroke="none"/>
                 <line x1="558" y1="318" x2="790" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
                 <line x1="790" y1="318" x2="558" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
                 <rect x="576" y="428" width="120" height="6" rx="1.5" fill="rgba(37,99,235,0.15)"/>
-                <rect x="576" y="440" width="60"  height="6" rx="1.5" fill="rgba(37,99,235,0.22)"/>
-                <rect x="720" y="436" width="52" height="16" rx="2.5"
-                      fill="rgba(37,99,235,0.2)" stroke="rgba(37,99,235,0.4)" stroke-width="0.6"/>
+                <rect x="576" y="440" width="60" height="6" rx="1.5" fill="rgba(37,99,235,0.22)"/>
 
-                <!-- ── Dimension annotation lines ── -->
-                <!-- Width annotation -->
+                <!-- Dimension annotation -->
                 <line x1="30" y1="498" x2="790" y2="498"
                       stroke="rgba(37,99,235,0.22)" stroke-width="0.7" stroke-dasharray="2,4"/>
                 <line x1="30"  y1="494" x2="30"  y2="502" stroke="rgba(37,99,235,0.35)" stroke-width="0.8"/>
@@ -715,108 +746,126 @@
                 <text x="410" y="497" font-family="'Courier New',monospace" font-size="6.5"
                       fill="rgba(37,99,235,0.40)" text-anchor="middle">1440px — FULL WIDTH LAYOUT</text>
 
-                <!-- ── The animated bezier draw path ── -->
-                <!-- Glow (wider, behind) -->
+                <!-- Animated draw path: glow + crisp -->
                 <path id="draw-path-glow"
                       d="M 68,50 C 120,80 160,160 280,190 C 380,215 460,200 560,248 C 640,285 700,370 752,454"
                       stroke="#2563EB" stroke-width="6" fill="none" opacity="0.35"
-                      stroke-linecap="round" stroke-linejoin="round"/>
-                <!-- Crisp line (on top) -->
+                      stroke-linecap="round"/>
                 <path id="draw-path"
                       d="M 68,50 C 120,80 160,160 280,190 C 380,215 460,200 560,248 C 640,285 700,370 752,454"
                       stroke="#2563EB" stroke-width="1.8" fill="none"
-                      filter="url(#lineGlow)"
-                      stroke-linecap="round" stroke-linejoin="round"/>
+                      filter="url(#lineGlow)" stroke-linecap="round"/>
 
-                <!-- Anchor points — appear along the path -->
-                <circle id="anchor-start" cx="68"  cy="50"  r="5" fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" opacity="0" filter="url(#dotGlow)"/>
-                <circle id="anchor-mid1"  cx="280" cy="190" r="4.5" fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1" opacity="0" filter="url(#dotGlow)"/>
-                <circle id="anchor-mid2"  cx="560" cy="248" r="4.5" fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1" opacity="0" filter="url(#dotGlow)"/>
-                <circle id="anchor-end"   cx="752" cy="454" r="5" fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" opacity="0" filter="url(#dotGlow)"/>
-
-                <!-- Bezier handle lines (appear mid-animation, subtle) -->
+                <!-- Anchor points -->
+                <circle id="anchor-start" cx="68"  cy="50"  r="5"   fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" opacity="0" filter="url(#dotGlow)"/>
+                <circle id="anchor-mid1"  cx="280" cy="190" r="4.5" fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1"   opacity="0" filter="url(#dotGlow)"/>
+                <circle id="anchor-mid2"  cx="560" cy="248" r="4.5" fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1"   opacity="0" filter="url(#dotGlow)"/>
+                <circle id="anchor-end"   cx="752" cy="454" r="5"   fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" opacity="0" filter="url(#dotGlow)"/>
                 <line id="handle-1" x1="68" y1="50" x2="120" y2="80"
                       stroke="rgba(37,99,235,0.35)" stroke-width="0.8" stroke-dasharray="2,2" opacity="0"/>
                 <line id="handle-2" x1="752" y1="454" x2="700" y2="370"
                       stroke="rgba(37,99,235,0.35)" stroke-width="0.8" stroke-dasharray="2,2" opacity="0"/>
 
-                <!-- ── Cursor (SVG pen tool, animates along path) ── -->
+                <!-- Cursor (pen tool) -->
                 <g id="cursor-el" opacity="0">
-                  <!-- Shadow for depth -->
                   <path d="M 0,0 L 0,19 L 5.5,14.5 L 8.5,22 L 11,21 L 8,13.5 L 14.5,13.5 Z"
-                        fill="rgba(0,0,0,0.3)" transform="translate(1.5,1.5)"/>
-                  <!-- Arrow body -->
+                        fill="rgba(0,0,0,0.28)" transform="translate(1.5,1.5)"/>
                   <path d="M 0,0 L 0,19 L 5.5,14.5 L 8.5,22 L 11,21 L 8,13.5 L 14.5,13.5 Z"
-                        fill="white" stroke="rgba(30,30,40,0.5)" stroke-width="0.6"
-                        stroke-linejoin="round"/>
-                  <!-- Bezier anchor indicator (blue dot) -->
+                        fill="white" stroke="rgba(30,30,40,0.45)" stroke-width="0.6" stroke-linejoin="round"/>
                   <circle cx="0" cy="0" r="4.5" fill="#2563EB" stroke="white" stroke-width="1.8"/>
-                  <circle cx="0" cy="0" r="2"   fill="white" opacity="0.6"/>
+                  <circle cx="0" cy="0" r="1.8" fill="white" opacity="0.7"/>
                 </g>
-
               </svg>
             </div><!-- /blueprint-layer -->
 
-            <!-- ── Finished luxury website layer ── -->
+            <!-- ─────────────────────────────────────────
+                 FINISHED INNER SITE — "Your Future Website"
+                 Cream · Charcoal · Blue
+            ───────────────────────────────────────── -->
             <div id="finished-layer">
               <div class="fin-site">
 
-                <!-- Nav -->
+                <!-- Navigation -->
                 <nav class="fin-nav">
-                  <span class="fin-brand">FLORA</span>
+                  <span class="fin-brand">Your Future <span>Website.</span></span>
                   <div class="fin-nav-links">
-                    <span>Shop</span><span>Collections</span><span>About</span><span>Journal</span>
+                    <span>Work</span>
+                    <span>Studio</span>
+                    <span>Process</span>
+                    <span>Contact</span>
                   </div>
-                  <button class="fin-nav-cta">Cart (2)</button>
+                  <button class="fin-nav-cta">Start a project →</button>
                 </nav>
 
                 <!-- Hero -->
                 <div class="fin-hero">
                   <img
                     class="fin-hero-img"
-                    src="https://images.unsplash.com/photo-1490750967868-88df5691cc08?auto=format&fit=crop&w=1920&q=85"
-                    alt="Vibrant wildflower meadow"
+                    src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1920&q=85"
+                    alt="Abstract premium design"
                   />
                   <div class="fin-hero-overlay"></div>
                   <div class="fin-hero-content">
-                    <span class="fin-eyebrow">New Collection — 2025</span>
-                    <h2 class="fin-heading">Where Nature<br>Meets Home.</h2>
-                    <p class="fin-sub">Handcrafted objects that bring the living world indoors.</p>
+                    <span class="fin-eyebrow">Award-Winning Digital Experiences</span>
+                    <h2 class="fin-heading">Crafting Digital<br><em>Luxuries.</em></h2>
+                    <p class="fin-sub">Transforming ambitious brands into digital icons.<br>Every pixel intentional. Every interaction memorable.</p>
                     <div class="fin-btn-row">
-                      <button class="fin-btn-primary">Shop the Collection</button>
-                      <button class="fin-btn-ghost">View Lookbook →</button>
+                      <button class="fin-btn-primary">View Our Work</button>
+                      <button class="fin-btn-ghost">See the Process</button>
                     </div>
                   </div>
                 </div>
 
-                <!-- Product cards -->
-                <div class="fin-products">
-                  <div class="fin-card">
-                    <div class="fin-card-thumb">
-                      <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=400&q=80" alt="Botanical arrangement"/>
+                <!-- Selected work -->
+                <div class="fin-work">
+                  <span class="fin-work-label">Selected Work</span>
+                  <div class="fin-cards">
+
+                    <div class="fin-card">
+                      <div class="fin-card-img">
+                        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=600&q=80" alt="Brand strategy project"/>
+                        <span class="fin-card-tag">Brand Strategy</span>
+                      </div>
+                      <div class="fin-card-footer">
+                        <span class="fin-card-title">Luminary Studio</span>
+                        <span class="fin-card-arrow">
+                          <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 8L8 2M8 2H4M8 2V6" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </span>
+                      </div>
                     </div>
-                    <div class="fin-card-info">
-                      <span class="fin-card-name">Botanical Wreath</span>
-                      <span class="fin-card-price">$58</span>
+
+                    <div class="fin-card">
+                      <div class="fin-card-img">
+                        <img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=600&q=80" alt="Web design project"/>
+                        <span class="fin-card-tag">Web Design</span>
+                      </div>
+                      <div class="fin-card-footer">
+                        <span class="fin-card-title">Ardent Collective</span>
+                        <span class="fin-card-arrow">
+                          <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 8L8 2M8 2H4M8 2V6" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <div class="fin-card">
-                    <div class="fin-card-thumb">
-                      <img src="https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?auto=format&fit=crop&w=400&q=80" alt="Cedar candle"/>
+
+                    <div class="fin-card">
+                      <div class="fin-card-img">
+                        <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" alt="Motion and film project"/>
+                        <span class="fin-card-tag">Motion &amp; Film</span>
+                      </div>
+                      <div class="fin-card-footer">
+                        <span class="fin-card-title">Vora Atelier</span>
+                        <span class="fin-card-arrow">
+                          <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 8L8 2M8 2H4M8 2V6" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </span>
+                      </div>
                     </div>
-                    <div class="fin-card-info">
-                      <span class="fin-card-name">Cedar Candle</span>
-                      <span class="fin-card-price">$34</span>
-                    </div>
-                  </div>
-                  <div class="fin-card">
-                    <div class="fin-card-thumb">
-                      <img src="https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?auto=format&fit=crop&w=400&q=80" alt="Ceramic vase"/>
-                    </div>
-                    <div class="fin-card-info">
-                      <span class="fin-card-name">Ceramic Vase</span>
-                      <span class="fin-card-price">$46</span>
-                    </div>
+
                   </div>
                 </div>
 
@@ -825,7 +874,7 @@
 
           </div><!-- /laptop-screen-content -->
 
-          <!-- ④ MACBOOK SVG FRAME — screen area (x=90 y=30 w=820 h=510) left transparent -->
+          <!-- ④ MACBOOK SVG FRAME — screen area (x=90 y=30 w=820 h=510) transparent -->
           <svg id="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
               <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
@@ -837,41 +886,26 @@
                 <stop offset="100%" stop-color="#a4a4a4"/>
               </linearGradient>
             </defs>
-
-            <!-- Outer aluminum lid -->
+            <!-- Lid -->
             <rect x="44" y="4" width="912" height="558" rx="14" fill="url(#lidGrad)"/>
             <rect x="44" y="4" width="912" height="558" rx="14" fill="none" stroke="#9a9a9a" stroke-width="1.2"/>
             <rect x="52" y="10" width="896" height="548" rx="10" fill="#c4c4c4"/>
-
-            <!-- Bezel — top -->
+            <!-- Bezel (screen area x=90,y=30,w=820,h=510 stays transparent) -->
             <rect x="70" y="18" width="860" height="14" fill="#141416"/>
-            <!-- Bezel — left -->
             <rect x="70" y="18" width="20" height="530" fill="#141416"/>
-            <!-- Bezel — right -->
             <rect x="910" y="18" width="20" height="530" fill="#141416"/>
-            <!-- Bezel — bottom -->
             <rect x="70" y="544" width="860" height="14" fill="#141416"/>
-
-            <!-- Screen area x=90 y=30 w=820 h=510 is transparent — screen-content shows through -->
-
             <!-- Camera -->
             <circle cx="500" cy="12" r="4.5" fill="#222"/>
             <circle cx="500" cy="12" r="2"   fill="#0a0a0a" opacity="0.7"/>
-
             <!-- Hinge -->
             <rect x="34"  y="558" width="932" height="10" rx="2.5" fill="#868686"/>
             <rect x="44"  y="561" width="912" height="5"  fill="#a8a8a8" opacity="0.4"/>
-
-            <!-- Base body -->
+            <!-- Base -->
             <path d="M 18,568 Q 18,572 22,574 L 978,574 Q 982,572 982,568 Z" fill="#bcbcbc"/>
             <path d="M 22,574 L 978,574 L 958,620 Q 954,630 920,632 L 80,632 Q 46,630 42,620 Z" fill="url(#baseGrad)" stroke="#9a9a9a" stroke-width="0.8"/>
-
-            <!-- Keyboard area -->
             <rect x="88"  y="578" width="824" height="38" rx="3" fill="#b0b0b0" opacity="0.4"/>
-            <!-- Trackpad -->
             <rect x="378" y="582" width="244" height="26" rx="5.5" fill="#b4b4b4" stroke="#a0a0a0" stroke-width="0.8"/>
-
-            <!-- Speaker grilles — left -->
             <g fill="#888" opacity="0.65">
               <rect x="100" y="585" width="2" height="18" rx="1"/>
               <rect x="107" y="585" width="2" height="18" rx="1"/>
@@ -879,9 +913,6 @@
               <rect x="121" y="585" width="2" height="18" rx="1"/>
               <rect x="128" y="585" width="2" height="18" rx="1"/>
               <rect x="135" y="585" width="2" height="18" rx="1"/>
-            </g>
-            <!-- Speaker grilles — right -->
-            <g fill="#888" opacity="0.65">
               <rect x="853" y="585" width="2" height="18" rx="1"/>
               <rect x="860" y="585" width="2" height="18" rx="1"/>
               <rect x="867" y="585" width="2" height="18" rx="1"/>
@@ -889,51 +920,109 @@
               <rect x="881" y="585" width="2" height="18" rx="1"/>
               <rect x="888" y="585" width="2" height="18" rx="1"/>
             </g>
-
-            <!-- Rubber feet -->
-            <ellipse cx="102"  cy="632" rx="14" ry="5" fill="#747474" opacity="0.7"/>
-            <ellipse cx="898"  cy="632" rx="14" ry="5" fill="#747474" opacity="0.7"/>
-
-            <!-- Front chamfer -->
+            <ellipse cx="102" cy="632" rx="14" ry="5" fill="#747474" opacity="0.7"/>
+            <ellipse cx="898" cy="632" rx="14" ry="5" fill="#747474" opacity="0.7"/>
             <path d="M 42,632 Q 42,640 54,642 L 946,642 Q 958,640 958,632 Z" fill="#b8b8b8"/>
           </svg>
 
-        </div><!-- /laptop-wrap -->
+          <!-- ⑤ TABLET — positioned relative to laptop-wrap -->
+          <div id="tablet-device" aria-hidden="true">
+            <!-- SVG defined above; duplicated here as an inline reference won't work -->
+            <!-- Full tablet SVG below -->
+            <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <clipPath id="tab2Clip"><rect x="12" y="20" width="176" height="226" rx="3"/></clipPath>
+                <linearGradient id="tab2Fade" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="transparent"/>
+                  <stop offset="100%" stop-color="rgba(12,15,20,0.85)"/>
+                </linearGradient>
+              </defs>
+              <rect x="2" y="2" width="196" height="266" rx="18" fill="#1e1e22"/>
+              <rect x="2" y="2" width="196" height="266" rx="18" fill="none" stroke="#38383c" stroke-width="1.2"/>
+              <circle cx="100" cy="258" r="8" fill="#2a2a2e" stroke="#3a3a3e" stroke-width="1"/>
+              <rect x="12" y="20" width="176" height="226" rx="3" fill="#FAF7F2"/>
+              <!-- Nav on cream -->
+              <rect x="12" y="20" width="176" height="44" fill="#FAF7F2"/>
+              <rect x="12" y="63" width="176" height="1" fill="rgba(28,28,30,0.08)"/>
+              <text x="22" y="43" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#1C1C1E" letter-spacing="-0.4">Your Future</text>
+              <text x="22" y="56" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#2563EB" letter-spacing="-0.4">Website.</text>
+              <!-- Hero image -->
+              <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=75"
+                     x="12" y="64" width="176" height="110" preserveAspectRatio="xMidYMid slice"/>
+              <rect x="12" y="64" width="176" height="110" fill="rgba(12,15,20,0.58)"/>
+              <text x="22" y="106" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Crafting Digital</text>
+              <text x="22" y="120" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Luxuries.</text>
+              <rect x="22" y="128" width="52" height="14" rx="7" fill="#2563EB"/>
+              <text x="30" y="138" font-family="Archivo,sans-serif" font-size="6" fill="white">View Work</text>
+              <!-- Work cards on cream -->
+              <rect x="12" y="174" width="176" height="72" fill="#FAF7F2"/>
+              <text x="18" y="184" font-family="Archivo,sans-serif" font-size="6" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
+              <rect x="14" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
+              <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=200&q=70"
+                     x="14" y="190" width="52" height="50" clip-path="url(#tcc1)" preserveAspectRatio="xMidYMid slice"/>
+              <defs><clipPath id="tcc1"><rect x="14" y="190" width="52" height="50" rx="3"/></clipPath></defs>
+              <rect x="72" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
+              <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=200&q=70"
+                     x="72" y="190" width="52" height="50" clip-path="url(#tcc2)" preserveAspectRatio="xMidYMid slice"/>
+              <defs><clipPath id="tcc2"><rect x="72" y="190" width="52" height="50" rx="3"/></clipPath></defs>
+              <rect x="130" y="190" width="58" height="50" rx="3" fill="#e8e2d8"/>
+              <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=200&q=70"
+                     x="130" y="190" width="58" height="50" clip-path="url(#tcc3)" preserveAspectRatio="xMidYMid slice"/>
+              <defs><clipPath id="tcc3"><rect x="130" y="190" width="58" height="50" rx="3"/></clipPath></defs>
+            </svg>
+          </div>
 
-        <!-- ⑤ PHONE — right, hidden until State 5 -->
-        <div id="phone-device" aria-hidden="true">
-          <svg viewBox="0 0 108 218" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <clipPath id="phoneClip"><rect x="7" y="14" width="94" height="190" rx="8"/></clipPath>
-              <linearGradient id="phoneHeroGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="transparent"/>
-                <stop offset="100%" stop-color="rgba(10,10,12,0.92)"/>
-              </linearGradient>
-            </defs>
-            <rect x="0" y="0" width="108" height="218" rx="20" fill="#1a1a1e"/>
-            <rect x="0" y="0" width="108" height="218" rx="20" fill="none" stroke="#333" stroke-width="1.2"/>
-            <rect x="38" y="6" width="32" height="8" rx="4" fill="#111"/>
-            <rect x="7" y="14" width="94" height="190" rx="8" fill="#0a0a0a"/>
-            <image href="https://images.unsplash.com/photo-1490750967868-88df5691cc08?auto=format&fit=crop&w=400&q=80"
-                   x="7" y="14" width="94" height="190" clip-path="url(#phoneClip)" preserveAspectRatio="xMidYMid slice"/>
-            <!-- Nav -->
-            <rect x="7" y="14" width="94" height="20" fill="rgba(10,10,12,0.92)"/>
-            <text x="16" y="27" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="white" letter-spacing="1.2">FLORA</text>
-            <!-- Bottom overlay -->
-            <rect x="7" y="140" width="94" height="64" fill="url(#phoneHeroGrad)"/>
-            <text x="16" y="168" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Where Nature</text>
-            <text x="16" y="180" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Meets Home.</text>
-            <rect x="16" y="186" width="46" height="12" rx="3" fill="#2563EB"/>
-            <text x="24" y="195" font-family="Archivo,sans-serif" font-size="6" fill="white">Shop Now</text>
-            <!-- Home indicator -->
-            <rect x="39" y="206" width="30" height="3" rx="1.5" fill="#333"/>
-          </svg>
-        </div>
+          <!-- ⑥ PHONE — positioned relative to laptop-wrap -->
+          <div id="phone-device" aria-hidden="true">
+            <svg viewBox="0 0 108 218" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <clipPath id="ph2Clip"><rect x="7" y="14" width="94" height="190" rx="8"/></clipPath>
+              </defs>
+              <rect x="0" y="0" width="108" height="218" rx="20" fill="#1a1a1e"/>
+              <rect x="0" y="0" width="108" height="218" rx="20" fill="none" stroke="#333" stroke-width="1.2"/>
+              <rect x="38" y="6" width="32" height="8" rx="4" fill="#111"/>
+              <!-- Screen: cream bg -->
+              <rect x="7" y="14" width="94" height="190" rx="8" fill="#FAF7F2"/>
+              <!-- Nav on cream -->
+              <rect x="7" y="14" width="94" height="28" fill="#FAF7F2"/>
+              <rect x="7" y="41" width="94" height="1" fill="rgba(28,28,30,0.08)"/>
+              <text x="14" y="30" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="#1C1C1E">Your Future</text>
+              <text x="14" y="40" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="#2563EB">Website.</text>
+              <!-- Hero image -->
+              <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=75"
+                     x="7" y="42" width="94" height="100" clip-path="url(#ph2Clip)" preserveAspectRatio="xMidYMid slice"/>
+              <rect x="7" y="42" width="94" height="100" fill="rgba(12,15,20,0.58)"/>
+              <text x="14" y="80" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Crafting</text>
+              <text x="14" y="92" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Digital</text>
+              <text x="14" y="104" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Luxuries.</text>
+              <rect x="14" y="112" width="44" height="12" rx="6" fill="#2563EB"/>
+              <text x="20" y="121" font-family="Archivo,sans-serif" font-size="5.5" fill="white">View Work</text>
+              <!-- Work on cream -->
+              <rect x="7" y="142" width="94" height="62" fill="#FAF7F2"/>
+              <text x="13" y="153" font-family="Archivo,sans-serif" font-size="5" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
+              <rect x="9"  y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
+              <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=100&q=70"
+                     x="9" y="158" width="28" height="40" clip-path="url(#pcc1)" preserveAspectRatio="xMidYMid slice"/>
+              <defs><clipPath id="pcc1"><rect x="9" y="158" width="28" height="40" rx="2"/></clipPath></defs>
+              <rect x="41" y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
+              <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=100&q=70"
+                     x="41" y="158" width="28" height="40" clip-path="url(#pcc2)" preserveAspectRatio="xMidYMid slice"/>
+              <defs><clipPath id="pcc2"><rect x="41" y="158" width="28" height="40" rx="2"/></clipPath></defs>
+              <rect x="73" y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
+              <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=100&q=70"
+                     x="73" y="158" width="28" height="40" clip-path="url(#pcc3)" preserveAspectRatio="xMidYMid slice"/>
+              <defs><clipPath id="pcc3"><rect x="73" y="158" width="28" height="40" rx="2"/></clipPath></defs>
+              <!-- Home indicator -->
+              <rect x="39" y="206" width="30" height="3" rx="1.5" fill="#333"/>
+            </svg>
+          </div>
+
+        </div><!-- /laptop-wrap -->
 
       </div><!-- /lateral-wrap -->
     </div><!-- /device-scene -->
 
-    <!-- ── HERO TEXT (highest z-index, fades out on scroll) ── -->
+    <!-- Hero text -->
     <div id="hero-text" aria-live="polite">
       <p id="hero-eyebrow">Blueprint to Reality</p>
       <h1 id="hero-headline">not just a website —<br/>a story.</h1>
@@ -950,7 +1039,7 @@
   </div><!-- /sticky-viewport -->
 </section>
 
-<!-- ── AFTER SECTION ── -->
+<!-- After section -->
 <section id="after-section">
   <h2>Your story, beautifully crafted.</h2>
   <p>From the first wireframe to the final pixel — every element designed with intention, every interaction built for impact. Across every device, every screen, every scroll.</p>
@@ -961,7 +1050,7 @@
 <script>
   gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
-  // ── Element references ──
+  // ── References ──
   const deviceScene  = document.getElementById('device-scene');
   const bpLayer      = document.getElementById('blueprint-layer');
   const finLayer     = document.getElementById('finished-layer');
@@ -971,15 +1060,11 @@
   const tabletDev    = document.getElementById('tablet-device');
   const phoneDev     = document.getElementById('phone-device');
 
-  // ═══════════════════════════════════════════════════
+  // ════════════════════════════════════════
   //  INITIAL SCALE
-  //  Scales device-scene up so the MacBook screen
-  //  fills the full viewport on load.
-  //
-  //  Laptop wrap at 1×: min(960, 90vw)
-  //  Screen width  at 1×: laptopW × 0.82  (= 820/1000)
-  //  Screen height at 1×: laptopW × 0.51  (= 510/1000)
-  // ═══════════════════════════════════════════════════
+  //  Makes MacBook screen fill the viewport.
+  //  Screen at 1×: laptopW × 0.82 wide, × 0.51 tall
+  // ════════════════════════════════════════
   function computeInitialScale() {
     const W = Math.min(960, window.innerWidth * 0.9);
     return Math.max(
@@ -991,70 +1076,55 @@
   let INITIAL_SCALE = computeInitialScale();
   gsap.set(deviceScene, { scale: INITIAL_SCALE, transformOrigin: 'center center' });
 
-  // ═══════════════════════════════════════════════════
-  //  PATH LENGTH — needed for stroke-dashoffset draw
-  // ═══════════════════════════════════════════════════
+  // Side devices: hidden + offset (autoAlpha = opacity + visibility)
+  gsap.set(tabletDev, { autoAlpha: 0, x: 40 });
+  gsap.set(phoneDev,  { autoAlpha: 0, x: -40 });
+
+  // ════════════════════════════════════════
+  //  PATH LENGTHS for stroke-dashoffset draw
+  // ════════════════════════════════════════
   const pathLen     = drawPath.getTotalLength();
   const pathLenGlow = drawGlow.getTotalLength();
 
-  gsap.set(drawPath, {
-    attr: { 'stroke-dasharray': pathLen, 'stroke-dashoffset': pathLen }
-  });
-  gsap.set(drawGlow, {
-    attr: { 'stroke-dasharray': pathLenGlow, 'stroke-dashoffset': pathLenGlow }
-  });
+  gsap.set(drawPath, { attr: { 'stroke-dasharray': pathLen,     'stroke-dashoffset': pathLen     } });
+  gsap.set(drawGlow, { attr: { 'stroke-dasharray': pathLenGlow, 'stroke-dashoffset': pathLenGlow } });
 
-  // ═══════════════════════════════════════════════════
-  //  MAIN SCROLL TIMELINE
-  //  All animation scrubbed to scroll position.
-  //  scrub: 1.1 → slight lag for silky feel
-  // ═══════════════════════════════════════════════════
+  // ════════════════════════════════════════
+  //  MAIN SCROLL TIMELINE — scrubbed
+  // ════════════════════════════════════════
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: '#scroll-section',
       start:   'top top',
       end:     'bottom bottom',
       scrub:   1.1,
-    }
+    },
   });
 
-  // ─── 0.00–0.10  :  STATE 1 → 2  —  Hero text fades out ───
+  // ── 0.04–0.13  STATE 1→2  :  Hero text exits ──
   tl.to(['#hero-eyebrow', '#hero-headline', '#hero-rule', '#hero-sub', '#scroll-hint'], {
     opacity: 0,
     y: -22,
     duration: 0.09,
     ease: 'power2.in',
-    stagger: 0.015,
+    stagger: 0.012,
   }, 0.04);
 
-  // ─── 0.10–0.14  :  Cursor appears + anchor start ───
-  tl.to(cursorEl, {
-    opacity: 1,
-    duration: 0.04,
-    ease: 'power2.out',
-  }, 0.10);
+  // ── 0.10  :  Cursor appears + start anchor ──
+  tl.to(cursorEl,        { opacity: 1, duration: 0.04, ease: 'power2.out' }, 0.10);
+  tl.to('#anchor-start', { attr: { opacity: 1 }, duration: 0.03 }, 0.10);
 
-  tl.to('#anchor-start', {
-    attr: { opacity: 1 },
-    duration: 0.03,
-    ease: 'power2.out',
-  }, 0.10);
-
-  // ─── 0.10–0.44  :  STATE 2  —  Path draws + cursor moves ───
-  // Both the glow and crisp line draw in sync
+  // ── 0.10–0.44  STATE 2  :  Path draws + cursor follows ──
   tl.to(drawPath, {
     attr: { 'stroke-dashoffset': 0 },
     duration: 0.34,
     ease: 'power1.inOut',
   }, 0.10);
-
   tl.to(drawGlow, {
     attr: { 'stroke-dashoffset': 0 },
     duration: 0.34,
     ease: 'power1.inOut',
   }, 0.10);
-
-  // Cursor follows the path (coordinates in SVG space — GSAP aligns automatically)
   tl.to(cursorEl, {
     duration: 0.34,
     ease: 'power1.inOut',
@@ -1066,98 +1136,79 @@
     },
   }, 0.10);
 
-  // Anchor dots appear progressively along the path
-  tl.to('#anchor-mid1', { attr: { opacity: 1 }, duration: 0.04, ease: 'power2.out' }, 0.24);
-  tl.to('#handle-1',    { attr: { opacity: 1 }, duration: 0.06, ease: 'power2.out' }, 0.24);
-  tl.to('#anchor-mid2', { attr: { opacity: 1 }, duration: 0.04, ease: 'power2.out' }, 0.34);
-  tl.to('#anchor-end',  { attr: { opacity: 1 }, duration: 0.04, ease: 'power2.out' }, 0.42);
-  tl.to('#handle-2',    { attr: { opacity: 1 }, duration: 0.06, ease: 'power2.out' }, 0.42);
+  // Anchor dots appear progressively
+  tl.to('#anchor-mid1', { attr: { opacity: 1 }, duration: 0.04 }, 0.24);
+  tl.to('#handle-1',    { attr: { opacity: 1 }, duration: 0.06 }, 0.24);
+  tl.to('#anchor-mid2', { attr: { opacity: 1 }, duration: 0.04 }, 0.34);
+  tl.to('#anchor-end',  { attr: { opacity: 1 }, duration: 0.04 }, 0.42);
+  tl.to('#handle-2',    { attr: { opacity: 1 }, duration: 0.06 }, 0.42);
 
-  // ─── 0.44–0.62  :  STATE 3  —  Reality Reveal ───
-  // Cursor flashes then disappears
-  tl.to(cursorEl, {
-    opacity: 0,
-    scale: 0,
-    duration: 0.05,
-    ease: 'power2.in',
-    transformOrigin: 'center center',
-  }, 0.44);
-
-  // Blueprint fades out
-  tl.to(bpLayer, {
-    opacity: 0,
-    duration: 0.14,
-    ease: 'power2.in',
-  }, 0.44);
-
-  // Finished site wipes in left → right
+  // ── 0.44–0.62  STATE 3  :  Reality Reveal ──
+  tl.to(cursorEl, { opacity: 0, scale: 0.6, duration: 0.05, ease: 'power2.in', transformOrigin: 'center center' }, 0.44);
+  tl.to(bpLayer,  { opacity: 0, duration: 0.14, ease: 'power2.in' }, 0.44);
+  // Left → right clip-path wipe
   tl.to(finLayer, {
     clipPath: 'inset(0 0% 0 0)',
     duration: 0.18,
     ease: 'power2.out',
   }, 0.46);
 
-  // ─── 0.60–0.76  :  STATE 4  —  Zoom-out: MacBook reveal ───
+  // ── 0.60–0.76  STATE 4  :  Zoom-out — MacBook revealed ──
   tl.to(deviceScene, {
     scale: 1,
     duration: 0.22,
     ease: 'expo.inOut',
   }, 0.60);
 
-  // ─── 0.76–0.92  :  STATE 5  —  Full pull-back + side devices ───
+  // ── 0.76–0.92  STATE 5  :  Full pull-back + side devices ──
   tl.to(deviceScene, {
     scale: 0.80,
     duration: 0.18,
     ease: 'power2.inOut',
   }, 0.76);
 
-  // Tablet slides in from left
+  // Tablet: reveal + slide from right (positioned left of laptop)
   tl.to(tabletDev, {
-    opacity: 1,
+    autoAlpha: 1,
     x: 0,
     duration: 0.16,
     ease: 'back.out(1.2)',
   }, 0.79);
 
-  // Phone slides in from right
+  // Phone: reveal + slide from left (positioned right of laptop)
   tl.to(phoneDev, {
-    opacity: 1,
+    autoAlpha: 1,
     x: 0,
     duration: 0.16,
     ease: 'back.out(1.2)',
   }, 0.83);
 
   // Gentle final float
-  tl.to(deviceScene, {
-    y: -8,
-    duration: 0.10,
-    ease: 'sine.out',
-  }, 0.90);
+  tl.to(deviceScene, { y: -8, duration: 0.10, ease: 'sine.out' }, 0.90);
 
-  // ═══════════════════════════════════════════════════
-  //  RESIZE — recompute scale & refresh ScrollTrigger
-  // ═══════════════════════════════════════════════════
-  let resizeTimer;
+  // ════════════════════════════════════════
+  //  RESIZE — recompute + refresh
+  // ════════════════════════════════════════
+  let rsz;
   window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
+    clearTimeout(rsz);
+    rsz = setTimeout(() => {
       INITIAL_SCALE = computeInitialScale();
-      if (window.scrollY < 60) {
-        gsap.set(deviceScene, { scale: INITIAL_SCALE });
-      }
+      if (window.scrollY < 60) gsap.set(deviceScene, { scale: INITIAL_SCALE });
       ScrollTrigger.refresh();
     }, 220);
   });
 
-  // ═══════════════════════════════════════════════════
+  // ════════════════════════════════════════
   //  REDUCED MOTION
-  // ═══════════════════════════════════════════════════
+  // ════════════════════════════════════════
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     ScrollTrigger.getAll().forEach(st => st.kill());
-    gsap.set(deviceScene,  { scale: 0.85 });
-    gsap.set(finLayer,     { clipPath: 'inset(0 0% 0 0)' });
-    gsap.set(bpLayer,      { opacity: 0 });
+    gsap.set(deviceScene, { scale: 0.85 });
+    gsap.set(finLayer,    { clipPath: 'inset(0 0% 0 0)' });
+    gsap.set(bpLayer,     { opacity: 0 });
     gsap.set(['#hero-eyebrow','#hero-headline','#hero-rule','#hero-sub'], { opacity: 1, y: 0 });
+    gsap.set([tabletDev, phoneDev], { autoAlpha: 1, x: 0 });
   }
 </script>
 
