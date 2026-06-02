@@ -550,7 +550,7 @@
 <canvas id="wipe-canvas" aria-hidden="true"></canvas>
 
 <!-- Scroll space for the brush diagonal sweep — canvas+brush are position:fixed so they overlay everything -->
-<div id="sweep-wrap" style="height:500vh;"></div>
+<div id="sweep-wrap" style="height:2px;"></div>
 
 <section id="about-section">
   <div class="about-inner">
@@ -667,25 +667,28 @@
   tl.to(phoneCover,  { opacity: 0, duration: 0, ease: 'none' }, 0.65);
   tl.to(lsFo,        { opacity: 1, duration: 0, ease: 'none' }, 0.65);
 
-  // ── Scroll-driven brush sweep ─────────────────────────────────────────────────
-  // Progress phases (fraction of sweep-wrap scroll):
-  //   0.00 – 0.10  brush pops out (time-based, fires on enter)
-  //   0.10 – 0.40  brush idles in place with subtle wobble (2 scrolls worth)
-  //   0.40 – 1.00  painting: 3 diagonal strokes from center, white → magenta → white
+  // ── Scroll-hijack brush sweep ─────────────────────────────────────────────────
+  // When user reaches #sweep-wrap the page is locked. Wheel/touch events drive
+  // the animation exclusively. Once progress reaches 1 the page unlocks and the
+  // user lands on #about-section. Scrolling back up past 0 re-locks and rewinds.
+  //
+  // Virtual scroll budget per phase (px of wheel delta):
+  //   IDLE_BUDGET  = 600  (2 typical scroll clicks ≈ 240px each on trackpad)
+  //   PAINT_BUDGET = 1800 (3 strokes, 600px each)
 
-  var sweepCtx  = null;
-  var POP_END   = 0.10;
-  var SWING_END = 0.40;
+  var sweepCtx     = null;
+  var sweepLocked  = false;
+  var sweepDone    = false;
+  var sweepVirtual = 0;          // accumulated virtual scroll px
+  var IDLE_BUDGET  = 600;
+  var PAINT_BUDGET = 1800;
+  var TOTAL_BUDGET = IDLE_BUDGET + PAINT_BUDGET;
+  var POP_END      = 0.10;       // fraction of TOTAL at which pop animation ends
+  var IDLE_END     = IDLE_BUDGET / TOTAL_BUDGET;  // ~0.25
 
-  // Each stroke: starts where brush is, paints toward the opposite edge.
-  // x0/y0 = fraction of viewport at stroke start (brush tip position).
-  // x1/y1 = fraction at stroke end.
   var STROKES = [
-    // Stroke 1 — WHITE — starts exactly where idle brush sits (center), diagonal down-left
     { x0: 0.50, y0: 0.35, x1: -0.05, y1: 0.62, rot: -38, color: '#ffffff', edge: 'rgba(255,0,127,0.18)' },
-    // Stroke 2 — MAGENTA — from left edge across to right, covers middle band
     { x0: -0.05, y0: 0.52, x1:  1.10, y1: 0.82, rot:  35, color: '#FF007F', edge: 'rgba(255,255,255,0.25)' },
-    // Stroke 3 — WHITE — from right edge back to left, covers bottom — reveals About Us
     { x0:  1.10, y0: 0.70, x1: -0.05, y1: 1.05, rot: -35, color: '#ffffff', edge: 'rgba(255,0,127,0.15)' }
   ];
 
@@ -693,50 +696,36 @@
     if (!sweepCtx) return;
     var w = wipeCanvas.width, h = wipeCanvas.height, vw = window.innerWidth, vh = window.innerHeight;
     var N = STROKES.length;
-
     sweepCtx.clearRect(0, 0, w, h);
 
-    // ── Idle phase: brush stays in place, subtle in-place wobble ──
-    if (p <= SWING_END) {
+    // Idle phase — brush wobbles in place, no paint
+    if (p <= IDLE_END) {
       if (p > POP_END) {
-        var idleP = (p - POP_END) / (SWING_END - POP_END); // 0→1
-        // Small rotation wobble and tiny vertical bounce — stays centered
-        var wobble = Math.sin(idleP * Math.PI * 6) * 4;   // ±4° rotation flicker
-        var bounce = Math.sin(idleP * Math.PI * 5) * (vh * 0.012); // tiny vertical bob
-        gsap.set(brushFixed, {
-          x:        0,
-          y:        -(vh * 0.15) + bounce,
-          rotation: -38 + wobble,
-          scale:    2.8,
-          opacity:  1
-        });
+        var idleP  = (p - POP_END) / (IDLE_END - POP_END);
+        var wobble = Math.sin(idleP * Math.PI * 6) * 4;
+        var bounce = Math.sin(idleP * Math.PI * 5) * (vh * 0.012);
+        gsap.set(brushFixed, { x: 0, y: -(vh * 0.15) + bounce, rotation: -38 + wobble, scale: 2.8, opacity: 1 });
       }
       return;
     }
 
-    // ── Painting phase ──
-    var paintP = (p - SWING_END) / (1 - SWING_END); // 0→1
-
+    // Painting phase — p goes IDLE_END → 1
+    var paintP = (p - IDLE_END) / (1 - IDLE_END);
     sweepCtx.lineCap  = 'round';
     sweepCtx.lineJoin = 'round';
 
     for (var i = 0; i < N; i++) {
       var lp = Math.min(1, Math.max(0, paintP * N - i));
       if (lp <= 0) continue;
-
-      var s  = STROKES[i];
-      // Stroke grows from tip start toward tip end — paint appears FROM the brush tip
+      var s    = STROKES[i];
       var tipX = (s.x0 + (s.x1 - s.x0) * lp) * w;
       var tipY = (s.y0 + (s.y1 - s.y0) * lp) * h;
-
       sweepCtx.beginPath();
       sweepCtx.moveTo(s.x0 * w, s.y0 * h);
       sweepCtx.lineTo(tipX, tipY);
       sweepCtx.strokeStyle = s.color;
       sweepCtx.lineWidth   = h * 0.44;
       sweepCtx.stroke();
-
-      // Feathered edge for painterly look
       sweepCtx.beginPath();
       sweepCtx.moveTo(s.x0 * w, s.y0 * h);
       sweepCtx.lineTo(tipX, tipY);
@@ -745,78 +734,132 @@
       sweepCtx.stroke();
     }
 
-    // Position brush at tip of active stroke
     var ai  = Math.min(N - 1, Math.floor(paintP * N));
     var alp = Math.min(1, paintP * N - ai);
     var as  = STROKES[ai];
     var bx  = (as.x0 + (as.x1 - as.x0) * alp) * w;
     var by  = (as.y0 + (as.y1 - as.y0) * alp) * h;
-    gsap.set(brushFixed, {
-      opacity:  1,
-      x:        bx - vw * 0.5,
-      y:        by - vh * 0.5 - 155,
-      rotation: as.rot,
-      scale:    1
+    gsap.set(brushFixed, { opacity: 1, x: bx - vw * 0.5, y: by - vh * 0.5 - 155, rotation: as.rot, scale: 1 });
+  }
+
+  function lockPage() {
+    if (sweepLocked) return;
+    sweepLocked = true;
+    var sy = window.scrollY;
+    document.body.style.position   = 'fixed';
+    document.body.style.top        = -sy + 'px';
+    document.body.style.left       = '0';
+    document.body.style.width      = '100%';
+    document.body.dataset.scrollY  = sy;
+  }
+
+  function unlockPage(scrollToAbout) {
+    if (!sweepLocked) return;
+    sweepLocked = false;
+    var sy = parseFloat(document.body.dataset.scrollY || 0);
+    document.body.style.position = '';
+    document.body.style.top      = '';
+    document.body.style.left     = '';
+    document.body.style.width    = '';
+    if (scrollToAbout) {
+      // Land user right at the about section
+      var aboutSec = document.getElementById('about-section');
+      window.scrollTo(0, aboutSec ? aboutSec.offsetTop : sy);
+    } else {
+      // Restore previous scroll (scrolling back up)
+      window.scrollTo(0, sy);
+    }
+  }
+
+  function startSweepAnimation() {
+    if (!sweepCtx) {
+      wipeCanvas.width  = window.innerWidth;
+      wipeCanvas.height = window.innerHeight;
+      sweepCtx = wipeCanvas.getContext('2d');
+    }
+    sweepCtx.clearRect(0, 0, wipeCanvas.width, wipeCanvas.height);
+    gsap.set(wipeCanvas, { opacity: 1 });
+    var lsBrush = document.querySelector('.ls-brush');
+    var vh = window.innerHeight;
+    gsap.to(lsBrush, {
+      scale: 2.2, filter: 'drop-shadow(0 0 12px #FF007F) brightness(2)',
+      duration: 0.22, ease: 'power2.in',
+      onComplete: function () {
+        gsap.set(lsBrush, { opacity: 0, scale: 1, filter: 'none' });
+        gsap.set(brushFixed, { opacity: 1, x: 0, y: vh * 0.05, rotation: -15, scale: 0.6 });
+        gsap.to(brushFixed, {
+          scale: 2.8, x: 0, y: -(vh * 0.15), rotation: -38,
+          duration: 0.35, ease: 'back.out(4)'
+        });
+      }
     });
   }
 
-  ScrollTrigger.create({
-    trigger: '#sweep-wrap',
-    start:   'top bottom',
-    end:     'bottom top',
-    scrub:   1.5,
-    onEnter: function () {
-      if (!sweepCtx) {
-        wipeCanvas.width  = window.innerWidth;
-        wipeCanvas.height = window.innerHeight;
-        sweepCtx = wipeCanvas.getContext('2d');
-      }
-      sweepCtx.clearRect(0, 0, wipeCanvas.width, wipeCanvas.height);
-      gsap.set(wipeCanvas, { opacity: 1 });
+  function resetSweep() {
+    gsap.killTweensOf(wipeCanvas);
+    gsap.killTweensOf(brushFixed);
+    gsap.set(wipeCanvas, { opacity: 0 });
+    gsap.set(brushFixed, { opacity: 0 });
+    gsap.set(document.querySelector('.ls-brush'), { opacity: 1, scale: 1, filter: 'none' });
+    if (sweepCtx) { sweepCtx.clearRect(0, 0, wipeCanvas.width, wipeCanvas.height); sweepCtx = null; }
+    sweepVirtual = 0;
+    sweepDone = false;
+  }
 
-      var vw = window.innerWidth, vh = window.innerHeight;
-      // Brush starts at laptop screen center then rockets to screen center
-      var startX = vw * 0.5 - vw * 0.5;   // x offset from center = 0 (centered)
-      var startY = vh * 0.1 - vh * 0.5;    // slightly below center initially
-      var lsBrush = document.querySelector('.ls-brush');
+  function onWheelSweep(e) {
+    e.preventDefault();
+    var delta = e.deltaY;
 
-      // In-screen brush pulses then vanishes
-      gsap.to(lsBrush, {
-        scale: 2.2, filter: 'drop-shadow(0 0 12px #FF007F) brightness(2)',
-        duration: 0.22, ease: 'power2.in',
-        onComplete: function () {
-          gsap.set(lsBrush, { opacity: 0, scale: 1, filter: 'none' });
-          // Fixed brush appears at laptop position then rockets to center
-          gsap.set(brushFixed, { opacity: 1, x: 0, y: vh * 0.05, rotation: -15, scale: 0.6 });
-          gsap.to(brushFixed, {
-            scale: 2.8, x: 0, y: -(vh * 0.15), rotation: -38,
-            duration: 0.35, ease: 'back.out(4)',
-            onComplete: function () { /* swing handled by paintSweep onUpdate */ }
-          });
-        }
-      });
-    },
-    onUpdate: function (self) { paintSweep(self.progress); },
-    onLeave: function () {
+    // Scrolling back up past the start → unlock upward
+    if (delta < 0 && sweepVirtual <= 0) {
+      window.removeEventListener('wheel', onWheelSweep, { passive: false });
+      window.removeEventListener('touchmove', onTouchMoveSweep, { passive: false });
+      resetSweep();
+      unlockPage(false);
+      return;
+    }
+
+    sweepVirtual = Math.max(0, Math.min(TOTAL_BUDGET, sweepVirtual + delta));
+    var p = sweepVirtual / TOTAL_BUDGET;
+    paintSweep(p);
+
+    if (sweepVirtual >= TOTAL_BUDGET && !sweepDone) {
+      sweepDone = true;
+      // Finish canvas — fill white so about section is visible through it
       if (sweepCtx) {
         sweepCtx.fillStyle = '#ffffff';
         sweepCtx.fillRect(0, 0, wipeCanvas.width, wipeCanvas.height);
       }
       gsap.set(brushFixed, { opacity: 0 });
-      gsap.to(wipeCanvas, { opacity: 0, duration: 0.6, delay: 0.15,
-        onComplete: function () { sweepCtx = null; }
-      });
-    },
-    onLeaveBack: function () {
-      gsap.killTweensOf(wipeCanvas);
-      gsap.killTweensOf(brushFixed);
-      gsap.set(wipeCanvas,  { opacity: 0 });
-      gsap.set(brushFixed,  { opacity: 0 });
-      if (sweepCtx) { sweepCtx.clearRect(0, 0, wipeCanvas.width, wipeCanvas.height); sweepCtx = null; }
-      // Restore in-screen brush if user scrolls back
-      gsap.set(document.querySelector('.ls-brush'), { opacity: 1 });
+      gsap.to(wipeCanvas, { opacity: 0, duration: 0.5, delay: 0.1, onComplete: function () { sweepCtx = null; } });
+      window.removeEventListener('wheel', onWheelSweep, { passive: false });
+      window.removeEventListener('touchmove', onTouchMoveSweep, { passive: false });
+      unlockPage(true);
     }
-  });
+  }
+
+  var touchStartYSweep = 0;
+  function onTouchStartSweep(e) { touchStartYSweep = e.touches[0].clientY; }
+  function onTouchMoveSweep(e) {
+    e.preventDefault();
+    var dy = touchStartYSweep - e.touches[0].clientY;
+    touchStartYSweep = e.touches[0].clientY;
+    onWheelSweep({ preventDefault: function(){}, deltaY: dy * 2 });
+  }
+
+  // Observe sweep-wrap with IntersectionObserver — lock when it enters viewport
+  var sweepObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting && !sweepLocked && !sweepDone) {
+        lockPage();
+        startSweepAnimation();
+        window.addEventListener('wheel', onWheelSweep, { passive: false });
+        window.addEventListener('touchstart', onTouchStartSweep, { passive: true });
+        window.addEventListener('touchmove', onTouchMoveSweep, { passive: false });
+      }
+    });
+  }, { threshold: 0 });
+  sweepObserver.observe(document.getElementById('sweep-wrap'));
 
   window.addEventListener('resize', function () {
     gsap.set(deviceScene, { scale: computeInitialScale() });
