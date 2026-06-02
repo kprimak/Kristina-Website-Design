@@ -387,11 +387,15 @@
                 <stop offset="0%" stop-color="#d6d6d6"/>
                 <stop offset="100%" stop-color="#a4a4a4"/>
               </linearGradient>
+              <!-- clip that punches the screen hole out of any shape -->
+              <clipPath id="lidClip">
+                <path fill-rule="evenodd" d="M44,4 h912 a14,14 0 0 1 14,14 v530 a14,14 0 0 1 -14,14 h-912 a14,14 0 0 1 -14,-14 v-530 a14,14 0 0 1 14,-14 z M90,32 h820 v512 h-820 z"/>
+              </clipPath>
             </defs>
-            <rect x="44" y="4" width="912" height="558" rx="14" fill="url(#lidGrad)"/>
+            <!-- lid: gradient + stroke, both clipped so screen area is fully transparent -->
+            <rect x="44" y="4" width="912" height="558" rx="14" fill="url(#lidGrad)" clip-path="url(#lidClip)"/>
             <rect x="44" y="4" width="912" height="558" rx="14" fill="none" stroke="#9a9a9a" stroke-width="1.2"/>
-            <!-- frame ring with screen hole cut out via evenodd -->
-            <path d="M62,10 h876 a10,10 0 0 1 10,10 v528 a10,10 0 0 1 -10,10 h-876 a10,10 0 0 1 -10,-10 v-528 a10,10 0 0 1 10,-10 z M90,32 h820 v512 h-820 z" fill="#c4c4c4" fill-rule="evenodd"/>
+            <!-- black bezels around screen -->
             <rect x="70" y="18" width="860" height="14" fill="#141416"/>
             <rect x="70" y="18" width="20" height="530" fill="#141416"/>
             <rect x="910" y="18" width="20" height="530" fill="#141416"/>
