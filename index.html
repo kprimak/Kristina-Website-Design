@@ -437,93 +437,22 @@
       min-width: 58px;
     }
 
-    /* ── PAINTBALL CONTAINER — white base, sits between colorful-bg and blueprint ── */
+    /* ── PAINTBALL CONTAINER — high-res abstract liquid paint image, behind blueprint ── */
     .paintball-container {
       position: absolute;
-      inset: 0;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
       z-index: 1;
-      background: #ffffff;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    .splat {
-      position: absolute;
-      transform-origin: center center;
-      border-radius: 50%;
+      background-color: #ffffff !important;
+      background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      transform: scale(0.8);
       opacity: 0;
-      transform: scale(0);
+      pointer-events: none;
       will-change: transform, opacity;
-    }
-    /* Each splat: unique blob via border-radius, color, size, position */
-    .splat-1 {
-      width: 28vw; height: 24vw;
-      top: 5%; left: -4%;
-      background: #FF2D78;
-      border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
-      filter: blur(2px);
-    }
-    .splat-2 {
-      width: 22vw; height: 20vw;
-      top: -6%; left: 30%;
-      background: #FFE600;
-      border-radius: 42% 58% 38% 62% / 60% 44% 56% 40%;
-      filter: blur(1.5px);
-    }
-    .splat-3 {
-      width: 26vw; height: 22vw;
-      top: 2%; right: -2%;
-      background: #7B00D4;
-      border-radius: 55% 45% 62% 38% / 48% 55% 45% 52%;
-      filter: blur(2px);
-    }
-    .splat-4 {
-      width: 20vw; height: 18vw;
-      top: 35%; left: 5%;
-      background: #004FFF;
-      border-radius: 38% 62% 44% 56% / 52% 40% 60% 48%;
-      filter: blur(1.5px);
-    }
-    .splat-5 {
-      width: 30vw; height: 26vw;
-      top: 28%; left: 35%;
-      background: #FF007F;
-      border-radius: 60% 40% 50% 50% / 45% 58% 42% 55%;
-      filter: blur(2.5px);
-    }
-    .splat-6 {
-      width: 18vw; height: 22vw;
-      top: 25%; right: 4%;
-      background: #FFE600;
-      border-radius: 44% 56% 60% 40% / 55% 42% 58% 45%;
-      filter: blur(1px);
-    }
-    .splat-7 {
-      width: 24vw; height: 20vw;
-      bottom: 2%; left: 10%;
-      background: #FF2D78;
-      border-radius: 50% 50% 38% 62% / 60% 45% 55% 40%;
-      filter: blur(2px);
-    }
-    .splat-8 {
-      width: 22vw; height: 18vw;
-      bottom: -4%; right: 8%;
-      background: #004FFF;
-      border-radius: 58% 42% 46% 54% / 40% 60% 40% 60%;
-      filter: blur(1.5px);
-    }
-    .splat-9 {
-      width: 16vw; height: 14vw;
-      bottom: 15%; left: 42%;
-      background: #7B00D4;
-      border-radius: 46% 54% 55% 45% / 52% 48% 52% 48%;
-      filter: blur(1px);
-    }
-    .splat-10 {
-      width: 14vw; height: 16vw;
-      top: 55%; right: 22%;
-      background: #FF6B00;
-      border-radius: 62% 38% 40% 60% / 45% 55% 45% 55%;
-      filter: blur(1.5px);
     }
 
     /* ── LAYER 0 · Colorful gradient (always behind) ── */
@@ -769,19 +698,8 @@
     <!-- LAYER 0 · Colorful gradient base — always visible behind everything -->
     <div class="colorful-bg"></div>
 
-    <!-- LAYER 1 · Paintball container — white base, splats hidden until blueprint tears -->
-    <div class="paintball-container">
-      <div class="splat splat-1"></div>
-      <div class="splat splat-2"></div>
-      <div class="splat splat-3"></div>
-      <div class="splat splat-4"></div>
-      <div class="splat splat-5"></div>
-      <div class="splat splat-6"></div>
-      <div class="splat splat-7"></div>
-      <div class="splat splat-8"></div>
-      <div class="splat splat-9"></div>
-      <div class="splat splat-10"></div>
-    </div>
+    <!-- LAYER 1 · Paintball container — high-res liquid paint image, hidden until blueprint tears -->
+    <div class="paintball-container"></div>
 
     <!-- LAYER 2 · Torn paper edge SVG -->
     <svg class="paper-tear-edge" viewBox="0 0 1440 900"
@@ -1243,7 +1161,8 @@
   gsap.set('.colorful-bg', { opacity: 1, zIndex: 0 });
   gsap.set(finLayer, { clipPath: 'inset(0 100% 0 0)' });
   gsap.set(bpLayer,  { opacity: 0 }); // small in-screen blueprint always hidden
-  gsap.set('.splat',  { scale: 0, autoAlpha: 0 }); // paintball splats hidden until rip
+  // paintball-container starts scaled down + invisible — CSS sets initial state, GSAP confirms it
+  gsap.set('.paintball-container', { scale: 0.8, autoAlpha: 0 });
 
   // ══════════════════════════════════════
   //  SINGLE UNIFIED TIMELINE — 450vh, one ScrollTrigger
@@ -1266,11 +1185,11 @@
     scale: 1.06, duration: 0.06, ease: 'power2.in', transformOrigin: 'center center',
   }, 0.00);
 
-  // SIMULTANEOUS at 0.06: paintballs violently burst into view behind the tearing paper
-  tl.to('.splat', {
-    scale: 1.5, autoAlpha: 1,
-    stagger: 0.05,
-    duration: 0.08,
+  // SIMULTANEOUS at 0.06: liquid paint image explosively bursts into view behind the tearing paper
+  tl.to('.paintball-container', {
+    scale: 1,
+    autoAlpha: 1,
+    duration: 0.15,
     ease: 'power4.out',
   }, 0.06);
 
