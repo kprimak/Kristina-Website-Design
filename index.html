@@ -375,13 +375,15 @@
                       <div style="text-align:center;">
                         <p style="font-family:'Space Grotesk',sans-serif;font-size:0.65rem;font-weight:700;color:rgba(255,255,255,0.75);line-height:1;margin:0 0 0.5rem;letter-spacing:0.01em;">Crafting digital luxuries with</p>
                         <!-- KIPODE logo: double stacked + swoosh -->
-                        <svg viewBox="0 0 220 88" xmlns="http://www.w3.org/2000/svg" style="width:160px;height:auto;display:block;">
-                          <!-- top KIPODE: normal -->
-                          <text x="110" y="28" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="26" font-weight="300" letter-spacing="6" fill="white">KIPODE</text>
-                          <!-- bottom KIPODE: rotated 180° around the midpoint between the two lines -->
-                          <text x="110" y="52" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="26" font-weight="300" letter-spacing="6" fill="white" transform="rotate(180, 110, 40)">KIPODE</text>
-                          <!-- swoosh: cursive l loop on right, long tail sweeping left -->
-                          <path d="M 152,54 C 154,46 158,38 154,43 C 150,48 151,55 149,60 C 145,67 110,74 60,70" fill="none" stroke="white" stroke-width="1.1" stroke-linecap="round"/>
+                        <svg viewBox="0 0 260 100" xmlns="http://www.w3.org/2000/svg" style="width:200px;height:auto;display:block;">
+                          <!-- top KIPODE normal -->
+                          <text id="kt" x="130" y="36" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="30" font-weight="300" letter-spacing="5" fill="white">KIPODE</text>
+                          <!-- bottom KIPODE: rotate 180° around center between the two baselines.
+                               letter-spacing adds trailing space after last char, so after rotation
+                               the text shifts left by letter-spacing/2 — compensate with x offset -->
+                          <text x="132.5" y="62" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-size="30" font-weight="300" letter-spacing="5" fill="white" transform="rotate(180, 132.5, 49)">KIPODE</text>
+                          <!-- swoosh: cursive l loop rising from right of bottom text, tail sweeps left -->
+                          <path d="M 162,66 C 165,57 168,46 163,51 C 158,56 160,64 158,69 C 150,78 100,82 55,77" fill="none" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
                         </svg>
                       </div>
                       <!-- paintbrush to the right -->
