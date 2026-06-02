@@ -679,12 +679,12 @@
   var sweepCtx     = null;
   var sweepLocked  = false;
   var sweepDone    = false;
-  var sweepVirtual = 0;          // accumulated virtual scroll px
-  var IDLE_BUDGET  = 0;          // no idle — painting starts immediately after pop
+  var sweepVirtual = 0;
   var PAINT_BUDGET = 1800;
-  var TOTAL_BUDGET = PAINT_BUDGET;
-  var POP_END      = 0;
-  var IDLE_END     = 0;
+  // States: 'waiting' → first scroll triggers glow (page frozen)
+  //         'glowing' → animation plays, scrolls ignored
+  //         'painting' → scrolls drive brush across canvas
+  var sweepState   = 'waiting';
 
   // quickTo smoothers — created once brushFixed exists, used instead of gsap.set
   // so every brush position change interpolates rather than snapping
@@ -805,62 +805,79 @@
     gsap.set(wipeCanvas, { opacity: 1 });
     var lsBrush = document.querySelector('.ls-brush');
     var vh = window.innerHeight;
-    var vw = window.innerWidth;
     var targetX = -33.8;
     var targetY = 0.35 * vh - 43.3 - (vh * 0.5 + 11);
-    // In-screen brush gently dissolves
+
+    // In-screen brush gently fades out
     gsap.to(lsBrush, {
-      opacity: 0, scale: 0.8, duration: 0.3, ease: 'power1.inOut',
+      opacity: 0, scale: 0.85, duration: 0.35, ease: 'power1.inOut',
       onComplete: function () { gsap.set(lsBrush, { opacity: 0, scale: 1, filter: 'none' }); }
     });
-    // Fixed brush materialises with a glow — grows and floats up in one arc
+
+    // Fixed brush materialises with a soft light-pink glow, floats up in one arc
     gsap.set(brushFixed, {
       opacity: 0, x: targetX, y: targetY + vh * 0.10, rotation: -28, scale: 0.5,
-      filter: 'drop-shadow(0 0 18px #FF007F) drop-shadow(0 0 6px #fff) brightness(1.8)'
+      filter: 'drop-shadow(0 0 12px #ffb3cc) drop-shadow(0 0 4px #fff9fb) brightness(1.3)'
     });
     gsap.to(brushFixed, {
       opacity: 1, scale: 2.8, x: targetX, y: targetY, rotation: -38,
-      duration: 0.55, ease: 'power2.out', delay: 0.08
+      duration: 0.6, ease: 'power2.out', delay: 0.1
     });
-    // Glow fades out once the brush has settled
+    // Glow softly fades once settled, then unlock painting
     gsap.to(brushFixed, {
-      filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3)) brightness(1)',
-      duration: 0.6, ease: 'power1.out', delay: 0.5
+      filter: 'none',
+      duration: 0.5, ease: 'power1.out', delay: 0.55,
+      onComplete: function () {
+        sweepState = 'painting';
+      }
     });
   }
 
   function resetSweep() {
     brushQX = brushQY = brushQR = null;
+    sweepState   = 'waiting';
+    sweepVirtual = 0;
+    sweepDone    = false;
     gsap.killTweensOf(wipeCanvas);
     gsap.killTweensOf(brushFixed);
-    gsap.set(wipeCanvas, { opacity: 0 });
-    gsap.set(brushFixed, { opacity: 0 });
+    gsap.set(wipeCanvas,  { opacity: 0 });
+    gsap.set(brushFixed,  { opacity: 0, filter: 'none' });
     gsap.set(document.querySelector('.ls-brush'), { opacity: 1, scale: 1, filter: 'none' });
     if (sweepCtx) { sweepCtx.clearRect(0, 0, wipeCanvas.width, wipeCanvas.height); sweepCtx = null; }
-    sweepVirtual = 0;
-    sweepDone = false;
   }
 
   function onWheelSweep(e) {
     e.preventDefault();
     var delta = e.deltaY;
 
-    // Scrolling back up past the start → unlock upward
+    if (sweepState === 'waiting') {
+      if (delta > 0) {
+        sweepState = 'glowing';
+        startSweepAnimation();  // page stays frozen; painting unlocks in onComplete
+      }
+      return;
+    }
+
+    if (sweepState === 'glowing') {
+      // Scrolls ignored while the glow/pop animation plays
+      return;
+    }
+
+    // sweepState === 'painting'
     if (delta < 0 && sweepVirtual <= 0) {
       window.removeEventListener('wheel', onWheelSweep, { passive: false });
       window.removeEventListener('touchmove', onTouchMoveSweep, { passive: false });
       resetSweep();
+      sweepState = 'waiting';
       unlockPage(false);
       return;
     }
 
-    sweepVirtual = Math.max(0, Math.min(TOTAL_BUDGET, sweepVirtual + delta));
-    var p = sweepVirtual / TOTAL_BUDGET;
-    paintSweep(p);
+    sweepVirtual = Math.max(0, Math.min(PAINT_BUDGET, sweepVirtual + delta));
+    paintSweep(sweepVirtual / PAINT_BUDGET);
 
-    if (sweepVirtual >= TOTAL_BUDGET && !sweepDone) {
+    if (sweepVirtual >= PAINT_BUDGET && !sweepDone) {
       sweepDone = true;
-      // Finish canvas — fill white so about section is visible through it
       if (sweepCtx) {
         sweepCtx.fillStyle = '#ffffff';
         sweepCtx.fillRect(0, 0, wipeCanvas.width, wipeCanvas.height);
