@@ -821,12 +821,12 @@
     });
     gsap.to(brushFixed, {
       opacity: 1, scale: 2.8, x: targetX, y: targetY, rotation: -38,
-      duration: 0.6, ease: 'power2.out', delay: 0.1
+      duration: 1.0, ease: 'power2.out', delay: 0.1
     });
     // Glow softly fades once settled, then unlock painting
     gsap.to(brushFixed, {
       filter: 'none',
-      duration: 0.5, ease: 'power1.out', delay: 0.55,
+      duration: 0.5, ease: 'power1.out', delay: 0.95,
       onComplete: function () {
         sweepState = 'painting';
       }
