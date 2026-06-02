@@ -15,81 +15,30 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* White everywhere — no exceptions */
-    html, body { background: #ffffff !important; }
-
-    body { font-family: 'Archivo', sans-serif; overflow-x: hidden; }
-
-    /* ── SCROLL SPACE ── */
-    #main-section { height: 450vh; }
-
-    /* ── ALL SCENE WRAPPERS — force white, no exceptions ── */
-    #main-viewport,
-    #device-scene,
-    #lateral-wrap,
-    #laptop-wrap {
-      background-color: #ffffff !important;
-      background:       #ffffff !important;
+    /* ══ MAGENTA BASE — floods every surface before anything else loads ══ */
+    html {
+      background: #FF007F !important;
+    }
+    body {
+      background: #FF007F !important;
+      font-family: 'Archivo', sans-serif;
+      overflow-x: hidden;
     }
 
-    /* ── STICKY CANVAS ── */
+    /* ══ SCROLL SPACE ══ */
+    #main-section { height: 450vh; }
+
+    /* ══ STICKY CANVAS — magenta fills 100vw × 100vh ══ */
     #main-viewport {
       position: sticky;
       top: 0;
       width: 100%;
       height: 100vh;
       overflow: hidden;
+      background: #FF007F !important;
     }
 
-    /* ── HEADLINE — lives at viewport level, never inside a transform ──
-       position:fixed is NOT used because a transformed ancestor traps it.
-       Instead the headline sits in #main-viewport (no transform on it)
-       and is centered with flex. GSAP fades it out during zoom-out. */
-    #headline-wrap {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      z-index: 100;
-      pointer-events: none;
-    }
-    #headline-eyebrow {
-      font-family: 'Archivo', sans-serif;
-      font-size: 0.7rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: #000000;
-      opacity: 0.45;
-      margin-bottom: 1.1rem;
-    }
-    #headline-h1 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 900;
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      color: #000000 !important;
-      line-height: 1.18;
-      letter-spacing: -0.03em;
-      margin-bottom: 1.2rem;
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-    }
-    #headline-rule {
-      width: 40px;
-      height: 1.5px;
-      background: rgba(0,0,0,0.22);
-      margin: 0 auto 1rem;
-    }
-    #headline-sub {
-      font-size: 0.7rem;
-      letter-spacing: 0.14em;
-      color: rgba(0,0,0,0.38);
-    }
-
-    /* ── DEVICE SCENE — GSAP scales this group ── */
+    /* ══ DEVICE SCENE — GSAP scales this group ══ */
     #device-scene {
       position: absolute;
       inset: 0;
@@ -99,6 +48,7 @@
       transform-origin: center center;
       will-change: transform;
       z-index: 1;
+      background: #FF007F !important;
     }
 
     #lateral-wrap {
@@ -106,6 +56,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      background: #FF007F !important;
     }
 
     /* MacBook chassis */
@@ -114,12 +65,13 @@
       width: min(960px, 90vw);
       aspect-ratio: 1000 / 680;
       flex-shrink: 0;
+      background: #FF007F !important;
       filter:
-        drop-shadow(0 40px 80px rgba(0,0,0,0.28))
-        drop-shadow(0 10px 24px rgba(0,0,0,0.14));
+        drop-shadow(0 40px 80px rgba(0,0,0,0.32))
+        drop-shadow(0 10px 24px rgba(0,0,0,0.18));
     }
 
-    /* Screen window */
+    /* Screen window — magenta fill behind all screen content */
     #laptop-screen-content {
       position: absolute;
       left:   9%;
@@ -127,7 +79,7 @@
       width:  82%;
       height: 75%;
       overflow: hidden;
-      background: #ffffff !important;
+      background: #FF007F !important;
       z-index: 1;
     }
 
@@ -149,7 +101,7 @@
       transform: translateY(-50%);
       width: 20%;
       min-width: 110px;
-      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.20));
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.22));
     }
     #phone-device {
       position: absolute;
@@ -158,12 +110,54 @@
       transform: translateY(-50%);
       width: 9.5%;
       min-width: 58px;
-      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.20));
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.22));
     }
 
-    /* After section */
+    /* ══ HEADLINE — sits in #main-viewport (no transform ancestor)
+       so z-index and centering behave correctly ══ */
+    #headline-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 100;
+      pointer-events: none;
+    }
+    #headline-eyebrow {
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 1.1rem;
+    }
+    #headline-h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: #ffffff !important;
+      line-height: 1.18;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.2rem;
+    }
+    #headline-rule {
+      width: 40px;
+      height: 1.5px;
+      background: rgba(255,255,255,0.35);
+      margin: 0 auto 1rem;
+    }
+    #headline-sub {
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.55);
+    }
+
+    /* ══ AFTER SECTION ══ */
     #after-section {
-      background: #ffffff;
+      background: #1a1a1a;
       text-align: center;
       padding: 9rem 2rem 10rem;
     }
@@ -171,20 +165,20 @@
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
       font-size: clamp(2rem, 4vw, 3.8rem);
-      color: #1C1C1E;
+      color: #ffffff;
       letter-spacing: -0.04em;
       margin-bottom: 1.4rem;
     }
     #after-section p {
       max-width: 500px;
       margin: 0 auto 2.6rem;
-      color: #6B6B70;
+      color: rgba(255,255,255,0.55);
       line-height: 1.78;
       font-size: 1.05rem;
     }
     .cta-btn {
       display: inline-block;
-      background: #1C1C1E;
+      background: #FF007F;
       color: #ffffff;
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 600;
@@ -201,16 +195,14 @@
 <section id="main-section">
   <div id="main-viewport">
 
-    <!-- DEVICE SCENE — scaled by GSAP (z-index 1, behind headline) -->
+    <!-- DEVICE SCENE (z-index 1) — scaled by GSAP -->
     <div id="device-scene">
       <div id="lateral-wrap">
 
         <!-- TABLET -->
         <div id="tablet-device" aria-hidden="true">
           <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <clipPath id="tcc0"><rect x="12" y="20" width="176" height="226" rx="3"/></clipPath>
-            </defs>
+            <defs><clipPath id="tcc0"><rect x="12" y="20" width="176" height="226" rx="3"/></clipPath></defs>
             <rect x="2" y="2" width="196" height="266" rx="18" fill="#1e1e22"/>
             <rect x="2" y="2" width="196" height="266" rx="18" fill="none" stroke="#38383c" stroke-width="1.2"/>
             <circle cx="100" cy="258" r="8" fill="#2a2a2e" stroke="#3a3a3e" stroke-width="1"/>
@@ -219,8 +211,7 @@
             <rect x="12" y="63" width="176" height="1" fill="rgba(28,28,30,0.08)"/>
             <text x="22" y="43" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#1C1C1E" letter-spacing="-0.4">Your Future</text>
             <text x="22" y="56" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#2563EB" letter-spacing="-0.4">Website.</text>
-            <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=75"
-                   x="12" y="64" width="176" height="110" preserveAspectRatio="xMidYMid slice"/>
+            <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=75" x="12" y="64" width="176" height="110" preserveAspectRatio="xMidYMid slice"/>
             <rect x="12" y="64" width="176" height="110" fill="rgba(12,15,20,0.58)"/>
             <text x="22" y="106" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Crafting Digital</text>
             <text x="22" y="120" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Luxuries.</text>
@@ -229,23 +220,22 @@
             <rect x="12" y="174" width="176" height="72" fill="#FAF7F2"/>
             <text x="18" y="184" font-family="Archivo,sans-serif" font-size="6" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
             <rect x="14" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
-            <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=200&q=70"
-                   x="14" y="190" width="52" height="50" clip-path="url(#tcc1)" preserveAspectRatio="xMidYMid slice"/>
+            <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=200&q=70" x="14" y="190" width="52" height="50" clip-path="url(#tcc1)" preserveAspectRatio="xMidYMid slice"/>
             <defs><clipPath id="tcc1"><rect x="14" y="190" width="52" height="50" rx="3"/></clipPath></defs>
             <rect x="72" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
-            <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=200&q=70"
-                   x="72" y="190" width="52" height="50" clip-path="url(#tcc2)" preserveAspectRatio="xMidYMid slice"/>
+            <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=200&q=70" x="72" y="190" width="52" height="50" clip-path="url(#tcc2)" preserveAspectRatio="xMidYMid slice"/>
             <defs><clipPath id="tcc2"><rect x="72" y="190" width="52" height="50" rx="3"/></clipPath></defs>
             <rect x="130" y="190" width="58" height="50" rx="3" fill="#e8e2d8"/>
-            <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=200&q=70"
-                   x="130" y="190" width="58" height="50" clip-path="url(#tcc3)" preserveAspectRatio="xMidYMid slice"/>
+            <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=200&q=70" x="130" y="190" width="58" height="50" clip-path="url(#tcc3)" preserveAspectRatio="xMidYMid slice"/>
             <defs><clipPath id="tcc3"><rect x="130" y="190" width="58" height="50" rx="3"/></clipPath></defs>
           </svg>
         </div>
 
         <!-- MACBOOK -->
         <div id="laptop-wrap">
+          <!-- Magenta screen fill -->
           <div id="laptop-screen-content"></div>
+          <!-- Chassis SVG -->
           <svg id="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
               <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
@@ -269,8 +259,7 @@
             <rect x="34"  y="558" width="932" height="10" rx="2.5" fill="#868686"/>
             <rect x="44"  y="561" width="912" height="5"  fill="#a8a8a8" opacity="0.4"/>
             <path d="M 18,568 Q 18,572 22,574 L 978,574 Q 982,572 982,568 Z" fill="#bcbcbc"/>
-            <path d="M 22,574 L 978,574 L 958,620 Q 954,630 920,632 L 80,632 Q 46,630 42,620 Z"
-                  fill="url(#baseGrad)" stroke="#9a9a9a" stroke-width="0.8"/>
+            <path d="M 22,574 L 978,574 L 958,620 Q 954,630 920,632 L 80,632 Q 46,630 42,620 Z" fill="url(#baseGrad)" stroke="#9a9a9a" stroke-width="0.8"/>
             <rect x="88"  y="578" width="824" height="38" rx="3" fill="#b0b0b0" opacity="0.4"/>
             <rect x="378" y="582" width="244" height="26" rx="5.5" fill="#b4b4b4" stroke="#a0a0a0" stroke-width="0.8"/>
             <g fill="#888" opacity="0.65">
@@ -296,9 +285,7 @@
         <!-- PHONE -->
         <div id="phone-device" aria-hidden="true">
           <svg viewBox="0 0 108 218" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <clipPath id="ph2Clip"><rect x="7" y="14" width="94" height="190" rx="8"/></clipPath>
-            </defs>
+            <defs><clipPath id="ph2Clip"><rect x="7" y="14" width="94" height="190" rx="8"/></clipPath></defs>
             <rect x="0" y="0" width="108" height="218" rx="20" fill="#1a1a1e"/>
             <rect x="0" y="0" width="108" height="218" rx="20" fill="none" stroke="#333" stroke-width="1.2"/>
             <rect x="38" y="6" width="32" height="8" rx="4" fill="#111"/>
@@ -307,8 +294,7 @@
             <rect x="7" y="41" width="94" height="1" fill="rgba(28,28,30,0.08)"/>
             <text x="14" y="30" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="#1C1C1E">Your Future</text>
             <text x="14" y="40" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="#2563EB">Website.</text>
-            <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=75"
-                   x="7" y="42" width="94" height="100" clip-path="url(#ph2Clip)" preserveAspectRatio="xMidYMid slice"/>
+            <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=75" x="7" y="42" width="94" height="100" clip-path="url(#ph2Clip)" preserveAspectRatio="xMidYMid slice"/>
             <rect x="7" y="42" width="94" height="100" fill="rgba(12,15,20,0.58)"/>
             <text x="14" y="80"  font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Crafting</text>
             <text x="14" y="92"  font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Digital</text>
@@ -318,16 +304,13 @@
             <rect x="7" y="142" width="94" height="62" fill="#FAF7F2"/>
             <text x="13" y="153" font-family="Archivo,sans-serif" font-size="5" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
             <rect x="9"  y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
-            <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=100&q=70"
-                   x="9" y="158" width="28" height="40" clip-path="url(#pcc1)" preserveAspectRatio="xMidYMid slice"/>
+            <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=100&q=70" x="9" y="158" width="28" height="40" clip-path="url(#pcc1)" preserveAspectRatio="xMidYMid slice"/>
             <defs><clipPath id="pcc1"><rect x="9" y="158" width="28" height="40" rx="2"/></clipPath></defs>
             <rect x="41" y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
-            <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=100&q=70"
-                   x="41" y="158" width="28" height="40" clip-path="url(#pcc2)" preserveAspectRatio="xMidYMid slice"/>
+            <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=100&q=70" x="41" y="158" width="28" height="40" clip-path="url(#pcc2)" preserveAspectRatio="xMidYMid slice"/>
             <defs><clipPath id="pcc2"><rect x="41" y="158" width="28" height="40" rx="2"/></clipPath></defs>
             <rect x="73" y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
-            <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=100&q=70"
-                   x="73" y="158" width="28" height="40" clip-path="url(#pcc3)" preserveAspectRatio="xMidYMid slice"/>
+            <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=100&q=70" x="73" y="158" width="28" height="40" clip-path="url(#pcc3)" preserveAspectRatio="xMidYMid slice"/>
             <defs><clipPath id="pcc3"><rect x="73" y="158" width="28" height="40" rx="2"/></clipPath></defs>
             <rect x="39" y="206" width="30" height="3" rx="1.5" fill="#333"/>
           </svg>
@@ -336,9 +319,9 @@
       </div><!-- /lateral-wrap -->
     </div><!-- /device-scene -->
 
-    <!-- HEADLINE — lives in #main-viewport, NOT inside #device-scene.
-         #main-viewport has NO transform, so z-index and centering work
-         exactly as expected. z-index 100 puts it above #device-scene (z-index 1). -->
+    <!-- HEADLINE — inside #main-viewport, NOT inside #device-scene.
+         #main-viewport has no CSS transform, so z-index 100 works correctly
+         and the headline cannot be trapped or clipped. -->
     <div id="headline-wrap">
       <p id="headline-eyebrow">Blueprint to Reality</p>
       <h1 id="headline-h1">not just a website —<br>a story.</h1>
@@ -358,16 +341,11 @@
 <script>
   gsap.registerPlugin(ScrollTrigger);
 
-  const deviceScene  = document.getElementById('device-scene');
-  const headlineWrap = document.getElementById('headline-wrap');
-  const tabletDev    = document.getElementById('tablet-device');
-  const phoneDev     = document.getElementById('phone-device');
+  var deviceScene  = document.getElementById('device-scene');
+  var headlineWrap = document.getElementById('headline-wrap');
+  var tabletDev    = document.getElementById('tablet-device');
+  var phoneDev     = document.getElementById('phone-device');
 
-  // ── INITIAL SCALE ──────────────────────────────────────────────────────
-  // Scales #device-scene so the laptop screen fills the full viewport.
-  // laptop-wrap width W = min(960, 90vw)
-  // screen width  = W × 0.82
-  // screen height = W × 0.51  (= 680/1000 × 0.75)
   function computeInitialScale() {
     var W = Math.min(960, window.innerWidth * 0.9);
     return Math.max(
@@ -378,14 +356,10 @@
 
   var INITIAL_SCALE = computeInitialScale();
 
-  // Apply immediately — before GSAP's first tick.
-  // The headline is NOT inside #device-scene so its position
-  // is unaffected by this transform.
   gsap.set(deviceScene, { scale: INITIAL_SCALE, transformOrigin: 'center center' });
   gsap.set(tabletDev,   { autoAlpha: 0 });
   gsap.set(phoneDev,    { autoAlpha: 0 });
 
-  // ── SCROLL TIMELINE ────────────────────────────────────────────────────
   var tl = gsap.timeline({
     scrollTrigger: {
       trigger: '#main-section',
@@ -397,15 +371,10 @@
     }
   });
 
-  // Step 1: fade out the headline as the zoom begins
   tl.to(headlineWrap, { autoAlpha: 0, duration: 0.20, ease: 'power1.in' }, 0);
-
-  // Step 2: zoom out the device scene — chassis and keyboard emerge
-  tl.to(deviceScene, { scale: 0.82, duration: 0.75, ease: 'expo.inOut' }, 0);
-
-  // Step 3: side devices fade in
-  tl.to(tabletDev, { autoAlpha: 1, duration: 0.25, ease: 'power2.out' }, 0.70);
-  tl.to(phoneDev,  { autoAlpha: 1, duration: 0.25, ease: 'power2.out' }, 0.70);
+  tl.to(deviceScene,  { scale: 0.82,  duration: 0.75, ease: 'expo.inOut' }, 0);
+  tl.to(tabletDev,    { autoAlpha: 1, duration: 0.25, ease: 'power2.out' }, 0.70);
+  tl.to(phoneDev,     { autoAlpha: 1, duration: 0.25, ease: 'power2.out' }, 0.70);
 
   window.addEventListener('resize', function () {
     INITIAL_SCALE = computeInitialScale();
