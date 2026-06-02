@@ -550,7 +550,7 @@
 <canvas id="wipe-canvas" aria-hidden="true"></canvas>
 
 <!-- Scroll space for the brush diagonal sweep — canvas+brush are position:fixed so they overlay everything -->
-<div id="sweep-wrap" style="height:280vh;"></div>
+<div id="sweep-wrap" style="height:500vh;"></div>
 
 <section id="about-section">
   <div class="about-inner">
@@ -675,19 +675,19 @@
   //                paint grows from brush tip as brush moves
 
   var sweepCtx  = null;
-  var POP_END   = 0.15;
-  var SWING_END = 0.35;
+  var POP_END   = 0.08;
+  var SWING_END = 0.18;
 
   // Each stroke: starts where brush is, paints toward the opposite edge.
   // x0/y0 = fraction of viewport at stroke start (brush tip position).
   // x1/y1 = fraction at stroke end.
   var STROKES = [
-    // Stroke 1 — WHITE — from brush land position (center-right), diagonally down-left
-    { x0: 0.58, y0: 0.38, x1: -0.05, y1: 0.74, rot: -38, color: '#ffffff', edge: 'rgba(255,0,127,0.14)' },
-    // Stroke 2 — MAGENTA — from left edge, sweeps across to right
-    { x0: -0.05, y0: 0.62, x1:  1.10, y1: 0.93, rot:  35, color: '#FF007F', edge: 'rgba(255,255,255,0.22)' },
-    // Stroke 3 — WHITE — from right edge, sweeps back to left
-    { x0:  1.10, y0: 0.82, x1: -0.05, y1: 1.08, rot: -35, color: '#ffffff', edge: 'rgba(255,0,127,0.12)' }
+    // Stroke 1 — WHITE — from screen center (brush land), diagonally down-left to cover top half
+    { x0: 0.50, y0: 0.35, x1: -0.05, y1: 0.65, rot: -38, color: '#ffffff', edge: 'rgba(255,0,127,0.18)' },
+    // Stroke 2 — MAGENTA — from left edge across to right, covers middle band
+    { x0: -0.05, y0: 0.52, x1:  1.10, y1: 0.82, rot:  35, color: '#FF007F', edge: 'rgba(255,255,255,0.25)' },
+    // Stroke 3 — WHITE — from right edge back to left, covers bottom — reveals About Us
+    { x0:  1.10, y0: 0.70, x1: -0.05, y1: 1.05, rot: -35, color: '#ffffff', edge: 'rgba(255,0,127,0.15)' }
   ];
 
   function paintSweep(p) {
@@ -701,12 +701,12 @@
     if (p <= SWING_END) {
       if (p > POP_END) {
         var swP   = (p - POP_END) / (SWING_END - POP_END); // 0→1
-        var angle = swP * Math.PI * 2.8; // ~1.4 full swings
+        var angle = swP * Math.PI * 3.2; // ~1.6 swings centered on screen
         gsap.set(brushFixed, {
-          x:        vw * 0.08 + Math.sin(angle) * vw * 0.20,
-          y:        -(vh * 0.26),
-          rotation: -38 + Math.sin(angle) * 20,
-          scale:    1,
+          x:        Math.sin(angle) * vw * 0.30,  // centered, swings left/right
+          y:        -(vh * 0.15),
+          rotation: -38 + Math.sin(angle) * 25,
+          scale:    2.8,
           opacity:  1
         });
       }
@@ -774,20 +774,22 @@
       gsap.set(wipeCanvas, { opacity: 1 });
 
       var vw = window.innerWidth, vh = window.innerHeight;
-      var startX = vw * 0.08, startY = vh * -0.04;
+      // Brush starts at laptop screen center then rockets to screen center
+      var startX = vw * 0.5 - vw * 0.5;   // x offset from center = 0 (centered)
+      var startY = vh * 0.1 - vh * 0.5;    // slightly below center initially
       var lsBrush = document.querySelector('.ls-brush');
 
       // In-screen brush pulses then vanishes
       gsap.to(lsBrush, {
-        scale: 1.9, filter: 'drop-shadow(0 0 8px #FF007F) brightness(1.6)',
-        duration: 0.18, ease: 'power2.in',
+        scale: 2.2, filter: 'drop-shadow(0 0 12px #FF007F) brightness(2)',
+        duration: 0.22, ease: 'power2.in',
         onComplete: function () {
           gsap.set(lsBrush, { opacity: 0, scale: 1, filter: 'none' });
-          // Fixed brush rockets out — scroll phase 0.15→0.35 handles the swing
-          gsap.set(brushFixed, { opacity: 1, x: startX, y: startY, rotation: -15, scale: 0.5 });
+          // Fixed brush appears at laptop position then rockets to center
+          gsap.set(brushFixed, { opacity: 1, x: 0, y: vh * 0.05, rotation: -15, scale: 0.6 });
           gsap.to(brushFixed, {
-            scale: 2.2, y: startY - vh * 0.22, rotation: -38,
-            duration: 0.28, ease: 'back.out(3)',
+            scale: 2.8, x: 0, y: -(vh * 0.15), rotation: -38,
+            duration: 0.35, ease: 'back.out(4)',
             onComplete: function () { /* swing handled by paintSweep onUpdate */ }
           });
         }
