@@ -15,20 +15,28 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ══ MAGENTA BASE — floods every surface before anything else loads ══ */
-    html {
-      background: #FF007F !important;
-    }
-    body {
+    /* ══ MAGENTA BASE ══ */
+    html, body {
       background: #FF007F !important;
       font-family: 'Archivo', sans-serif;
       overflow-x: hidden;
     }
 
+    /* ══ LOADING MASK — pure magenta, covers 100% of viewport.
+       Exists before any JS runs. GSAP removes it instantly after
+       applying INITIAL_SCALE, so the grey chassis never flashes. ══ */
+    #loading-mask {
+      position: fixed;
+      inset: 0;
+      background: #FF007F !important;
+      z-index: 99999;
+      pointer-events: none;
+    }
+
     /* ══ SCROLL SPACE ══ */
     #main-section { height: 450vh; }
 
-    /* ══ STICKY CANVAS — magenta fills 100vw × 100vh ══ */
+    /* ══ STICKY CANVAS ══ */
     #main-viewport {
       position: sticky;
       top: 0;
@@ -71,7 +79,7 @@
         drop-shadow(0 10px 24px rgba(0,0,0,0.18));
     }
 
-    /* Screen window — magenta fill behind all screen content */
+    /* Screen window — magenta fill */
     #laptop-screen-content {
       position: absolute;
       left:   9%;
@@ -113,8 +121,7 @@
       filter: drop-shadow(0 20px 40px rgba(0,0,0,0.22));
     }
 
-    /* ══ HEADLINE — sits in #main-viewport (no transform ancestor)
-       so z-index and centering behave correctly ══ */
+    /* ══ HEADLINE — in #main-viewport (no transform ancestor) ══ */
     #headline-wrap {
       position: absolute;
       inset: 0;
@@ -192,10 +199,18 @@
 </head>
 <body>
 
+  <!--
+    #loading-mask covers the entire viewport in magenta (#FF007F) from
+    the very first byte the browser renders. It requires zero JavaScript
+    to be visible. GSAP removes it (autoAlpha:0, duration:0) after
+    INITIAL_SCALE is applied — so the grey MacBook chassis never flashes.
+  -->
+  <div id="loading-mask"></div>
+
 <section id="main-section">
   <div id="main-viewport">
 
-    <!-- DEVICE SCENE (z-index 1) — scaled by GSAP -->
+    <!-- DEVICE SCENE (z-index 1) -->
     <div id="device-scene">
       <div id="lateral-wrap">
 
@@ -233,9 +248,7 @@
 
         <!-- MACBOOK -->
         <div id="laptop-wrap">
-          <!-- Magenta screen fill -->
           <div id="laptop-screen-content"></div>
-          <!-- Chassis SVG -->
           <svg id="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
               <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
@@ -319,9 +332,8 @@
       </div><!-- /lateral-wrap -->
     </div><!-- /device-scene -->
 
-    <!-- HEADLINE — inside #main-viewport, NOT inside #device-scene.
-         #main-viewport has no CSS transform, so z-index 100 works correctly
-         and the headline cannot be trapped or clipped. -->
+    <!-- HEADLINE — sibling of #device-scene, inside #main-viewport.
+         #main-viewport has NO transform, so z-index:100 works correctly. -->
     <div id="headline-wrap">
       <p id="headline-eyebrow">Blueprint to Reality</p>
       <h1 id="headline-h1">not just a website —<br>a story.</h1>
@@ -341,11 +353,14 @@
 <script>
   gsap.registerPlugin(ScrollTrigger);
 
-  var deviceScene  = document.getElementById('device-scene');
-  var headlineWrap = document.getElementById('headline-wrap');
-  var tabletDev    = document.getElementById('tablet-device');
-  var phoneDev     = document.getElementById('phone-device');
+  var mask        = document.getElementById('loading-mask');
+  var deviceScene = document.getElementById('device-scene');
+  var headlineWrap= document.getElementById('headline-wrap');
+  var tabletDev   = document.getElementById('tablet-device');
+  var phoneDev    = document.getElementById('phone-device');
 
+  // ── INITIAL SCALE ──────────────────────────────────────────────────
+  // Zoom #device-scene so the laptop screen fills the full viewport.
   function computeInitialScale() {
     var W = Math.min(960, window.innerWidth * 0.9);
     return Math.max(
@@ -353,13 +368,20 @@
       window.innerHeight / (W * 0.51)
     ) * 1.02;
   }
-
   var INITIAL_SCALE = computeInitialScale();
 
+  // Apply scale and hide side devices BEFORE releasing the mask.
+  // No GSAP call here touches background-color — zero grey risk.
   gsap.set(deviceScene, { scale: INITIAL_SCALE, transformOrigin: 'center center' });
   gsap.set(tabletDev,   { autoAlpha: 0 });
   gsap.set(phoneDev,    { autoAlpha: 0 });
 
+  // Drop the mask instantly — scale is already applied, so the
+  // chassis is off-screen. User sees only magenta + white headline.
+  gsap.set(mask, { autoAlpha: 0 });
+
+  // ── SCROLL TIMELINE ────────────────────────────────────────────────
+  // No background-color animation. No grey anywhere.
   var tl = gsap.timeline({
     scrollTrigger: {
       trigger: '#main-section',
