@@ -407,7 +407,7 @@
   // Phase 3 — instant snap-in
   tl.to(tablet, { autoAlpha: 1, duration: 0.05, ease: 'none' }, 0.50);
   tl.to(phone,  { autoAlpha: 1, duration: 0.05, ease: 'none' }, 0.50);
-  tl.to(lsFo,   { opacity: 1,   duration: 0.05, ease: 'none' }, 0.50);
+  tl.to(lsFo,   { opacity: 1, duration: 0, ease: 'none' }, 0.50);
 
   window.addEventListener('resize', function () {
     gsap.set(deviceScene, { scale: computeInitialScale() });
