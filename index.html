@@ -959,18 +959,27 @@
     onWheelSweep({ preventDefault: function(){}, deltaY: dy * 2 });
   }
 
-  // Observe sweep-wrap with IntersectionObserver — lock page and wait for first scroll
-  var sweepObserver = new IntersectionObserver(function (entries) {
-    entries.forEach(function (entry) {
-      if (entry.isIntersecting && !sweepLocked && !sweepDone) {
-        lockPage();   // freezes page on the 3-device scene; animation waits for scroll
-        window.addEventListener('wheel', onWheelSweep, { passive: false });
-        window.addEventListener('touchstart', onTouchStartSweep, { passive: true });
-        window.addEventListener('touchmove', onTouchMoveSweep, { passive: false });
-      }
-    });
-  }, { threshold: 0 });
-  sweepObserver.observe(document.getElementById('sweep-wrap'));
+  // Intercept wheel events SYNCHRONOUSLY before the browser scrolls.
+  // IntersectionObserver fires after the fact — too late to prevent the scroll.
+  // Instead, a global wheel listener checks if the next scroll would reach sweep-wrap
+  // and locks the page right there in the same event tick.
+  var sweepWrapEl = document.getElementById('sweep-wrap');
+
+  function onGlobalWheel(e) {
+    if (sweepLocked || sweepDone) return;
+    var sweepTop = sweepWrapEl.getBoundingClientRect().top + window.scrollY;
+    if (window.scrollY + e.deltaY >= sweepTop - 4) {
+      e.preventDefault();
+      lockPage();
+      window.removeEventListener('wheel', onGlobalWheel, { passive: false });
+      window.addEventListener('wheel', onWheelSweep, { passive: false });
+      window.addEventListener('touchstart', onTouchStartSweep, { passive: true });
+      window.addEventListener('touchmove', onTouchMoveSweep, { passive: false });
+      // Treat this wheel tick as the first sweep interaction
+      onWheelSweep(e);
+    }
+  }
+  window.addEventListener('wheel', onGlobalWheel, { passive: false });
 
   window.addEventListener('resize', function () {
     gsap.set(deviceScene, { scale: computeInitialScale() });
