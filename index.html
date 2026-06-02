@@ -163,15 +163,13 @@
       color: rgba(0,0,0,0.35);
     }
 
-    .ls-cover {
+    /* ── Laptop screen mini-site ── */
+    .ls-content {
       position: absolute;
       inset: 0;
-      background: #ffffff;
-      z-index: 10;
-      pointer-events: none;
+      display: flex;
+      flex-direction: column;
     }
-
-    /* ── Laptop screen mini-site ── */
     .ls-nav {
       background: #FAF7F2;
       padding: 0.6rem 1.4rem;
@@ -353,7 +351,7 @@
         <!-- LAPTOP -->
         <div class="device laptop">
           <div class="laptop-screen">
-            <div class="ls-cover"></div>
+            <div class="ls-content">
             <div class="ls-nav">
               <span class="ls-brand-top">Your Future</span>
               <span class="ls-brand-blue">Website.</span>
@@ -377,6 +375,7 @@
                 <div class="ls-card"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75" alt="" /></div>
               </div>
             </div>
+            </div><!-- /.ls-content -->
           </div>
           <svg class="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
@@ -488,7 +487,7 @@
   var tablet       = document.querySelector('.device.tablet');
   var phone        = document.querySelector('.device.phone');
   var laptopScreen = document.querySelector('.laptop-screen');
-  var lsCover      = document.querySelector('.ls-cover');
+  var lsContent    = document.querySelector('.ls-content');
   var whiteCover   = document.getElementById('white-cover');
 
   function computeInitialScale() {
@@ -503,7 +502,7 @@
 
   // Apply scale then make visible — chassis never renders at natural size
   gsap.set(deviceScene, { scale: initialScale, transformOrigin: 'center center', visibility: 'visible', immediateRender: true });
-  gsap.set([tablet, phone], { autoAlpha: 0, immediateRender: true });
+  gsap.set([tablet, phone, lsContent], { autoAlpha: 0, immediateRender: true });
 
   // Scroll DOWN advances progress 0 → 1:
   //  0.00–0.35  grey → magenta colour wash
@@ -528,10 +527,10 @@
   tl.to(whiteCover,   { autoAlpha: 0, duration: 0.30, ease: 'power1.in' }, 0.28);
   tl.to(deviceScene,  { scale: 0.82, duration: 0.52, ease: 'expo.inOut' }, 0.30);
 
-  // Phase 3 — side devices appear, laptop screen mockup reveals
-  tl.to(tablet,   { autoAlpha: 1, duration: 0.20, ease: 'power2.out' }, 0.80);
-  tl.to(phone,    { autoAlpha: 1, duration: 0.20, ease: 'power2.out' }, 0.80);
-  tl.to(lsCover,  { autoAlpha: 0, duration: 0.20, ease: 'power1.out' }, 0.80);
+  // Phase 3 — side devices + laptop screen mockup all fade in together
+  tl.to(tablet,    { autoAlpha: 1, duration: 0.20, ease: 'power2.out' }, 0.80);
+  tl.to(phone,     { autoAlpha: 1, duration: 0.20, ease: 'power2.out' }, 0.80);
+  tl.to(lsContent, { autoAlpha: 1, duration: 0.20, ease: 'power2.out' }, 0.80);
 
   window.addEventListener('resize', function () {
     gsap.set(deviceScene, { scale: computeInitialScale() });
