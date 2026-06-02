@@ -820,27 +820,18 @@
     var vw = window.innerWidth;
     var targetX = -33.8;
     var targetY = 0.35 * vh - 43.3 - (vh * 0.5 + 11);
-    // Gentle pulse on the in-screen brush, then fade it out
+    // In-screen brush gently dissolves away
     gsap.to(lsBrush, {
-      scale: 1.5, filter: 'drop-shadow(0 0 8px #FF007F) brightness(1.6)',
-      duration: 0.3, ease: 'power1.inOut',
-      onComplete: function () {
-        gsap.to(lsBrush, {
-          scale: 0, opacity: 0, duration: 0.2, ease: 'power2.in',
-          onComplete: function () {
-            gsap.set(lsBrush, { opacity: 0, scale: 1, filter: 'none' });
-          }
-        });
-        // Fixed brush fades in from just below the laptop screen and glides up
-        gsap.set(brushFixed, { opacity: 0, x: targetX, y: targetY + vh * 0.18, rotation: -20, scale: 1.2 });
-        gsap.to(brushFixed, {
-          opacity: 1, duration: 0.15, ease: 'power1.out'
-        });
-        gsap.to(brushFixed, {
-          scale: 2.8, x: targetX, y: targetY, rotation: -38,
-          duration: 0.75, ease: 'expo.out'
-        });
-      }
+      opacity: 0, scale: 0.8, duration: 0.5, ease: 'power1.inOut',
+      onComplete: function () { gsap.set(lsBrush, { opacity: 0, scale: 1, filter: 'none' }); }
+    });
+    // Fixed brush materialises: starts tiny, transparent, slightly below —
+    // then grows and floats up in one continuous graceful arc
+    gsap.set(brushFixed, { opacity: 0, x: targetX, y: targetY + vh * 0.12, rotation: -28, scale: 0.4 });
+    gsap.to(brushFixed, {
+      opacity: 1, scale: 2.8, x: targetX, y: targetY, rotation: -38,
+      duration: 1.0, ease: 'power3.out',
+      delay: 0.15
     });
   }
 
