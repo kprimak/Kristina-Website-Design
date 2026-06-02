@@ -21,7 +21,7 @@
       background: #ffffff;
     }
 
-    #main-section { height: 2282vh; }
+    #main-section { height: 1141vh; }
     #ls-fo { opacity: 0; }
 
     #main-viewport {
@@ -407,7 +407,7 @@
   // Phase 3 — instant snap-in
   tl.to(tablet, { autoAlpha: 1, duration: 0.05, ease: 'none' }, 0.75);
   tl.to(phone,  { autoAlpha: 1, duration: 0.05, ease: 'none' }, 0.75);
-  tl.to(lsFo,   { opacity: 1,   duration: 0.10, ease: 'none' }, 0.75);
+  tl.to(lsFo,   { opacity: 1,   duration: 0.05, ease: 'none' }, 0.75);
 
   window.addEventListener('resize', function () {
     gsap.set(deviceScene, { scale: computeInitialScale() });
