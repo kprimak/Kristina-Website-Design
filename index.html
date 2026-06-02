@@ -23,14 +23,22 @@
     /* ── SCROLL SPACE ── */
     #main-section { height: 450vh; }
 
-    /* ── STICKY CANVAS — white, always ── */
+    /* ── ALL SCENE WRAPPERS — force white, no exceptions ── */
+    #main-viewport,
+    #device-scene,
+    #lateral-wrap,
+    #laptop-wrap {
+      background-color: #ffffff !important;
+      background:       #ffffff !important;
+    }
+
+    /* ── STICKY CANVAS ── */
     #main-viewport {
       position: sticky;
       top: 0;
       width: 100%;
       height: 100vh;
       overflow: hidden;
-      background: #ffffff !important;
     }
 
     /* ── HEADLINE — lives at viewport level, never inside a transform ──
