@@ -819,15 +819,19 @@
     setBrushAtTip(btipX, btipY, as.rot);
   }
 
-  var lockedScrollY = 0;
+  var lockedScrollY  = 0;
+  var snapping       = false;
 
   function onScrollLocked() {
-    // Snap back to where we locked — keeps the device scene visible
+    if (snapping) return;
+    snapping = true;
     window.scrollTo(0, lockedScrollY);
+    // Re-enforce device scene end-state after snap (ScrollTrigger may re-evaluate)
+    tl.progress(1);
+    requestAnimationFrame(function () { snapping = false; });
   }
 
   function onKeyDownLocked(e) {
-    // Block keyboard scroll keys while animation is running
     if ([32, 33, 34, 35, 36, 37, 38, 39, 40].indexOf(e.keyCode) > -1) e.preventDefault();
   }
 
@@ -835,9 +839,10 @@
     if (sweepLocked) return;
     sweepLocked = true;
     lockedScrollY = window.scrollY;
-    // Force device timeline to its final state (laptop/tablet/phone scene on magenta)
+    // Kill device ScrollTrigger so it cannot fight the locked state.
+    // Pass false so GSAP does NOT revert the animated properties.
+    if (tl.scrollTrigger) tl.scrollTrigger.kill(false);
     tl.progress(1);
-    // Prevent any other scroll mechanism from moving the page
     window.addEventListener('scroll', onScrollLocked);
     document.addEventListener('keydown', onKeyDownLocked);
   }
