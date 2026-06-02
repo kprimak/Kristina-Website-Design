@@ -14,14 +14,10 @@
 
   <style>
 
-    /* ══════════════════════════════════════════════
-       RESET
-    ══════════════════════════════════════════════ */
+    /* ─── RESET ─────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ══════════════════════════════════════════════
-       GLOBAL MAGENTA — set only in CSS, never in JS
-    ══════════════════════════════════════════════ */
+    /* ─── GLOBAL MAGENTA — CSS only, never touched by JS ────── */
     html {
       background: #FF007F !important;
     }
@@ -31,14 +27,10 @@
       overflow-x: hidden;
     }
 
-    /* ══════════════════════════════════════════════
-       LOADING MASK
-       A magenta div that covers the viewport from
-       the very first byte. CSS gives it the color —
-       no JS involved. GSAP only removes it (opacity)
-       after INITIAL_SCALE is applied. This stops the
-       grey MacBook chassis from flashing on load.
-    ══════════════════════════════════════════════ */
+    /* ─── LOADING MASK ───────────────────────────────────────────
+       Pure magenta div. Exists in raw HTML so it renders before
+       any script runs. GSAP removes it (opacity only) after the
+       scale is applied, so the grey MacBook chassis never flashes. */
     #loading-mask {
       position: fixed;
       inset: 0;
@@ -47,13 +39,10 @@
       pointer-events: none;
     }
 
-    /* ══════════════════════════════════════════════
-       SCROLL SPACE + STICKY CANVAS
-    ══════════════════════════════════════════════ */
-    #main-section {
-      height: 450vh;
-    }
+    /* ─── SCROLL SPACE ───────────────────────────────────────── */
+    #main-section { height: 450vh; }
 
+    /* ─── STICKY CANVAS ──────────────────────────────────────── */
     #main-viewport {
       position: sticky;
       top: 0;
@@ -63,11 +52,7 @@
       background: #FF007F !important;
     }
 
-    /* ══════════════════════════════════════════════
-       DEVICE SCENE
-       GSAP scales this entire group. Background is
-       magenta so no grey bleeds through at any scale.
-    ══════════════════════════════════════════════ */
+    /* ─── DEVICE SCENE — GSAP scales this group ─────────────── */
     #device-scene {
       position: absolute;
       inset: 0;
@@ -88,35 +73,34 @@
       background: #FF007F !important;
     }
 
-    /* ══════════════════════════════════════════════
-       TABLET DEVICE
-       Positioned to the left of the laptop.
-       Width + height defined so it never collapses.
-    ══════════════════════════════════════════════ */
-    #tablet-device {
+    /* ─── .device — shared rules for all three mockups ──────────
+       display:block and explicit dimensions so they never collapse. */
+    .device {
+      display: block !important;
       position: absolute;
+      height: auto;
+      opacity: 1;
+      visibility: visible;
+    }
+    .device svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* ─── TABLET ─────────────────────────────────────────────── */
+    .device.tablet {
       right: calc(100% + 20px);
       top: 50%;
       transform: translateY(-50%);
       width: 20%;
       min-width: 110px;
-      height: auto;
-      display: block;
-      opacity: 1;
-      visibility: visible;
       filter: drop-shadow(0 20px 40px rgba(0,0,0,0.22));
     }
-    #tablet-device svg {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
 
-    /* ══════════════════════════════════════════════
-       MACBOOK LAPTOP CHASSIS
-    ══════════════════════════════════════════════ */
-    #laptop-wrap {
-      position: relative;
+    /* ─── LAPTOP ─────────────────────────────────────────────── */
+    .device.laptop {
+      position: relative; /* flex child, not absolute */
       width: min(960px, 90vw);
       aspect-ratio: 1000 / 680;
       flex-shrink: 0;
@@ -126,8 +110,8 @@
         drop-shadow(0 10px 24px rgba(0,0,0,0.18));
     }
 
-    /* Screen slot — magenta behind the bezel */
-    #laptop-screen-content {
+    /* Screen slot inside the MacBook bezel */
+    .laptop-screen {
       position: absolute;
       left:   9%;
       top:    4.41%;
@@ -138,8 +122,8 @@
       z-index: 1;
     }
 
-    /* MacBook SVG frame — sits above the screen slot */
-    #laptop-svg {
+    /* MacBook SVG frame sits above the screen slot */
+    .laptop-svg {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -149,36 +133,19 @@
       pointer-events: none;
     }
 
-    /* ══════════════════════════════════════════════
-       PHONE DEVICE
-       Positioned to the right of the laptop.
-       Width + height defined so it never collapses.
-    ══════════════════════════════════════════════ */
-    #phone-device {
-      position: absolute;
+    /* ─── PHONE ──────────────────────────────────────────────── */
+    .device.phone {
       left: calc(100% + 16px);
       top: 50%;
       transform: translateY(-50%);
       width: 9.5%;
       min-width: 58px;
-      height: auto;
-      display: block;
-      opacity: 1;
-      visibility: visible;
       filter: drop-shadow(0 20px 40px rgba(0,0,0,0.22));
     }
-    #phone-device svg {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
 
-    /* ══════════════════════════════════════════════
-       HEADLINE
-       Positioned in #main-viewport — no transform
-       ancestor, so z-index and centering are exact.
-       White text on magenta background.
-    ══════════════════════════════════════════════ */
+    /* ─── HEADLINE ───────────────────────────────────────────────
+       Sits in #main-viewport — NO transform ancestor — so z-index
+       and absolute centering work exactly as expected. */
     #headline-wrap {
       position: absolute;
       inset: 0;
@@ -190,7 +157,7 @@
       z-index: 100;
       pointer-events: none;
     }
-    #headline-eyebrow {
+    .eyebrow {
       font-family: 'Archivo', sans-serif;
       font-size: 0.7rem;
       letter-spacing: 0.28em;
@@ -198,7 +165,7 @@
       color: rgba(255,255,255,0.65);
       margin-bottom: 1.1rem;
     }
-    #headline-h1 {
+    h1.headline {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 900;
       font-size: clamp(2rem, 5vw, 3.5rem);
@@ -206,25 +173,23 @@
       line-height: 1.18;
       letter-spacing: -0.03em;
       margin-bottom: 1.2rem;
-      display: block;
-      visibility: visible;
-      opacity: 1;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
     }
-    #headline-rule {
+    .rule {
       width: 40px;
       height: 1.5px;
       background: rgba(255,255,255,0.35);
       margin: 0 auto 1rem;
     }
-    #headline-sub {
+    .sub {
       font-size: 0.7rem;
       letter-spacing: 0.14em;
       color: rgba(255,255,255,0.55);
     }
 
-    /* ══════════════════════════════════════════════
-       AFTER SECTION
-    ══════════════════════════════════════════════ */
+    /* ─── AFTER SECTION ──────────────────────────────────────── */
     #after-section {
       background: #1a1a1a;
       text-align: center;
@@ -262,19 +227,21 @@
 </head>
 <body>
 
-  <!-- LOADING MASK: magenta from byte 1. CSS sets the color; GSAP only
-       removes it after INITIAL_SCALE is applied. No background JS. -->
+  <!-- Magenta from byte 1. CSS sets the color. GSAP only removes it. -->
   <div id="loading-mask"></div>
 
   <section id="main-section">
     <div id="main-viewport">
 
-      <!-- ── DEVICE SCENE (z-index 1) ───────────────────────────────── -->
+      <!-- DEVICE SCENE — GSAP scales this entire group -->
       <div id="device-scene">
         <div id="lateral-wrap">
 
-          <!-- ═══ TABLET ══════════════════════════════════════════════ -->
-          <div id="tablet-device" aria-hidden="true">
+          <!-- ═══════════════════════════════════════
+               TABLET DEVICE
+               class="device tablet" — DO NOT REMOVE
+          ═══════════════════════════════════════ -->
+          <div class="device tablet" aria-hidden="true">
             <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
               <defs><clipPath id="tcc0"><rect x="12" y="20" width="176" height="226" rx="3"/></clipPath></defs>
               <rect x="2" y="2" width="196" height="266" rx="18" fill="#1e1e22"/>
@@ -309,14 +276,17 @@
             </svg>
           </div>
 
-          <!-- ═══ MACBOOK ══════════════════════════════════════════════ -->
-          <div id="laptop-wrap">
+          <!-- ═══════════════════════════════════════
+               LAPTOP DEVICE
+               class="device laptop" — DO NOT REMOVE
+          ═══════════════════════════════════════ -->
+          <div class="device laptop">
 
             <!-- Magenta screen fill behind the bezel -->
-            <div id="laptop-screen-content"></div>
+            <div class="laptop-screen"></div>
 
-            <!-- MacBook aluminium chassis SVG -->
-            <svg id="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- MacBook aluminium chassis -->
+            <svg class="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <defs>
                 <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%"   stop-color="#e2e2e2"/>
@@ -362,10 +332,13 @@
               <path d="M 42,632 Q 42,640 54,642 L 946,642 Q 958,640 958,632 Z" fill="#b8b8b8"/>
             </svg>
 
-          </div><!-- /laptop-wrap -->
+          </div><!-- /.device.laptop -->
 
-          <!-- ═══ PHONE ══════════════════════════════════════════════ -->
-          <div id="phone-device" aria-hidden="true">
+          <!-- ═══════════════════════════════════════
+               PHONE DEVICE
+               class="device phone" — DO NOT REMOVE
+          ═══════════════════════════════════════ -->
+          <div class="device phone" aria-hidden="true">
             <svg viewBox="0 0 108 218" xmlns="http://www.w3.org/2000/svg">
               <defs><clipPath id="ph2Clip"><rect x="7" y="14" width="94" height="190" rx="8"/></clipPath></defs>
               <rect x="0" y="0" width="108" height="218" rx="20" fill="#1a1a1e"/>
@@ -400,19 +373,18 @@
               <defs><clipPath id="pcc3"><rect x="73" y="158" width="28" height="40" rx="2"/></clipPath></defs>
               <rect x="39" y="206" width="30" height="3" rx="1.5" fill="#333"/>
             </svg>
-          </div>
+          </div><!-- /.device.phone -->
 
         </div><!-- /lateral-wrap -->
       </div><!-- /device-scene -->
 
-      <!-- ── HEADLINE (z-index 100, sibling of device-scene) ────────── -->
-      <!-- Lives in #main-viewport which has no CSS transform,
-           so z-index and absolute centering work exactly as expected. -->
+      <!-- HEADLINE — sibling of device-scene inside #main-viewport.
+           #main-viewport has NO transform, so z-index:100 is reliable. -->
       <div id="headline-wrap">
-        <p id="headline-eyebrow">Blueprint to Reality</p>
-        <h1 id="headline-h1">not just a website —<br>a story.</h1>
-        <div id="headline-rule"></div>
-        <p id="headline-sub">scroll to watch it come alive</p>
+        <p class="eyebrow">Blueprint to Reality</p>
+        <h1 class="headline">not just a website —<br>a story.</h1>
+        <div class="rule"></div>
+        <p class="sub">scroll to watch it come alive</p>
       </div>
 
     </div><!-- /main-viewport -->
@@ -431,11 +403,9 @@
   var deviceScene = document.getElementById('device-scene');
   var headlineWrap= document.getElementById('headline-wrap');
 
-  // ── INITIAL SCALE ─────────────────────────────────────────────────────
-  // Zooms #device-scene so the laptop screen fills the full viewport.
-  // laptop-wrap width W = min(960, 90vw)
-  // screen width  = W × 0.82
-  // screen height = W × 0.51  (= 680/1000 × 0.75)
+  // ── INITIAL SCALE ──────────────────────────────────────────────────
+  // Zooms the scene so the laptop screen fills the full viewport.
+  // JS only controls transform:scale — background color is CSS only.
   function computeInitialScale() {
     var W = Math.min(960, window.innerWidth * 0.9);
     return Math.max(
@@ -444,13 +414,12 @@
     ) * 1.02;
   }
 
-  // Apply scale then remove the mask. Zero background-color calls in JS.
   gsap.set(deviceScene, { scale: computeInitialScale(), transformOrigin: 'center center' });
-  gsap.set(mask, { autoAlpha: 0 });
+  gsap.set(mask, { autoAlpha: 0 }); // remove mask — scale is already applied
 
-  // ── SCROLL TIMELINE ───────────────────────────────────────────────────
-  // Headline fades → scene zooms out → devices come into frame naturally.
-  // No opacity:0 set on tablet or phone — they are always in the DOM.
+  // ── SCROLL ANIMATION ───────────────────────────────────────────────
+  // GSAP animates ONLY transform:scale and opacity.
+  // No background-color, no display, no visibility changes.
   var tl = gsap.timeline({
     scrollTrigger: {
       trigger: '#main-section',
