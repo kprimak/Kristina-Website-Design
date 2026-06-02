@@ -11,6 +11,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -149,19 +150,49 @@
       color: rgba(0,0,0,0.35);
     }
 
-    /* ── Airplane ── */
-    #airplane {
+    /* ── Airplane on laptop screen ── */
+    .ls-plane {
+      position: absolute;
+      bottom: 22%;
+      right: 8%;
+      width: 42px;
+      height: 56px;
+      pointer-events: none;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.25));
+    }
+    /* Fixed copy that animates across viewport */
+    #plane-fixed {
       position: fixed;
-      bottom: 12vh;
-      right: 8vw;
-      width: 90px;
-      height: 90px;
-      z-index: 50;
+      left: 50%;
+      top: 50%;
+      width: 52px;
+      height: 70px;
+      margin: -35px 0 0 -26px;
+      z-index: 200;
       opacity: 0;
       pointer-events: none;
-      filter: drop-shadow(0 8px 24px rgba(0,0,0,0.18));
+      filter: drop-shadow(0 6px 16px rgba(0,0,0,0.22));
+      transform-origin: 50% 50%;
     }
-    #airplane svg { width: 100%; height: 100%; display: block; }
+    /* White wipe that expands behind the plane */
+    #plane-wipe {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      z-index: 180;
+      pointer-events: none;
+      clip-path: circle(0% at 50% 50%);
+    }
+    /* Hidden SVG holding the circular flight path */
+    #flight-svg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+    }
 
     /* ── About Section ── */
     #about-section {
@@ -354,6 +385,20 @@
                   <div style="position:relative;z-index:2;padding:1.4rem 1.4rem 1rem;height:100%;display:flex;flex-direction:column;justify-content:flex-end;">
                     <h2 style="font-size:1.15rem;font-weight:700;color:#fff;line-height:1.2;margin:0 0 0.65rem;">Crafting Digital<br/>Luxuries.</h2>
                     <button style="align-self:flex-start;background:#2563EB;color:#fff;border:none;border-radius:100px;padding:0.3rem 0.85rem;font-family:'Archivo',sans-serif;font-size:0.5rem;cursor:default;">View Work</button>
+                    <!-- airplane on the screen — the fixed copy animates from this position -->
+                    <svg class="ls-plane" viewBox="0 0 52 70" xmlns="http://www.w3.org/2000/svg">
+                      <ellipse cx="26" cy="36" rx="5" ry="30" fill="#e8eaed"/>
+                      <ellipse cx="25" cy="36" rx="1.5" ry="25" fill="rgba(255,255,255,0.45)"/>
+                      <ellipse cx="26" cy="10" rx="4" ry="6" fill="#d0d3d8"/>
+                      <path d="M26,32 L1,52 L4,57 L26,44 L48,57 L51,52 Z" fill="#dde0e5"/>
+                      <path d="M26,32 L1,52 L4,52 L26,36 L48,52 L51,52 L26,32Z" fill="rgba(0,0,0,0.07)"/>
+                      <ellipse cx="11" cy="50" rx="5" ry="3" fill="#c0c4cc"/>
+                      <ellipse cx="41" cy="50" rx="5" ry="3" fill="#c0c4cc"/>
+                      <path d="M26,59 L17,66 L18,68 L26,62 L34,68 L35,66 Z" fill="#dde0e5"/>
+                      <ellipse cx="26" cy="60" rx="1.8" ry="5" fill="#c8ccd4"/>
+                      <ellipse cx="26" cy="16" rx="2.5" ry="3.5" fill="#5ba4e8" opacity="0.85"/>
+                      <rect x="23.5" y="24" width="5" height="20" rx="2.5" fill="rgba(91,164,232,0.3)"/>
+                    </svg>
                   </div>
                 </div>
                 <div style="background:#FAF7F2;flex:1;padding:0.55rem 1.4rem 0.7rem;overflow:hidden;">
@@ -451,29 +496,26 @@
   </div>
 </section>
 
-<!-- Airplane flies in with mock website, then flies off into About section -->
-<div id="airplane" aria-hidden="true">
-  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-    <!-- jet silhouette, pointing upper-right -->
-    <g transform="rotate(-35, 40, 40)">
-      <!-- fuselage -->
-      <ellipse cx="40" cy="40" rx="28" ry="7" fill="#1C1C1E"/>
-      <!-- nose cone -->
-      <polygon points="68,40 56,34 56,46" fill="#1C1C1E"/>
-      <!-- main wings -->
-      <polygon points="44,40 24,20 20,40 24,60" fill="#1C1C1E"/>
-      <!-- tail fin vertical -->
-      <polygon points="16,40 8,28 12,40" fill="#333"/>
-      <!-- tail wings horizontal -->
-      <polygon points="16,40 6,34 10,40 6,46" fill="#333"/>
-      <!-- engine pods -->
-      <ellipse cx="32" cy="28" rx="7" ry="3" fill="#444" transform="rotate(10,32,28)"/>
-      <ellipse cx="32" cy="52" rx="7" ry="3" fill="#444" transform="rotate(-10,32,52)"/>
-      <!-- window strip -->
-      <rect x="30" y="37" width="20" height="6" rx="3" fill="#FF007F" opacity="0.8"/>
-    </g>
+<!-- Fixed airplane that animates across the viewport -->
+<div id="plane-fixed" aria-hidden="true">
+  <svg viewBox="0 0 52 70" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="26" cy="36" rx="5" ry="30" fill="#e8eaed"/>
+    <ellipse cx="25" cy="36" rx="1.5" ry="25" fill="rgba(255,255,255,0.45)"/>
+    <ellipse cx="26" cy="10" rx="4" ry="6" fill="#d0d3d8"/>
+    <path d="M26,32 L1,52 L4,57 L26,44 L48,57 L51,52 Z" fill="#dde0e5"/>
+    <path d="M26,32 L1,52 L4,52 L26,36 L48,52 L51,52 L26,32Z" fill="rgba(0,0,0,0.07)"/>
+    <ellipse cx="11" cy="50" rx="5" ry="3" fill="#c0c4cc"/>
+    <ellipse cx="41" cy="50" rx="5" ry="3" fill="#c0c4cc"/>
+    <path d="M26,59 L17,66 L18,68 L26,62 L34,68 L35,66 Z" fill="#dde0e5"/>
+    <ellipse cx="26" cy="60" rx="1.8" ry="5" fill="#c8ccd4"/>
+    <ellipse cx="26" cy="16" rx="2.5" ry="3.5" fill="#5ba4e8" opacity="0.85"/>
+    <rect x="23.5" y="24" width="5" height="20" rx="2.5" fill="rgba(91,164,232,0.3)"/>
   </svg>
 </div>
+<!-- Hidden SVG for the circular MotionPath -->
+<svg id="flight-svg" aria-hidden="true"><circle id="flight-path" cx="0" cy="0" r="0" fill="none"/></svg>
+<!-- White wipe overlay -->
+<div id="plane-wipe" aria-hidden="true"></div>
 
 <section id="about-section">
   <div class="about-inner">
@@ -529,18 +571,20 @@
 </section>
 
 <script>
-  gsap.registerPlugin(ScrollTrigger);
+  gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
   var viewport     = document.getElementById('main-viewport');
   var deviceScene  = document.getElementById('device-scene');
   var headlineWrap = document.getElementById('headline-wrap');
   var tablet       = document.querySelector('.device.tablet');
   var phone        = document.querySelector('.device.phone');
-  var lsFo         = document.getElementById('ls-fo');
-  var tabletCover  = document.getElementById('tablet-cover');
-  var phoneCover   = document.getElementById('phone-cover');
-  var whiteCover   = document.getElementById('white-cover');
-  var airplane     = document.getElementById('airplane');
+  var lsFo        = document.getElementById('ls-fo');
+  var tabletCover = document.getElementById('tablet-cover');
+  var phoneCover  = document.getElementById('phone-cover');
+  var whiteCover  = document.getElementById('white-cover');
+  var planeFixed  = document.getElementById('plane-fixed');
+  var planeWipe   = document.getElementById('plane-wipe');
+  var flightPath  = document.getElementById('flight-path');
 
   function computeInitialScale() {
     var W = Math.min(960, window.innerWidth * 0.9);
@@ -584,24 +628,76 @@
   tl.to(tablet, { autoAlpha: 1, duration: 0, ease: 'none' }, 0.50);
   tl.to(phone,  { autoAlpha: 1, duration: 0, ease: 'none' }, 0.50);
 
-  // Phase 3b — all three screens + airplane snap in (0.65)
+  // Phase 3b — all three screens snap in (0.65)
   tl.to(tabletCover, { opacity: 0, duration: 0, ease: 'none' }, 0.65);
   tl.to(phoneCover,  { opacity: 0, duration: 0, ease: 'none' }, 0.65);
   tl.to(lsFo,        { opacity: 1, duration: 0, ease: 'none' }, 0.65);
-  tl.to(airplane,    { opacity: 1, duration: 0, ease: 'none' }, 0.65);
 
-  // Airplane flies off when About section enters viewport
-  gsap.to(airplane, {
-    x: '60vw',
-    y: '-60vh',
-    rotation: -20,
-    opacity: 0,
-    duration: 1.2,
-    ease: 'power2.in',
-    scrollTrigger: {
-      trigger: '#about-section',
-      start: 'top 80%',
-      toggleActions: 'play none none reverse'
+  // ── Airplane circular flight ────────────────────────────────────────────────
+  // Triggered once the main sticky section has fully scrolled through.
+  // The plane appears at viewport center (matching the laptop screen position),
+  // follows a circular MotionPath arc across the whole viewport, and a white
+  // wipe expands behind it — dissolving into the About Us section.
+  var flightPlayed = false;
+
+  ScrollTrigger.create({
+    trigger:  '#main-section',
+    start:    'bottom 85%',
+    onEnter: function() {
+      if (flightPlayed) return;
+      flightPlayed = true;
+
+      // Size the circle to viewport dimensions
+      var vw = window.innerWidth, vh = window.innerHeight;
+      var r  = Math.min(vw * 0.28, vh * 0.30);
+      var cx = vw * 0.50;
+      var cy = vh * 0.50 - r;           // center above screen mid-point
+
+      flightPath.setAttribute('cx', cx);
+      flightPath.setAttribute('cy', cy);
+      flightPath.setAttribute('r',  r);
+
+      var tFlight = gsap.timeline({ defaults: { ease: 'none' } });
+
+      // Plane snaps visible at viewport center (where the laptop screen is)
+      tFlight.set(planeFixed, { opacity: 1, x: 0, y: 0, rotation: 0 });
+
+      // Full circular arc — start at bottom of circle (3 o'clock + 90° = 6 o'clock)
+      tFlight.to(planeFixed, {
+        duration: 2.8,
+        ease: 'power1.inOut',
+        motionPath: {
+          path:        '#flight-path',
+          align:       '#flight-path',
+          alignOrigin: [0.5, 0.5],
+          autoRotate:  true,
+          start:       0.25,
+          end:         1.25
+        }
+      });
+
+      // White wipe starts expanding at 0.8s and covers the screen by 2.8s
+      tFlight.to(planeWipe, {
+        clipPath: 'circle(150% at 50% 50%)',
+        duration: 2.0,
+        ease: 'power2.inOut'
+      }, 0.8);
+
+      // Plane fades just before fully covered
+      tFlight.to(planeFixed, { opacity: 0, duration: 0.4, ease: 'power1.in' }, 2.2);
+
+      // Wipe fades out — reveals About Us section beneath
+      tFlight.to(planeWipe, {
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power1.inOut'
+      }, 3.0);
+    },
+    onLeaveBack: function() {
+      flightPlayed = false;
+      gsap.killTweensOf([planeFixed, planeWipe]);
+      gsap.set(planeFixed, { opacity: 0, x: 0, y: 0, rotation: 0 });
+      gsap.set(planeWipe,  { clipPath: 'circle(0% at 50% 50%)', opacity: 1 });
     }
   });
 
