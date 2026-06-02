@@ -151,28 +151,28 @@
 
     /* ── Paintbrush on laptop screen ── */
     .ls-brush {
-      width: 28px;
-      height: 72px;
+      width: 22px;
+      height: 88px;
       pointer-events: none;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
-      transform: rotate(-18deg);
-      transform-origin: 50% 85%;
+      filter: drop-shadow(0 3px 8px rgba(0,0,0,0.4));
+      transform: rotate(-15deg);
+      transform-origin: 50% 90%;
       flex-shrink: 0;
     }
-    /* Fixed brush that flies out and paints */
+    /* Fixed brush — larger, used during scroll sweep */
     #brush-fixed {
       position: fixed;
       left: 50%;
       top: 50%;
-      width: 48px;
-      height: 120px;
-      margin: -100px 0 0 -24px;
+      width: 52px;
+      height: 210px;
+      margin: -178px 0 0 -26px;
       z-index: 200;
       opacity: 0;
       pointer-events: none;
-      transform-origin: 50% 85%;
+      transform-origin: 50% 90%;
     }
-    /* Canvas for the paint strokes */
+    /* Canvas for the diagonal paint wipe */
     #wipe-canvas {
       position: fixed;
       top: 0; left: 0;
@@ -384,41 +384,39 @@
                           </svg>
                         </div>
                       </div>
-                      <!-- paintbrush to the right -->
-                      <svg class="ls-brush" style="position:static;transform:rotate(-18deg);flex-shrink:0;" viewBox="0 0 28 72" xmlns="http://www.w3.org/2000/svg">
-                      <!-- ferrule (metal band) -->
-                      <rect x="9" y="38" width="10" height="10" rx="1" fill="#c8c0a8"/>
-                      <rect x="9" y="38" width="10" height="10" rx="1" fill="none" stroke="#a09880" stroke-width="0.6"/>
-                      <rect x="10" y="40" width="8" height="1.5" fill="rgba(255,255,255,0.4)"/>
-                      <rect x="10" y="43" width="8" height="0.8" fill="rgba(0,0,0,0.12)"/>
-                      <!-- handle — wooden -->
-                      <rect x="9.5" y="14" width="9" height="25" rx="2" fill="url(#hGrad)"/>
-                      <rect x="10.5" y="15" width="2" height="22" rx="1" fill="rgba(255,255,255,0.2)"/>
-                      <!-- handle top cap -->
-                      <rect x="9.5" y="12" width="9" height="3" rx="1.5" fill="#b8a888"/>
-                      <!-- bristles -->
-                      <defs>
-                        <linearGradient id="hGrad" x1="0" y1="0" x2="1" y2="0">
-                          <stop offset="0%" stop-color="#c8aa72"/>
-                          <stop offset="40%" stop-color="#e8c888"/>
-                          <stop offset="100%" stop-color="#b89850"/>
-                        </linearGradient>
-                        <linearGradient id="bGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stop-color="#e8dcc8"/>
-                          <stop offset="60%" stop-color="#c8b898"/>
-                          <stop offset="100%" stop-color="#a89878"/>
-                        </linearGradient>
-                      </defs>
-                      <!-- bristle body -->
-                      <path d="M9,48 Q8,54 10,60 Q14,68 14,70 Q14,68 18,60 Q20,54 19,48 Z" fill="url(#bGrad)"/>
-                      <!-- bristle texture lines -->
-                      <line x1="11" y1="48" x2="11.5" y2="64" stroke="rgba(0,0,0,0.1)" stroke-width="0.5"/>
-                      <line x1="14" y1="48" x2="14" y2="66" stroke="rgba(0,0,0,0.08)" stroke-width="0.5"/>
-                      <line x1="17" y1="48" x2="16.5" y2="64" stroke="rgba(0,0,0,0.1)" stroke-width="0.5"/>
-                      <!-- paint blob at bristle tip — magenta -->
-                      <ellipse cx="14" cy="70" rx="3.5" ry="2" fill="#FF007F" opacity="0.85"/>
-                      <ellipse cx="13" cy="69" rx="1.5" ry="1" fill="#ffffff" opacity="0.35"/>
-                    </svg>
+                      <!-- realistic paintbrush to the right -->
+                      <svg class="ls-brush" style="position:static;transform:rotate(-15deg);flex-shrink:0;" viewBox="0 0 22 88" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <linearGradient id="hGrad" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stop-color="#a07030"/>
+                            <stop offset="30%" stop-color="#d4a055"/>
+                            <stop offset="65%" stop-color="#e8b86a"/>
+                            <stop offset="100%" stop-color="#a07030"/>
+                          </linearGradient>
+                          <linearGradient id="bGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#ddd0b8"/>
+                            <stop offset="55%" stop-color="#b8a888"/>
+                            <stop offset="100%" stop-color="#887050"/>
+                          </linearGradient>
+                        </defs>
+                        <!-- handle — long tapered wood -->
+                        <path d="M 8.5,2 L 13.5,2 L 14,62 L 8,62 Z" fill="url(#hGrad)"/>
+                        <path d="M 9.5,2 L 11,2 L 11.5,62 L 9.5,62 Z" fill="rgba(255,255,255,0.22)"/>
+                        <ellipse cx="11" cy="2.5" rx="2.5" ry="1.2" fill="#b88840"/>
+                        <!-- ferrule — metal band -->
+                        <rect x="7.5" y="60" width="7" height="7" rx="0.5" fill="#c8c0a4"/>
+                        <rect x="7.5" y="60" width="7" height="7" rx="0.5" fill="none" stroke="#a09878" stroke-width="0.5"/>
+                        <rect x="8" y="61.5" width="6" height="1.2" fill="rgba(255,255,255,0.5)"/>
+                        <rect x="8" y="64.5" width="6" height="0.7" fill="rgba(0,0,0,0.15)"/>
+                        <!-- bristles — tapered body -->
+                        <path d="M 7.5,67 C 7,70 6.5,75 7.5,80 C 9,85 11,87.5 11,88 C 11,87.5 13,85 14.5,80 C 15.5,75 15,70 14.5,67 Z" fill="url(#bGrad)"/>
+                        <line x1="9.2"  y1="67" x2="9.5"  y2="83" stroke="rgba(0,0,0,0.1)" stroke-width="0.4"/>
+                        <line x1="11"   y1="67" x2="11"   y2="85" stroke="rgba(0,0,0,0.08)" stroke-width="0.4"/>
+                        <line x1="12.8" y1="67" x2="12.5" y2="83" stroke="rgba(0,0,0,0.1)" stroke-width="0.4"/>
+                        <!-- magenta paint at bristle tip -->
+                        <ellipse cx="11" cy="87.5" rx="2.8" ry="1.4" fill="#FF007F" opacity="0.9"/>
+                        <ellipse cx="10.2" cy="87" rx="1.2" ry="0.7" fill="#ffffff" opacity="0.3"/>
+                      </svg>
                     </div><!-- end flex row -->
                   </div>
                 </div>
@@ -517,38 +515,42 @@
   </div>
 </section>
 
-<!-- Fixed paintbrush that leaps out and sweeps across the viewport -->
+<!-- Fixed paintbrush — animates during scroll sweep -->
 <div id="brush-fixed" aria-hidden="true">
-  <svg viewBox="0 0 28 72" xmlns="http://www.w3.org/2000/svg">
+  <svg viewBox="0 0 22 88" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
     <defs>
-      <linearGradient id="hGrad2" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#c8aa72"/>
-        <stop offset="40%" stop-color="#e8c888"/>
-        <stop offset="100%" stop-color="#b89850"/>
+      <linearGradient id="hGrad3" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#a07030"/>
+        <stop offset="30%" stop-color="#d4a055"/>
+        <stop offset="65%" stop-color="#e8b86a"/>
+        <stop offset="100%" stop-color="#a07030"/>
       </linearGradient>
-      <linearGradient id="bGrad2" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#e8dcc8"/>
-        <stop offset="60%" stop-color="#c8b898"/>
-        <stop offset="100%" stop-color="#a89878"/>
+      <linearGradient id="bGrad3" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ddd0b8"/>
+        <stop offset="55%" stop-color="#b8a888"/>
+        <stop offset="100%" stop-color="#887050"/>
       </linearGradient>
     </defs>
-    <rect x="9" y="38" width="10" height="10" rx="1" fill="#c8c0a8"/>
-    <rect x="9" y="38" width="10" height="10" rx="1" fill="none" stroke="#a09880" stroke-width="0.6"/>
-    <rect x="10" y="40" width="8" height="1.5" fill="rgba(255,255,255,0.4)"/>
-    <rect x="10" y="43" width="8" height="0.8" fill="rgba(0,0,0,0.12)"/>
-    <rect x="9.5" y="14" width="9" height="25" rx="2" fill="url(#hGrad2)"/>
-    <rect x="10.5" y="15" width="2" height="22" rx="1" fill="rgba(255,255,255,0.2)"/>
-    <rect x="9.5" y="12" width="9" height="3" rx="1.5" fill="#b8a888"/>
-    <path d="M9,48 Q8,54 10,60 Q14,68 14,70 Q14,68 18,60 Q20,54 19,48 Z" fill="url(#bGrad2)"/>
-    <line x1="11" y1="48" x2="11.5" y2="64" stroke="rgba(0,0,0,0.1)" stroke-width="0.5"/>
-    <line x1="14" y1="48" x2="14" y2="66" stroke="rgba(0,0,0,0.08)" stroke-width="0.5"/>
-    <line x1="17" y1="48" x2="16.5" y2="64" stroke="rgba(0,0,0,0.1)" stroke-width="0.5"/>
-    <ellipse cx="14" cy="70" rx="3.5" ry="2" fill="#FF007F" opacity="0.85"/>
-    <ellipse cx="13" cy="69" rx="1.5" ry="1" fill="#ffffff" opacity="0.35"/>
+    <path d="M 8.5,2 L 13.5,2 L 14,62 L 8,62 Z" fill="url(#hGrad3)"/>
+    <path d="M 9.5,2 L 11,2 L 11.5,62 L 9.5,62 Z" fill="rgba(255,255,255,0.22)"/>
+    <ellipse cx="11" cy="2.5" rx="2.5" ry="1.2" fill="#b88840"/>
+    <rect x="7.5" y="60" width="7" height="7" rx="0.5" fill="#c8c0a4"/>
+    <rect x="7.5" y="60" width="7" height="7" rx="0.5" fill="none" stroke="#a09878" stroke-width="0.5"/>
+    <rect x="8" y="61.5" width="6" height="1.2" fill="rgba(255,255,255,0.5)"/>
+    <rect x="8" y="64.5" width="6" height="0.7" fill="rgba(0,0,0,0.15)"/>
+    <path d="M 7.5,67 C 7,70 6.5,75 7.5,80 C 9,85 11,87.5 11,88 C 11,87.5 13,85 14.5,80 C 15.5,75 15,70 14.5,67 Z" fill="url(#bGrad3)"/>
+    <line x1="9.2"  y1="67" x2="9.5"  y2="83" stroke="rgba(0,0,0,0.1)" stroke-width="0.4"/>
+    <line x1="11"   y1="67" x2="11"   y2="85" stroke="rgba(0,0,0,0.08)" stroke-width="0.4"/>
+    <line x1="12.8" y1="67" x2="12.5" y2="83" stroke="rgba(0,0,0,0.1)" stroke-width="0.4"/>
+    <ellipse cx="11" cy="87.5" rx="2.8" ry="1.4" fill="#FF007F" opacity="0.9"/>
+    <ellipse cx="10.2" cy="87" rx="1.2" ry="0.7" fill="#ffffff" opacity="0.3"/>
   </svg>
 </div>
 <!-- Canvas for the paint strokes -->
 <canvas id="wipe-canvas" aria-hidden="true"></canvas>
+
+<!-- Scroll space for the brush diagonal sweep — canvas+brush are position:fixed so they overlay everything -->
+<div id="sweep-wrap" style="height:280vh;"></div>
 
 <section id="about-section">
   <div class="about-inner">
@@ -615,7 +617,7 @@
   var tabletCover  = document.getElementById('tablet-cover');
   var phoneCover   = document.getElementById('phone-cover');
   var whiteCover   = document.getElementById('white-cover');
-  var planeFixed   = document.getElementById('plane-fixed');
+  var brushFixed   = document.getElementById('brush-fixed');
   var wipeCanvas   = document.getElementById('wipe-canvas');
 
   function computeInitialScale() {
@@ -665,128 +667,93 @@
   tl.to(phoneCover,  { opacity: 0, duration: 0, ease: 'none' }, 0.65);
   tl.to(lsFo,        { opacity: 1, duration: 0, ease: 'none' }, 0.65);
 
-  // ── Paintbrush leap + horizontal stripe wipe ─────────────────────────────────
-  var brushFixed  = document.getElementById('brush-fixed');
-  var wipePlayed  = false;
-  var ctx         = null;
-  var tickerFn    = null;
-  // brush tip is at ~96% of element height (bottom of bristles)
-  var BRUSH_TIP_Y = 0.96;
-  // alternating stripe colours
-  var stripeColors = ['#ffffff', '#FF007F', '#ffffff', '#FF007F', '#ffffff'];
-  var stripeIdx   = 0;
-  var sweepX      = -1; // current brush x in canvas coords
+  // ── Scroll-driven diagonal brush sweep ───────────────────────────────────────
+  // #sweep-wrap (280vh) sits between the device section and About Us.
+  // The canvas and brush are position:fixed — they overlay everything.
+  // onUpdate repaints the canvas each scroll tick, so motion = scroll.
 
-  function paintStroke() {
-    if (!ctx || sweepX < 0) return;
-    var b  = brushFixed.getBoundingClientRect();
-    var bx = b.left + b.width * 0.5;
-    var by = b.top  + b.height * BRUSH_TIP_Y;
+  var sweepCtx = null;
 
-    // advance sweep to wherever the brush tip currently is
-    if (bx > sweepX) {
-      // fill a thick horizontal bar from last position to current
-      var barH = window.innerHeight * 0.22;
-      // pick colour band based on vertical position
-      var bandIdx = Math.floor((by / window.innerHeight) * stripeColors.length);
-      bandIdx = Math.min(bandIdx, stripeColors.length - 1);
-      ctx.fillStyle = stripeColors[bandIdx];
-      ctx.fillRect(sweepX - 2, by - barH * 0.5, bx - sweepX + 4, barH);
-      sweepX = bx;
-    }
-    // also paint a splodge at the bristle tip for texture
-    ctx.beginPath();
-    ctx.ellipse(bx, by, 18, 10, 0, 0, Math.PI * 2);
-    var bandIdx2 = Math.floor((by / window.innerHeight) * stripeColors.length);
-    bandIdx2 = Math.min(bandIdx2, stripeColors.length - 1);
-    ctx.fillStyle = stripeColors[bandIdx2];
-    ctx.fill();
+  function initSweep() {
+    wipeCanvas.width  = window.innerWidth;
+    wipeCanvas.height = window.innerHeight;
+    sweepCtx = wipeCanvas.getContext('2d');
+    gsap.set(wipeCanvas, { opacity: 1 });
+    gsap.set(brushFixed, { opacity: 1, x: 0, y: 0, rotation: 42, scale: 1 });
+  }
+
+  function paintDiagonal(p) {
+    if (!sweepCtx) return;
+    var w = wipeCanvas.width, h = wipeCanvas.height;
+    var diag = Math.sqrt(w * w + h * h);
+
+    // Brush tip travels from top-left off-screen to bottom-right off-screen
+    var sx = -w * 0.15, sy = -h * 0.15;
+    var ex = w * 1.15,  ey = h * 1.15;
+    var cx = sx + (ex - sx) * p;
+    var cy = sy + (ey - sy) * p;
+
+    // Move the fixed brush element to follow the tip
+    gsap.set(brushFixed, {
+      x: cx - w * 0.5,
+      y: cy - h * 0.5 - 160,   // handle extends above tip
+      rotation: 42
+    });
+
+    if (p <= 0) { sweepCtx.clearRect(0, 0, w, h); return; }
+
+    // Repaint full path from start to current position each frame
+    sweepCtx.clearRect(0, 0, w, h);
+    sweepCtx.lineCap  = 'round';
+    sweepCtx.lineJoin = 'round';
+
+    // Wide white base stroke — thick enough to cover full viewport width
+    sweepCtx.beginPath();
+    sweepCtx.moveTo(sx, sy);
+    sweepCtx.lineTo(cx, cy);
+    sweepCtx.strokeStyle = '#ffffff';
+    sweepCtx.lineWidth   = diag * 0.58;
+    sweepCtx.stroke();
+
+    // Magenta accent — offset perpendicular to the diagonal, narrower
+    sweepCtx.beginPath();
+    sweepCtx.moveTo(sx + 80, sy - 80);
+    sweepCtx.lineTo(cx + 80, cy - 80);
+    sweepCtx.strokeStyle = 'rgba(255,0,127,0.55)';
+    sweepCtx.lineWidth   = diag * 0.22;
+    sweepCtx.stroke();
+
+    // Second white stroke to soften the magenta edge
+    sweepCtx.beginPath();
+    sweepCtx.moveTo(sx, sy + 50);
+    sweepCtx.lineTo(cx, cy + 50);
+    sweepCtx.strokeStyle = 'rgba(255,255,255,0.7)';
+    sweepCtx.lineWidth   = diag * 0.3;
+    sweepCtx.stroke();
   }
 
   ScrollTrigger.create({
-    trigger: '#main-section',
-    start:   'bottom 85%',
-    onEnter: function () {
-      if (wipePlayed) return;
-      wipePlayed = true;
-
-      wipeCanvas.width  = window.innerWidth;
-      wipeCanvas.height = window.innerHeight;
-      ctx = wipeCanvas.getContext('2d');
-      gsap.set(wipeCanvas, { opacity: 1 });
-
-      // brush starts at roughly where the laptop screen center is (viewport center)
-      // then jumps left off-screen before sweeping right
-      gsap.set(brushFixed, {
-        opacity:  1,
-        x:        0,
-        y:        0,
-        rotation: -18,
-        scale:    1
+    trigger: '#sweep-wrap',
+    start:   'top bottom',
+    end:     'bottom top',
+    scrub:   1.2,
+    onEnter:     function ()       { initSweep(); },
+    onUpdate:    function (self)   { paintDiagonal(self.progress); },
+    onLeave:     function ()       {
+      if (sweepCtx) {
+        sweepCtx.fillStyle = '#ffffff';
+        sweepCtx.fillRect(0, 0, wipeCanvas.width, wipeCanvas.height);
+      }
+      gsap.set(brushFixed, { opacity: 0 });
+      gsap.to(wipeCanvas, { opacity: 0, duration: 0.5, delay: 0.15,
+        onComplete: function () { sweepCtx = null; }
       });
-
-      stripeIdx = 0;
-      sweepX    = -1;
-
-      tickerFn = paintStroke;
-      gsap.ticker.add(tickerFn);
-
-      // Phase A: brush "jumps" — scales up and snaps to left edge
-      // Phase B: sweeps right in 5 horizontal strokes (each stripe covers ~20% of height)
-      // The brush moves left→right on odd stripes, tilting slightly each pass
-      var tBrush = gsap.timeline({
-        onComplete: function () {
-          gsap.ticker.remove(tickerFn);
-          // fill full canvas solid white to ensure clean handoff
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, wipeCanvas.width, wipeCanvas.height);
-          gsap.to(wipeCanvas, { opacity: 0, duration: 0.5, delay: 0.1,
-            onComplete: function () { ctx = null; }
-          });
-        }
-      });
-
-      var vw = window.innerWidth;
-      var vh = window.innerHeight;
-
-      // jump: brush leaps out of screen, scaling up to feel like it's coming at viewer
-      tBrush.to(brushFixed, {
-        scale: 2.8, rotation: -30, y: '-12vh',
-        duration: 0.32, ease: 'back.out(1.5)'
-      });
-
-      // sweep row 1 (top ~20%): position brush at left edge, race right
-      tBrush.set(brushFixed, { x: -vw * 0.55, y: '-5vh', rotation: -8, scale: 2.2 });
-      tBrush.call(function(){ sweepX = 0; });
-      tBrush.to(brushFixed, { x: vw * 0.55, duration: 0.38, ease: 'power2.inOut' });
-
-      // sweep row 2 (~40%)
-      tBrush.set(brushFixed, { x: -vw * 0.55, y: '10vh', rotation: -5 });
-      tBrush.call(function(){ sweepX = 0; });
-      tBrush.to(brushFixed, { x: vw * 0.55, duration: 0.35, ease: 'power2.inOut' });
-
-      // sweep row 3 (~60%)
-      tBrush.set(brushFixed, { x: -vw * 0.55, y: '28vh', rotation: -4 });
-      tBrush.call(function(){ sweepX = 0; });
-      tBrush.to(brushFixed, { x: vw * 0.55, duration: 0.35, ease: 'power2.inOut' });
-
-      // sweep row 4 (~78%)
-      tBrush.set(brushFixed, { x: -vw * 0.55, y: '46vh', rotation: -3 });
-      tBrush.call(function(){ sweepX = 0; });
-      tBrush.to(brushFixed, { x: vw * 0.55, duration: 0.35, ease: 'power2.inOut' });
-
-      // sweep row 5 (bottom)
-      tBrush.set(brushFixed, { x: -vw * 0.55, y: '64vh', rotation: -2 });
-      tBrush.call(function(){ sweepX = 0; });
-      tBrush.to(brushFixed, { x: vw * 0.55, opacity: 0, duration: 0.35, ease: 'power2.inOut' });
     },
-    onLeaveBack: function () {
-      wipePlayed = false;
-      if (tickerFn) gsap.ticker.remove(tickerFn);
-      gsap.killTweensOf(brushFixed);
-      if (ctx) ctx.clearRect(0, 0, wipeCanvas.width, wipeCanvas.height);
+    onLeaveBack: function ()       {
+      gsap.killTweensOf(wipeCanvas);
       gsap.set(wipeCanvas,  { opacity: 0 });
-      gsap.set(brushFixed, { opacity: 0, x: 0, y: 0, rotation: -18, scale: 1 });
+      gsap.set(brushFixed,  { opacity: 0 });
+      if (sweepCtx) { sweepCtx.clearRect(0, 0, wipeCanvas.width, wipeCanvas.height); sweepCtx = null; }
     }
   });
 
