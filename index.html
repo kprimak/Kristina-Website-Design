@@ -508,16 +508,16 @@
       position: absolute;
       inset: 0;
       z-index: 2;
-      background: #ffffff;
+      background: #ffffff !important;
       background-image:
         repeating-linear-gradient(
           90deg,
-          rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px,
+          rgba(0,0,0,0.35) 0px, rgba(0,0,0,0.35) 1px,
           transparent 1px, transparent 40px
         ),
         repeating-linear-gradient(
           0deg,
-          rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px,
+          rgba(0,0,0,0.35) 0px, rgba(0,0,0,0.35) 1px,
           transparent 1px, transparent 40px
         );
       clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
@@ -721,12 +721,16 @@
     }
     #intro-headline {
       font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: clamp(2.8rem, 6.5vw, 7rem);
+      font-weight: 900;
+      font-size: 3.5rem;
       color: #000000;
-      line-height: 1.02;
-      letter-spacing: -0.045em;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
       margin-bottom: 1.4rem;
+      white-space: pre-line;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
     }
     #intro-rule {
       width: 40px;
@@ -894,7 +898,8 @@
     <!-- LAYER 5 · Hero text — position:fixed floats above all composited layers -->
     <div id="intro-hero-text">
       <p id="intro-eyebrow">Blueprint to Reality</p>
-      <h1 id="intro-headline">not just a website —<br>a story.</h1>
+      <h1 id="intro-headline">not just a website —
+a story.</h1>
       <div id="intro-rule"></div>
       <p id="intro-sub">scroll to watch it come alive</p>
     </div>
@@ -1505,7 +1510,7 @@
   tl.to(bpEl, { scale: 1.06, duration: 0.06, ease: 'power2.in', transformOrigin: 'center center' }, 0.00);
 
   // Text color-shift as the rip begins
-  tl.to('#intro-headline', { color: '#ffffff', textShadow: '0 4px 15px rgba(0,0,0,0.3)', duration: 0.05, ease: 'power2.out' }, 0.06);
+  tl.to('#intro-headline', { color: '#ff007f', textShadow: '0 4px 20px rgba(0,0,0,0.4)', duration: 0.05, ease: 'power2.out' }, 0.06);
   tl.to('#intro-eyebrow',  { color: 'rgba(255,255,255,0.8)', duration: 0.05, ease: 'power2.out' }, 0.06);
   tl.to('#intro-rule',     { backgroundColor: 'rgba(255,255,255,0.6)', duration: 0.05 }, 0.06);
   tl.to('#intro-sub',      { color: 'rgba(255,255,255,0.65)', duration: 0.05 }, 0.07);
