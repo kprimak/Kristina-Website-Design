@@ -742,36 +742,39 @@
     gsap.set(brushFixed, { opacity: 1, x: bx - vw * 0.5, y: by - vh * 0.5 - 155, rotation: as.rot, scale: 1 });
   }
 
+  var lockedScrollY = 0;
+
+  function onScrollLocked() {
+    // Snap back to where we locked — keeps the device scene visible
+    window.scrollTo(0, lockedScrollY);
+  }
+
+  function onKeyDownLocked(e) {
+    // Block keyboard scroll keys while animation is running
+    if ([32, 33, 34, 35, 36, 37, 38, 39, 40].indexOf(e.keyCode) > -1) e.preventDefault();
+  }
+
   function lockPage() {
     if (sweepLocked) return;
     sweepLocked = true;
-    var sy = window.scrollY;
-    // Pin the device timeline at its end state before fixing the body,
-    // so ScrollTrigger's scroll-position change doesn't reset it back to the hero.
+    lockedScrollY = window.scrollY;
+    // Force device timeline to its final state (laptop/tablet/phone scene on magenta)
     tl.progress(1);
-    tl.scrollTrigger && tl.scrollTrigger.kill();
-    document.body.style.position   = 'fixed';
-    document.body.style.top        = -sy + 'px';
-    document.body.style.left       = '0';
-    document.body.style.width      = '100%';
-    document.body.dataset.scrollY  = sy;
+    // Prevent any other scroll mechanism from moving the page
+    window.addEventListener('scroll', onScrollLocked);
+    document.addEventListener('keydown', onKeyDownLocked);
   }
 
   function unlockPage(scrollToAbout) {
     if (!sweepLocked) return;
     sweepLocked = false;
-    var sy = parseFloat(document.body.dataset.scrollY || 0);
-    document.body.style.position = '';
-    document.body.style.top      = '';
-    document.body.style.left     = '';
-    document.body.style.width    = '';
+    window.removeEventListener('scroll', onScrollLocked);
+    document.removeEventListener('keydown', onKeyDownLocked);
     if (scrollToAbout) {
-      // Land user right at the about section
       var aboutSec = document.getElementById('about-section');
-      window.scrollTo(0, aboutSec ? aboutSec.offsetTop : sy);
+      window.scrollTo(0, aboutSec ? aboutSec.offsetTop : lockedScrollY);
     } else {
-      // Restore previous scroll (scrolling back up)
-      window.scrollTo(0, sy);
+      window.scrollTo(0, lockedScrollY);
     }
   }
 
