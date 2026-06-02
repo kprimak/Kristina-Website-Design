@@ -549,9 +549,6 @@
 <!-- Canvas for the paint strokes -->
 <canvas id="wipe-canvas" aria-hidden="true"></canvas>
 
-<!-- Scroll space for the brush diagonal sweep — canvas+brush are position:fixed so they overlay everything -->
-<div id="sweep-wrap" style="height:2px;"></div>
-
 <section id="about-section">
   <div class="about-inner">
 
@@ -598,6 +595,9 @@
 
   </div>
 </section>
+
+<!-- Brush sweep trigger — placed after About Us so the animation follows that section -->
+<div id="sweep-wrap" style="height:2px;"></div>
 
 <section id="after-section">
   <h2>Your story, beautifully crafted.</h2>
@@ -853,8 +853,8 @@
     window.removeEventListener('scroll', onScrollLocked);
     document.removeEventListener('keydown', onKeyDownLocked);
     if (scrollToAbout) {
-      var aboutSec = document.getElementById('about-section');
-      window.scrollTo(0, aboutSec ? aboutSec.offsetTop : lockedScrollY);
+      var afterSec = document.getElementById('after-section');
+      window.scrollTo(0, afterSec ? afterSec.offsetTop : lockedScrollY);
     } else {
       window.scrollTo(0, lockedScrollY);
     }
