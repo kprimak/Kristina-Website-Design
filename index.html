@@ -674,12 +674,12 @@
 
   var sweepCtx = null;
 
-  // 3 strokes that collectively cover the full viewport.
-  // Each is a diagonal line (fraction of w/h). rot = brush angle in degrees.
+  // 3 diagonal strokes that collectively cover the full viewport.
+  // Alternating white / magenta / white so the brush visibly "paints" over the scene.
   var STROKES = [
-    { x0: -0.05, y0: -0.05, x1:  1.05, y1:  0.44, rot:  30 }, // L → R
-    { x0:  1.05, y0:  0.30, x1: -0.05, y1:  0.74, rot: -30 }, // R → L
-    { x0: -0.05, y0:  0.58, x1:  1.05, y1:  1.05, rot:  30 }  // L → R
+    { x0: -0.05, y0: -0.05, x1:  1.05, y1:  0.44, rot:  30, color: '#ffffff',  accent: 'rgba(255,0,127,0.18)' },
+    { x0:  1.05, y0:  0.30, x1: -0.05, y1:  0.74, rot: -30, color: '#FF007F',  accent: 'rgba(255,255,255,0.25)' },
+    { x0: -0.05, y0:  0.58, x1:  1.05, y1:  1.05, rot:  30, color: '#ffffff',  accent: 'rgba(255,0,127,0.15)' }
   ];
 
   function paintSweep(p) {
@@ -687,12 +687,12 @@
     var w = wipeCanvas.width, h = wipeCanvas.height;
     var N = STROKES.length;
 
-    // Redraw magenta base each frame (allows scroll-back to work)
-    sweepCtx.fillStyle = '#FF007F';
-    sweepCtx.fillRect(0, 0, w, h);
+    // Clear each frame so scroll-back works correctly
+    sweepCtx.clearRect(0, 0, w, h);
 
-    // First 15% of progress = jump-out phase (no strokes yet)
+    // First 15% of progress = jump-out phase; no strokes painted yet
     var sweepP = Math.max(0, (p - 0.15) / 0.85);
+    if (sweepP <= 0) return;
 
     sweepCtx.lineCap  = 'round';
     sweepCtx.lineJoin = 'round';
@@ -706,39 +706,36 @@
       var ex = (s.x0 + (s.x1 - s.x0) * lp) * w;
       var ey = (s.y0 + (s.y1 - s.y0) * lp) * h;
 
-      // White stroke — wide enough that 3 strokes cover the full screen
+      // Main stroke — wide enough that 3 strokes cover the full screen
       sweepCtx.beginPath();
       sweepCtx.moveTo(sx, sy);
       sweepCtx.lineTo(ex, ey);
-      sweepCtx.strokeStyle = '#ffffff';
+      sweepCtx.strokeStyle = s.color;
       sweepCtx.lineWidth   = h * 0.54;
       sweepCtx.stroke();
 
-      // Soft magenta edge for a painterly feel
+      // Soft accent on leading edge for a painterly texture
       sweepCtx.beginPath();
       sweepCtx.moveTo(sx, sy);
       sweepCtx.lineTo(ex, ey);
-      sweepCtx.strokeStyle = 'rgba(255,0,127,0.10)';
-      sweepCtx.lineWidth   = h * 0.08;
+      sweepCtx.strokeStyle = s.accent;
+      sweepCtx.lineWidth   = h * 0.09;
       sweepCtx.stroke();
     }
 
-    // Move brush to the tip of whichever stroke is actively being drawn
-    if (sweepP > 0) {
-      var ai   = Math.min(N - 1, Math.floor(sweepP * N));
-      var alp  = Math.min(1, sweepP * N - ai);
-      var as   = STROKES[ai];
-      var bx   = (as.x0 + (as.x1 - as.x0) * alp) * w;
-      var by   = (as.y0 + (as.y1 - as.y0) * alp) * h;
-      var vw   = window.innerWidth, vh = window.innerHeight;
-      gsap.set(brushFixed, {
-        opacity:  1,
-        x:        bx - vw * 0.5,
-        y:        by - vh * 0.5 - 155,
-        rotation: as.rot,
-        scale:    1
-      });
-    }
+    // Move brush to tip of the currently active stroke
+    var ai  = Math.min(N - 1, Math.floor(sweepP * N));
+    var alp = Math.min(1, sweepP * N - ai);
+    var as  = STROKES[ai];
+    var bx  = (as.x0 + (as.x1 - as.x0) * alp) * w;
+    var by  = (as.y0 + (as.y1 - as.y0) * alp) * h;
+    gsap.set(brushFixed, {
+      opacity:  1,
+      x:        bx - window.innerWidth  * 0.5,
+      y:        by - window.innerHeight * 0.5 - 155,
+      rotation: as.rot,
+      scale:    1
+    });
   }
 
   ScrollTrigger.create({
@@ -752,22 +749,29 @@
         wipeCanvas.height = window.innerHeight;
         sweepCtx = wipeCanvas.getContext('2d');
       }
-      // Fill canvas magenta immediately — covers device scene scrolling away
-      sweepCtx.fillStyle = '#FF007F';
-      sweepCtx.fillRect(0, 0, wipeCanvas.width, wipeCanvas.height);
-      gsap.set(wipeCanvas,  { opacity: 1 });
+      // Canvas starts transparent — strokes paint over the scene as brush moves
+      sweepCtx.clearRect(0, 0, wipeCanvas.width, wipeCanvas.height);
+      gsap.set(wipeCanvas, { opacity: 1 });
 
-      // Brush jumps out of laptop screen: pop from center + shake
-      gsap.set(brushFixed, { opacity: 0, x: 0, y: 0, rotation: 0, scale: 0.4 });
+      // Brush starts exactly at the laptop screen center (viewport center,
+      // roughly where the brush was sitting inside the laptop screen).
+      // It pops out with scale + bounce, then shakes left-right to signal
+      // it's jumping OFF the screen before the sweep begins.
+      var vw = window.innerWidth, vh = window.innerHeight;
+      // Laptop brush was at center-right of the screen area
+      var startX = vw * 0.08;   // slightly right of center (brush was right-side of logo)
+      var startY = vh * -0.04;  // near vertical center of laptop screen
+
+      gsap.set(brushFixed, { opacity: 1, x: startX, y: startY, rotation: -15, scale: 0.45 });
+      // Pop up — clear break from the laptop screen
       gsap.to(brushFixed, {
-        opacity: 1, scale: 1.5, y: '-8vh', rotation: -20,
-        duration: 0.22, ease: 'back.out(3)',
+        scale: 1.6, y: startY - vh * 0.14, rotation: -30,
+        duration: 0.25, ease: 'back.out(2.5)',
         onComplete: function () {
+          // Shake: rapid left-right wobble to sell the "jumped out" feel
           gsap.to(brushFixed, {
-            x: 18, duration: 0.06, yoyo: true, repeat: 5, ease: 'none',
-            onComplete: function () {
-              gsap.set(brushFixed, { x: 0 });
-            }
+            x: startX + 22, duration: 0.055, yoyo: true, repeat: 7, ease: 'none',
+            onComplete: function () { gsap.set(brushFixed, { x: startX }); }
           });
         }
       });
