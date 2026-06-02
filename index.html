@@ -75,22 +75,6 @@
         drop-shadow(0 10px 24px rgba(0,0,0,0.22));
     }
 
-    /* Screen slot — starts transparent so grey viewport shows through,
-       then GSAP transitions it to magenta together with the viewport */
-    .laptop-screen {
-      position: absolute;
-      left: 9%;
-      top: 4.41%;
-      width: 82%;
-      height: 75%;
-      overflow: hidden;
-      background: transparent;
-      z-index: 1;
-      font-family: 'Space Grotesk', sans-serif;
-      display: flex;
-      flex-direction: column;
-    }
-
     .laptop-svg {
       position: absolute;
       inset: 0;
@@ -161,117 +145,6 @@
       font-size: 0.7rem;
       letter-spacing: 0.18em;
       color: rgba(0,0,0,0.35);
-    }
-
-    /* ── Laptop screen mini-site ── */
-    .ls-content {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-    }
-    .ls-nav {
-      background: #FAF7F2;
-      padding: 0.6rem 1.4rem;
-      display: flex;
-      align-items: baseline;
-      gap: 0.22rem;
-      border-bottom: 1px solid rgba(28,28,30,0.08);
-      flex-shrink: 0;
-    }
-    .ls-brand-top {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #1C1C1E;
-      line-height: 1;
-    }
-    .ls-brand-blue {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #2563EB;
-      line-height: 1;
-      margin-right: auto;
-    }
-    .ls-links {
-      display: flex;
-      gap: 1.2rem;
-      font-size: 0.6rem;
-      color: rgba(28,28,30,0.5);
-      letter-spacing: 0.04em;
-    }
-    .ls-hero {
-      position: relative;
-      flex: 0 0 55%;
-      overflow: hidden;
-    }
-    .ls-hero img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .ls-hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(12,15,20,0.58);
-    }
-    .ls-hero-text {
-      position: relative;
-      z-index: 2;
-      padding: 1.4rem 1.4rem 1rem;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-    }
-    .ls-hero-text h2 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1.2;
-      margin-bottom: 0.65rem;
-    }
-    .ls-btn {
-      align-self: flex-start;
-      background: #2563EB;
-      color: #fff;
-      border: none;
-      border-radius: 100px;
-      padding: 0.3rem 0.85rem;
-      font-family: 'Archivo', sans-serif;
-      font-size: 0.5rem;
-      cursor: default;
-    }
-    .ls-work {
-      background: #FAF7F2;
-      flex: 1;
-      padding: 0.55rem 1.4rem 0.7rem;
-      overflow: hidden;
-    }
-    .ls-work-label {
-      font-family: 'Archivo', sans-serif;
-      font-size: 0.42rem;
-      letter-spacing: 0.12em;
-      color: #6B6B70;
-      margin-bottom: 0.45rem;
-    }
-    .ls-cards {
-      display: flex;
-      gap: 0.6rem;
-      height: calc(100% - 1.2rem);
-    }
-    .ls-card {
-      flex: 1;
-      border-radius: 4px;
-      overflow: hidden;
-      background: #e8e2d8;
-    }
-    .ls-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
     }
 
     #after-section {
@@ -350,34 +223,7 @@
 
         <!-- LAPTOP -->
         <div class="device laptop">
-          <div class="laptop-screen">
-            <div class="ls-content">
-            <div class="ls-nav">
-              <span class="ls-brand-top">Your Future</span>
-              <span class="ls-brand-blue">Website.</span>
-              <nav class="ls-links">
-                <span>Work</span><span>About</span><span>Contact</span>
-              </nav>
-            </div>
-            <div class="ls-hero">
-              <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1400&q=80" alt="" />
-              <div class="ls-hero-overlay"></div>
-              <div class="ls-hero-text">
-                <h2>Crafting Digital<br>Luxuries.</h2>
-                <button class="ls-btn">View Work</button>
-              </div>
-            </div>
-            <div class="ls-work">
-              <p class="ls-work-label">SELECTED WORK</p>
-              <div class="ls-cards">
-                <div class="ls-card"><img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=600&q=75" alt="" /></div>
-                <div class="ls-card"><img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=600&q=75" alt="" /></div>
-                <div class="ls-card"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75" alt="" /></div>
-              </div>
-            </div>
-            </div><!-- /.ls-content -->
-          </div>
-          <svg class="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <svg class="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stop-color="#e2e2e2"/>
@@ -387,23 +233,45 @@
                 <stop offset="0%" stop-color="#d6d6d6"/>
                 <stop offset="100%" stop-color="#a4a4a4"/>
               </linearGradient>
-              <!-- clip that punches the screen hole out of any shape -->
-              <clipPath id="lidClip">
-                <path fill-rule="evenodd" d="M44,4 h912 a14,14 0 0 1 14,14 v530 a14,14 0 0 1 -14,14 h-912 a14,14 0 0 1 -14,-14 v-530 a14,14 0 0 1 14,-14 z M90,32 h820 v512 h-820 z"/>
-              </clipPath>
             </defs>
-            <!-- lid: gradient + stroke, both clipped so screen area is fully transparent -->
-            <rect x="44" y="4" width="912" height="558" rx="14" fill="url(#lidGrad)" clip-path="url(#lidClip)"/>
+            <!-- lid chassis -->
+            <rect x="44" y="4" width="912" height="558" rx="14" fill="url(#lidGrad)"/>
             <rect x="44" y="4" width="912" height="558" rx="14" fill="none" stroke="#9a9a9a" stroke-width="1.2"/>
-            <!-- white screen fill -->
+            <!-- screen: white base + mockup via foreignObject -->
             <rect x="90" y="30" width="820" height="510" fill="#ffffff"/>
-            <!-- black bezels around screen -->
+            <foreignObject id="ls-fo" x="90" y="30" width="820" height="510">
+              <div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;font-family:'Space Grotesk',sans-serif;">
+                <div style="background:#FAF7F2;padding:0.6rem 1.4rem;display:flex;align-items:baseline;gap:0.22rem;border-bottom:1px solid rgba(28,28,30,0.08);flex-shrink:0;">
+                  <span style="font-size:0.75rem;font-weight:700;color:#1C1C1E;">Your Future</span>
+                  <span style="font-size:0.75rem;font-weight:700;color:#2563EB;margin-right:auto;">Website.</span>
+                  <span style="display:flex;gap:1.2rem;font-size:0.6rem;color:rgba(28,28,30,0.5);letter-spacing:0.04em;"><span>Work</span><span>About</span><span>Contact</span></span>
+                </div>
+                <div style="position:relative;flex:0 0 55%;overflow:hidden;">
+                  <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1400&q=80" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" alt=""/>
+                  <div style="position:absolute;inset:0;background:rgba(12,15,20,0.58);"></div>
+                  <div style="position:relative;z-index:2;padding:1.4rem 1.4rem 1rem;height:100%;display:flex;flex-direction:column;justify-content:flex-end;">
+                    <h2 style="font-size:1.15rem;font-weight:700;color:#fff;line-height:1.2;margin:0 0 0.65rem;">Crafting Digital<br/>Luxuries.</h2>
+                    <button style="align-self:flex-start;background:#2563EB;color:#fff;border:none;border-radius:100px;padding:0.3rem 0.85rem;font-family:'Archivo',sans-serif;font-size:0.5rem;cursor:default;">View Work</button>
+                  </div>
+                </div>
+                <div style="background:#FAF7F2;flex:1;padding:0.55rem 1.4rem 0.7rem;overflow:hidden;">
+                  <p style="font-family:'Archivo',sans-serif;font-size:0.42rem;letter-spacing:0.12em;color:#6B6B70;margin:0 0 0.45rem;">SELECTED WORK</p>
+                  <div style="display:flex;gap:0.6rem;height:calc(100% - 1.2rem);">
+                    <div style="flex:1;border-radius:4px;overflow:hidden;background:#e8e2d8;"><img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=600&q=75" style="width:100%;height:100%;object-fit:cover;display:block;" alt=""/></div>
+                    <div style="flex:1;border-radius:4px;overflow:hidden;background:#e8e2d8;"><img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=600&q=75" style="width:100%;height:100%;object-fit:cover;display:block;" alt=""/></div>
+                    <div style="flex:1;border-radius:4px;overflow:hidden;background:#e8e2d8;"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75" style="width:100%;height:100%;object-fit:cover;display:block;" alt=""/></div>
+                  </div>
+                </div>
+              </div>
+            </foreignObject>
+            <!-- bezels painted on top -->
             <rect x="70" y="18" width="860" height="14" fill="#141416"/>
             <rect x="70" y="18" width="20" height="530" fill="#141416"/>
             <rect x="910" y="18" width="20" height="530" fill="#141416"/>
             <rect x="70" y="544" width="860" height="14" fill="#141416"/>
             <circle cx="500" cy="12" r="4.5" fill="#222"/>
             <circle cx="500" cy="12" r="2" fill="#0a0a0a" opacity="0.7"/>
+            <!-- base / keyboard -->
             <rect x="34" y="558" width="932" height="10" rx="2.5" fill="#868686"/>
             <rect x="44" y="561" width="912" height="5" fill="#a8a8a8" opacity="0.4"/>
             <path d="M 18,568 Q 18,572 22,574 L 978,574 Q 982,572 982,568 Z" fill="#bcbcbc"/>
@@ -493,8 +361,7 @@
   var headlineWrap = document.getElementById('headline-wrap');
   var tablet       = document.querySelector('.device.tablet');
   var phone        = document.querySelector('.device.phone');
-  var laptopScreen = document.querySelector('.laptop-screen');
-  var lsContent    = document.querySelector('.ls-content');
+  var lsFo         = document.getElementById('ls-fo');
   var whiteCover   = document.getElementById('white-cover');
 
   function computeInitialScale() {
@@ -509,7 +376,7 @@
 
   // Apply scale then make visible — chassis never renders at natural size
   gsap.set(deviceScene, { scale: initialScale, transformOrigin: 'center center', visibility: 'visible', immediateRender: true });
-  gsap.set([tablet, phone, lsContent], { autoAlpha: 0, immediateRender: true });
+  gsap.set([tablet, phone, lsFo], { autoAlpha: 0, immediateRender: true });
 
   // Scroll DOWN advances progress 0 → 1:
   //  0.00–0.35  grey → magenta colour wash
@@ -537,7 +404,7 @@
   // Phase 3 — side devices + laptop screen mockup all fade in together
   tl.to(tablet,    { autoAlpha: 1, duration: 0.20, ease: 'power2.out' }, 0.80);
   tl.to(phone,     { autoAlpha: 1, duration: 0.20, ease: 'power2.out' }, 0.80);
-  tl.to(lsContent, { autoAlpha: 1, duration: 0.20, ease: 'power2.out' }, 0.80);
+  tl.to(lsFo,      { autoAlpha: 1, duration: 0.20, ease: 'power2.out' }, 0.80);
 
   window.addEventListener('resize', function () {
     gsap.set(deviceScene, { scale: computeInitialScale() });
