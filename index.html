@@ -749,32 +749,35 @@
         wipeCanvas.height = window.innerHeight;
         sweepCtx = wipeCanvas.getContext('2d');
       }
-      // Hide the in-screen brush the instant the fixed one takes over
-      gsap.set(document.querySelector('.ls-brush'), { opacity: 0 });
-
       // Canvas starts transparent — strokes paint over the scene as brush moves
       sweepCtx.clearRect(0, 0, wipeCanvas.width, wipeCanvas.height);
       gsap.set(wipeCanvas, { opacity: 1 });
 
-      // Brush starts exactly at the laptop screen center (viewport center,
-      // roughly where the brush was sitting inside the laptop screen).
-      // It pops out with scale + bounce, then shakes left-right to signal
-      // it's jumping OFF the screen before the sweep begins.
       var vw = window.innerWidth, vh = window.innerHeight;
-      // Laptop brush was at center-right of the screen area
-      var startX = vw * 0.08;   // slightly right of center (brush was right-side of logo)
-      var startY = vh * -0.04;  // near vertical center of laptop screen
+      var startX = vw * 0.08;
+      var startY = vh * -0.04;
+      var lsBrush = document.querySelector('.ls-brush');
 
-      gsap.set(brushFixed, { opacity: 1, x: startX, y: startY, rotation: -15, scale: 0.45 });
-      // Pop up — clear break from the laptop screen
-      gsap.to(brushFixed, {
-        scale: 1.6, y: startY - vh * 0.14, rotation: -30,
-        duration: 0.25, ease: 'back.out(2.5)',
+      // Step 1: in-screen brush pulses (grows + brightens) — builds tension
+      gsap.to(lsBrush, {
+        scale: 1.9, filter: 'drop-shadow(0 0 8px #FF007F) brightness(1.6)',
+        duration: 0.18, ease: 'power2.in',
         onComplete: function () {
-          // Shake: rapid left-right wobble to sell the "jumped out" feel
+          // Step 2: in-screen brush vanishes
+          gsap.set(lsBrush, { opacity: 0, scale: 1, filter: 'none' });
+
+          // Step 3: fixed brush launches from same spot — big rocket pop
+          gsap.set(brushFixed, { opacity: 1, x: startX, y: startY, rotation: -15, scale: 0.5 });
           gsap.to(brushFixed, {
-            x: startX + 22, duration: 0.055, yoyo: true, repeat: 7, ease: 'none',
-            onComplete: function () { gsap.set(brushFixed, { x: startX }); }
+            scale: 2.2, y: startY - vh * 0.22, rotation: -38,
+            duration: 0.28, ease: 'back.out(3)',
+            onComplete: function () {
+              // Step 4: hard shake — feels like it broke free
+              gsap.to(brushFixed, {
+                x: startX + 30, duration: 0.05, yoyo: true, repeat: 9, ease: 'none',
+                onComplete: function () { gsap.set(brushFixed, { x: startX }); }
+              });
+            }
           });
         }
       });
