@@ -899,12 +899,11 @@
     onWheelSweep({ preventDefault: function(){}, deltaY: dy * 2 });
   }
 
-  // Observe sweep-wrap with IntersectionObserver — lock when it enters viewport
+  // Observe sweep-wrap with IntersectionObserver — lock page and wait for first scroll
   var sweepObserver = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting && !sweepLocked && !sweepDone) {
-        lockPage();
-        startSweepAnimation();
+        lockPage();   // freezes page on the 3-device scene; animation waits for scroll
         window.addEventListener('wheel', onWheelSweep, { passive: false });
         window.addEventListener('touchstart', onTouchStartSweep, { passive: true });
         window.addEventListener('touchmove', onTouchMoveSweep, { passive: false });
