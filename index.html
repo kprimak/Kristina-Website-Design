@@ -674,12 +674,12 @@
 
   var sweepCtx = null;
 
-  // 3 diagonal strokes that collectively cover the full viewport.
-  // Alternating white / magenta / white so the brush visibly "paints" over the scene.
+  // Stroke 1 starts from where the brush lands after its jump (center-right ~0.55, 0.22).
+  // Strokes 2 and 3 cover the remaining areas with full-width sweeps.
   var STROKES = [
-    { x0: -0.05, y0: -0.05, x1:  1.05, y1:  0.44, rot:  30, color: '#ffffff',  accent: 'rgba(255,0,127,0.18)' },
-    { x0:  1.05, y0:  0.30, x1: -0.05, y1:  0.74, rot: -30, color: '#FF007F',  accent: 'rgba(255,255,255,0.25)' },
-    { x0: -0.05, y0:  0.58, x1:  1.05, y1:  1.05, rot:  30, color: '#ffffff',  accent: 'rgba(255,0,127,0.15)' }
+    { x0:  0.55, y0:  0.22, x1:  1.15, y1:  0.45, rot:  30, color: '#ffffff', accent: 'rgba(255,0,127,0.18)' },
+    { x0:  1.15, y0:  0.12, x1: -0.05, y1:  0.68, rot: -30, color: '#FF007F', accent: 'rgba(255,255,255,0.25)' },
+    { x0: -0.05, y0:  0.54, x1:  1.15, y1:  1.05, rot:  30, color: '#ffffff', accent: 'rgba(255,0,127,0.15)' }
   ];
 
   function paintSweep(p) {
@@ -690,8 +690,8 @@
     // Clear each frame so scroll-back works correctly
     sweepCtx.clearRect(0, 0, w, h);
 
-    // First 15% of progress = jump-out phase; no strokes painted yet
-    var sweepP = Math.max(0, (p - 0.15) / 0.85);
+    // Painting starts immediately with scroll — no delay
+    var sweepP = p;
     if (sweepP <= 0) return;
 
     sweepCtx.lineCap  = 'round';
