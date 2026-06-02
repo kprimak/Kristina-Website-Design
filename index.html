@@ -698,13 +698,33 @@
     var N = STROKES.length;
     sweepCtx.clearRect(0, 0, w, h);
 
-    // Idle phase — brush wobbles in place, no paint
+    // Position brush so its bristle TIP lands at screen coords (tx, ty).
+    // #brush-fixed: 52×210px, transform-origin 50% 90% = (26px, 189px from TL).
+    // Tip (SVG y=87.5) → 208.8px from TL → 19.8px below origin → 55px at scale 2.8.
+    // Origin natural screen position = (vw/2, vh/2 + 11).
+    function setBrushAtTip(tx, ty, rot) {
+      var rotRad  = rot * Math.PI / 180;
+      var tipDist = 55; // px from transform-origin to tip at scale 2.8
+      // tip = origin + rotate([0, tipDist], rot)  →  origin = tip - that
+      var offX = -tipDist * Math.sin(rotRad);
+      var offY =  tipDist * Math.cos(rotRad);
+      gsap.set(brushFixed, {
+        opacity:  1,
+        x:        (tx - offX) - vw * 0.5,
+        y:        (ty - offY) - (vh * 0.5 + 11),
+        rotation: rot,
+        scale:    2.8
+      });
+    }
+
+    // Idle phase — tip stays at stroke-1 start, brush wobbles in place
     if (p <= IDLE_END) {
       if (p > POP_END) {
         var idleP  = (p - POP_END) / (IDLE_END - POP_END);
         var wobble = Math.sin(idleP * Math.PI * 6) * 4;
         var bounce = Math.sin(idleP * Math.PI * 5) * (vh * 0.012);
-        gsap.set(brushFixed, { x: 0, y: -(vh * 0.15) + bounce, rotation: -38 + wobble, scale: 2.8, opacity: 1 });
+        var s0 = STROKES[0];
+        setBrushAtTip(s0.x0 * w, s0.y0 * h + bounce, -38 + wobble);
       }
       return;
     }
@@ -734,12 +754,13 @@
       sweepCtx.stroke();
     }
 
-    var ai  = Math.min(N - 1, Math.floor(paintP * N));
-    var alp = Math.min(1, paintP * N - ai);
-    var as  = STROKES[ai];
-    var bx  = (as.x0 + (as.x1 - as.x0) * alp) * w;
-    var by  = (as.y0 + (as.y1 - as.y0) * alp) * h;
-    gsap.set(brushFixed, { opacity: 1, x: bx - vw * 0.5, y: by - vh * 0.5 - 420, rotation: as.rot, scale: 2.8 });
+    // Move brush so tip follows the leading edge of the active stroke
+    var ai   = Math.min(N - 1, Math.floor(paintP * N));
+    var alp  = Math.min(1, paintP * N - ai);
+    var as   = STROKES[ai];
+    var btipX = (as.x0 + (as.x1 - as.x0) * alp) * w;
+    var btipY = (as.y0 + (as.y1 - as.y0) * alp) * h;
+    setBrushAtTip(btipX, btipY, as.rot);
   }
 
   var lockedScrollY = 0;
@@ -793,9 +814,16 @@
       duration: 0.22, ease: 'power2.in',
       onComplete: function () {
         gsap.set(lsBrush, { opacity: 0, scale: 1, filter: 'none' });
-        gsap.set(brushFixed, { opacity: 1, x: 0, y: vh * 0.05, rotation: -15, scale: 0.6 });
+        // Rocket to exact position where tip will sit over stroke-1 start (0.5*w, 0.35*h)
+        // At rot=-38°: tipOffX = -55*sin(-38°)=33.8, tipOffY = 55*cos(-38°)=43.3
+        // origin target x = 0.5*vw - 33.8 → gsap x = -33.8
+        // origin target y = 0.35*vh - 43.3 → gsap y = 0.35*vh - 43.3 - (vh*0.5 + 11) = -0.15*vh - 54.3
+        var vw = window.innerWidth;
+        var targetX = -33.8;
+        var targetY = 0.35 * vh - 43.3 - (vh * 0.5 + 11);
+        gsap.set(brushFixed, { opacity: 1, x: targetX, y: targetY + vh * 0.25, rotation: -15, scale: 0.6 });
         gsap.to(brushFixed, {
-          scale: 2.8, x: 0, y: -(vh * 0.15), rotation: -38,
+          scale: 2.8, x: targetX, y: targetY, rotation: -38,
           duration: 0.35, ease: 'back.out(4)'
         });
       }
