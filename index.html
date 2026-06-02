@@ -13,18 +13,32 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ══ MAGENTA BASE ══ */
-    html, body {
+    /* ══════════════════════════════════════════════
+       RESET
+    ══════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ══════════════════════════════════════════════
+       GLOBAL MAGENTA — set only in CSS, never in JS
+    ══════════════════════════════════════════════ */
+    html {
+      background: #FF007F !important;
+    }
+    body {
       background: #FF007F !important;
       font-family: 'Archivo', sans-serif;
       overflow-x: hidden;
     }
 
-    /* ══ LOADING MASK — pure magenta, covers 100% of viewport.
-       Exists before any JS runs. GSAP removes it instantly after
-       applying INITIAL_SCALE, so the grey chassis never flashes. ══ */
+    /* ══════════════════════════════════════════════
+       LOADING MASK
+       A magenta div that covers the viewport from
+       the very first byte. CSS gives it the color —
+       no JS involved. GSAP only removes it (opacity)
+       after INITIAL_SCALE is applied. This stops the
+       grey MacBook chassis from flashing on load.
+    ══════════════════════════════════════════════ */
     #loading-mask {
       position: fixed;
       inset: 0;
@@ -33,10 +47,13 @@
       pointer-events: none;
     }
 
-    /* ══ SCROLL SPACE ══ */
-    #main-section { height: 450vh; }
+    /* ══════════════════════════════════════════════
+       SCROLL SPACE + STICKY CANVAS
+    ══════════════════════════════════════════════ */
+    #main-section {
+      height: 450vh;
+    }
 
-    /* ══ STICKY CANVAS ══ */
     #main-viewport {
       position: sticky;
       top: 0;
@@ -46,7 +63,11 @@
       background: #FF007F !important;
     }
 
-    /* ══ DEVICE SCENE — GSAP scales this group ══ */
+    /* ══════════════════════════════════════════════
+       DEVICE SCENE
+       GSAP scales this entire group. Background is
+       magenta so no grey bleeds through at any scale.
+    ══════════════════════════════════════════════ */
     #device-scene {
       position: absolute;
       inset: 0;
@@ -67,7 +88,33 @@
       background: #FF007F !important;
     }
 
-    /* MacBook chassis */
+    /* ══════════════════════════════════════════════
+       TABLET DEVICE
+       Positioned to the left of the laptop.
+       Width + height defined so it never collapses.
+    ══════════════════════════════════════════════ */
+    #tablet-device {
+      position: absolute;
+      right: calc(100% + 20px);
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20%;
+      min-width: 110px;
+      height: auto;
+      display: block;
+      opacity: 1;
+      visibility: visible;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.22));
+    }
+    #tablet-device svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* ══════════════════════════════════════════════
+       MACBOOK LAPTOP CHASSIS
+    ══════════════════════════════════════════════ */
     #laptop-wrap {
       position: relative;
       width: min(960px, 90vw);
@@ -79,7 +126,7 @@
         drop-shadow(0 10px 24px rgba(0,0,0,0.18));
     }
 
-    /* Screen window — magenta fill */
+    /* Screen slot — magenta behind the bezel */
     #laptop-screen-content {
       position: absolute;
       left:   9%;
@@ -91,26 +138,22 @@
       z-index: 1;
     }
 
-    /* MacBook SVG frame */
+    /* MacBook SVG frame — sits above the screen slot */
     #laptop-svg {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
+      display: block;
       z-index: 2;
       pointer-events: none;
     }
 
-    /* Side devices */
-    #tablet-device {
-      position: absolute;
-      right: calc(100% + 20px);
-      top: 50%;
-      transform: translateY(-50%);
-      width: 20%;
-      min-width: 110px;
-      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.22));
-    }
+    /* ══════════════════════════════════════════════
+       PHONE DEVICE
+       Positioned to the right of the laptop.
+       Width + height defined so it never collapses.
+    ══════════════════════════════════════════════ */
     #phone-device {
       position: absolute;
       left: calc(100% + 16px);
@@ -118,10 +161,24 @@
       transform: translateY(-50%);
       width: 9.5%;
       min-width: 58px;
+      height: auto;
+      display: block;
+      opacity: 1;
+      visibility: visible;
       filter: drop-shadow(0 20px 40px rgba(0,0,0,0.22));
     }
+    #phone-device svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
 
-    /* ══ HEADLINE — in #main-viewport (no transform ancestor) ══ */
+    /* ══════════════════════════════════════════════
+       HEADLINE
+       Positioned in #main-viewport — no transform
+       ancestor, so z-index and centering are exact.
+       White text on magenta background.
+    ══════════════════════════════════════════════ */
     #headline-wrap {
       position: absolute;
       inset: 0;
@@ -149,6 +206,9 @@
       line-height: 1.18;
       letter-spacing: -0.03em;
       margin-bottom: 1.2rem;
+      display: block;
+      visibility: visible;
+      opacity: 1;
     }
     #headline-rule {
       width: 40px;
@@ -162,7 +222,9 @@
       color: rgba(255,255,255,0.55);
     }
 
-    /* ══ AFTER SECTION ══ */
+    /* ══════════════════════════════════════════════
+       AFTER SECTION
+    ══════════════════════════════════════════════ */
     #after-section {
       background: #1a1a1a;
       text-align: center;
@@ -195,160 +257,172 @@
       border-radius: 100px;
       text-decoration: none;
     }
+
   </style>
 </head>
 <body>
 
-  <!--
-    #loading-mask covers the entire viewport in magenta (#FF007F) from
-    the very first byte the browser renders. It requires zero JavaScript
-    to be visible. GSAP removes it (autoAlpha:0, duration:0) after
-    INITIAL_SCALE is applied — so the grey MacBook chassis never flashes.
-  -->
+  <!-- LOADING MASK: magenta from byte 1. CSS sets the color; GSAP only
+       removes it after INITIAL_SCALE is applied. No background JS. -->
   <div id="loading-mask"></div>
 
-<section id="main-section">
-  <div id="main-viewport">
+  <section id="main-section">
+    <div id="main-viewport">
 
-    <!-- DEVICE SCENE (z-index 1) -->
-    <div id="device-scene">
-      <div id="lateral-wrap">
+      <!-- ── DEVICE SCENE (z-index 1) ───────────────────────────────── -->
+      <div id="device-scene">
+        <div id="lateral-wrap">
 
-        <!-- TABLET -->
-        <div id="tablet-device" aria-hidden="true">
-          <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
-            <defs><clipPath id="tcc0"><rect x="12" y="20" width="176" height="226" rx="3"/></clipPath></defs>
-            <rect x="2" y="2" width="196" height="266" rx="18" fill="#1e1e22"/>
-            <rect x="2" y="2" width="196" height="266" rx="18" fill="none" stroke="#38383c" stroke-width="1.2"/>
-            <circle cx="100" cy="258" r="8" fill="#2a2a2e" stroke="#3a3a3e" stroke-width="1"/>
-            <rect x="12" y="20" width="176" height="226" rx="3" fill="#FAF7F2"/>
-            <rect x="12" y="20" width="176" height="44" fill="#FAF7F2"/>
-            <rect x="12" y="63" width="176" height="1" fill="rgba(28,28,30,0.08)"/>
-            <text x="22" y="43" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#1C1C1E" letter-spacing="-0.4">Your Future</text>
-            <text x="22" y="56" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#2563EB" letter-spacing="-0.4">Website.</text>
-            <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=75" x="12" y="64" width="176" height="110" preserveAspectRatio="xMidYMid slice"/>
-            <rect x="12" y="64" width="176" height="110" fill="rgba(12,15,20,0.58)"/>
-            <text x="22" y="106" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Crafting Digital</text>
-            <text x="22" y="120" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Luxuries.</text>
-            <rect x="22" y="128" width="52" height="14" rx="7" fill="#2563EB"/>
-            <text x="30" y="138" font-family="Archivo,sans-serif" font-size="6" fill="white">View Work</text>
-            <rect x="12" y="174" width="176" height="72" fill="#FAF7F2"/>
-            <text x="18" y="184" font-family="Archivo,sans-serif" font-size="6" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
-            <rect x="14" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
-            <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=200&q=70" x="14" y="190" width="52" height="50" clip-path="url(#tcc1)" preserveAspectRatio="xMidYMid slice"/>
-            <defs><clipPath id="tcc1"><rect x="14" y="190" width="52" height="50" rx="3"/></clipPath></defs>
-            <rect x="72" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
-            <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=200&q=70" x="72" y="190" width="52" height="50" clip-path="url(#tcc2)" preserveAspectRatio="xMidYMid slice"/>
-            <defs><clipPath id="tcc2"><rect x="72" y="190" width="52" height="50" rx="3"/></clipPath></defs>
-            <rect x="130" y="190" width="58" height="50" rx="3" fill="#e8e2d8"/>
-            <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=200&q=70" x="130" y="190" width="58" height="50" clip-path="url(#tcc3)" preserveAspectRatio="xMidYMid slice"/>
-            <defs><clipPath id="tcc3"><rect x="130" y="190" width="58" height="50" rx="3"/></clipPath></defs>
-          </svg>
-        </div>
+          <!-- ═══ TABLET ══════════════════════════════════════════════ -->
+          <div id="tablet-device" aria-hidden="true">
+            <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
+              <defs><clipPath id="tcc0"><rect x="12" y="20" width="176" height="226" rx="3"/></clipPath></defs>
+              <rect x="2" y="2" width="196" height="266" rx="18" fill="#1e1e22"/>
+              <rect x="2" y="2" width="196" height="266" rx="18" fill="none" stroke="#38383c" stroke-width="1.2"/>
+              <circle cx="100" cy="258" r="8" fill="#2a2a2e" stroke="#3a3a3e" stroke-width="1"/>
+              <rect x="12" y="20" width="176" height="226" rx="3" fill="#FAF7F2"/>
+              <rect x="12" y="20" width="176" height="44" fill="#FAF7F2"/>
+              <rect x="12" y="63" width="176" height="1" fill="rgba(28,28,30,0.08)"/>
+              <text x="22" y="43" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#1C1C1E" letter-spacing="-0.4">Your Future</text>
+              <text x="22" y="56" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#2563EB" letter-spacing="-0.4">Website.</text>
+              <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=75"
+                     x="12" y="64" width="176" height="110" preserveAspectRatio="xMidYMid slice"/>
+              <rect x="12" y="64" width="176" height="110" fill="rgba(12,15,20,0.58)"/>
+              <text x="22" y="106" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Crafting Digital</text>
+              <text x="22" y="120" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Luxuries.</text>
+              <rect x="22" y="128" width="52" height="14" rx="7" fill="#2563EB"/>
+              <text x="30" y="138" font-family="Archivo,sans-serif" font-size="6" fill="white">View Work</text>
+              <rect x="12" y="174" width="176" height="72" fill="#FAF7F2"/>
+              <text x="18" y="184" font-family="Archivo,sans-serif" font-size="6" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
+              <rect x="14" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
+              <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=200&q=70"
+                     x="14" y="190" width="52" height="50" clip-path="url(#tcc1)" preserveAspectRatio="xMidYMid slice"/>
+              <defs><clipPath id="tcc1"><rect x="14" y="190" width="52" height="50" rx="3"/></clipPath></defs>
+              <rect x="72" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
+              <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=200&q=70"
+                     x="72" y="190" width="52" height="50" clip-path="url(#tcc2)" preserveAspectRatio="xMidYMid slice"/>
+              <defs><clipPath id="tcc2"><rect x="72" y="190" width="52" height="50" rx="3"/></clipPath></defs>
+              <rect x="130" y="190" width="58" height="50" rx="3" fill="#e8e2d8"/>
+              <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=200&q=70"
+                     x="130" y="190" width="58" height="50" clip-path="url(#tcc3)" preserveAspectRatio="xMidYMid slice"/>
+              <defs><clipPath id="tcc3"><rect x="130" y="190" width="58" height="50" rx="3"/></clipPath></defs>
+            </svg>
+          </div>
 
-        <!-- MACBOOK -->
-        <div id="laptop-wrap">
-          <div id="laptop-screen-content"></div>
-          <svg id="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <defs>
-              <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%"   stop-color="#e2e2e2"/>
-                <stop offset="100%" stop-color="#bababa"/>
-              </linearGradient>
-              <linearGradient id="baseGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%"   stop-color="#d6d6d6"/>
-                <stop offset="100%" stop-color="#a4a4a4"/>
-              </linearGradient>
-            </defs>
-            <rect x="44" y="4" width="912" height="558" rx="14" fill="url(#lidGrad)"/>
-            <rect x="44" y="4" width="912" height="558" rx="14" fill="none" stroke="#9a9a9a" stroke-width="1.2"/>
-            <rect x="52" y="10" width="896" height="548" rx="10" fill="#c4c4c4"/>
-            <rect x="70" y="18" width="860" height="14" fill="#141416"/>
-            <rect x="70" y="18" width="20"  height="530" fill="#141416"/>
-            <rect x="910" y="18" width="20" height="530" fill="#141416"/>
-            <rect x="70" y="544" width="860" height="14" fill="#141416"/>
-            <circle cx="500" cy="12" r="4.5" fill="#222"/>
-            <circle cx="500" cy="12" r="2"   fill="#0a0a0a" opacity="0.7"/>
-            <rect x="34"  y="558" width="932" height="10" rx="2.5" fill="#868686"/>
-            <rect x="44"  y="561" width="912" height="5"  fill="#a8a8a8" opacity="0.4"/>
-            <path d="M 18,568 Q 18,572 22,574 L 978,574 Q 982,572 982,568 Z" fill="#bcbcbc"/>
-            <path d="M 22,574 L 978,574 L 958,620 Q 954,630 920,632 L 80,632 Q 46,630 42,620 Z" fill="url(#baseGrad)" stroke="#9a9a9a" stroke-width="0.8"/>
-            <rect x="88"  y="578" width="824" height="38" rx="3" fill="#b0b0b0" opacity="0.4"/>
-            <rect x="378" y="582" width="244" height="26" rx="5.5" fill="#b4b4b4" stroke="#a0a0a0" stroke-width="0.8"/>
-            <g fill="#888" opacity="0.65">
-              <rect x="100" y="585" width="2" height="18" rx="1"/>
-              <rect x="107" y="585" width="2" height="18" rx="1"/>
-              <rect x="114" y="585" width="2" height="18" rx="1"/>
-              <rect x="121" y="585" width="2" height="18" rx="1"/>
-              <rect x="128" y="585" width="2" height="18" rx="1"/>
-              <rect x="135" y="585" width="2" height="18" rx="1"/>
-              <rect x="853" y="585" width="2" height="18" rx="1"/>
-              <rect x="860" y="585" width="2" height="18" rx="1"/>
-              <rect x="867" y="585" width="2" height="18" rx="1"/>
-              <rect x="874" y="585" width="2" height="18" rx="1"/>
-              <rect x="881" y="585" width="2" height="18" rx="1"/>
-              <rect x="888" y="585" width="2" height="18" rx="1"/>
-            </g>
-            <ellipse cx="102" cy="632" rx="14" ry="5" fill="#747474" opacity="0.7"/>
-            <ellipse cx="898" cy="632" rx="14" ry="5" fill="#747474" opacity="0.7"/>
-            <path d="M 42,632 Q 42,640 54,642 L 946,642 Q 958,640 958,632 Z" fill="#b8b8b8"/>
-          </svg>
-        </div>
+          <!-- ═══ MACBOOK ══════════════════════════════════════════════ -->
+          <div id="laptop-wrap">
 
-        <!-- PHONE -->
-        <div id="phone-device" aria-hidden="true">
-          <svg viewBox="0 0 108 218" xmlns="http://www.w3.org/2000/svg">
-            <defs><clipPath id="ph2Clip"><rect x="7" y="14" width="94" height="190" rx="8"/></clipPath></defs>
-            <rect x="0" y="0" width="108" height="218" rx="20" fill="#1a1a1e"/>
-            <rect x="0" y="0" width="108" height="218" rx="20" fill="none" stroke="#333" stroke-width="1.2"/>
-            <rect x="38" y="6" width="32" height="8" rx="4" fill="#111"/>
-            <rect x="7" y="14" width="94" height="190" rx="8" fill="#FAF7F2"/>
-            <rect x="7" y="14" width="94" height="28" fill="#FAF7F2"/>
-            <rect x="7" y="41" width="94" height="1" fill="rgba(28,28,30,0.08)"/>
-            <text x="14" y="30" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="#1C1C1E">Your Future</text>
-            <text x="14" y="40" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="#2563EB">Website.</text>
-            <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=75" x="7" y="42" width="94" height="100" clip-path="url(#ph2Clip)" preserveAspectRatio="xMidYMid slice"/>
-            <rect x="7" y="42" width="94" height="100" fill="rgba(12,15,20,0.58)"/>
-            <text x="14" y="80"  font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Crafting</text>
-            <text x="14" y="92"  font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Digital</text>
-            <text x="14" y="104" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Luxuries.</text>
-            <rect x="14" y="112" width="44" height="12" rx="6" fill="#2563EB"/>
-            <text x="20" y="121" font-family="Archivo,sans-serif" font-size="5.5" fill="white">View Work</text>
-            <rect x="7" y="142" width="94" height="62" fill="#FAF7F2"/>
-            <text x="13" y="153" font-family="Archivo,sans-serif" font-size="5" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
-            <rect x="9"  y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
-            <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=100&q=70" x="9" y="158" width="28" height="40" clip-path="url(#pcc1)" preserveAspectRatio="xMidYMid slice"/>
-            <defs><clipPath id="pcc1"><rect x="9" y="158" width="28" height="40" rx="2"/></clipPath></defs>
-            <rect x="41" y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
-            <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=100&q=70" x="41" y="158" width="28" height="40" clip-path="url(#pcc2)" preserveAspectRatio="xMidYMid slice"/>
-            <defs><clipPath id="pcc2"><rect x="41" y="158" width="28" height="40" rx="2"/></clipPath></defs>
-            <rect x="73" y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
-            <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=100&q=70" x="73" y="158" width="28" height="40" clip-path="url(#pcc3)" preserveAspectRatio="xMidYMid slice"/>
-            <defs><clipPath id="pcc3"><rect x="73" y="158" width="28" height="40" rx="2"/></clipPath></defs>
-            <rect x="39" y="206" width="30" height="3" rx="1.5" fill="#333"/>
-          </svg>
-        </div>
+            <!-- Magenta screen fill behind the bezel -->
+            <div id="laptop-screen-content"></div>
 
-      </div><!-- /lateral-wrap -->
-    </div><!-- /device-scene -->
+            <!-- MacBook aluminium chassis SVG -->
+            <svg id="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"   stop-color="#e2e2e2"/>
+                  <stop offset="100%" stop-color="#bababa"/>
+                </linearGradient>
+                <linearGradient id="baseGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"   stop-color="#d6d6d6"/>
+                  <stop offset="100%" stop-color="#a4a4a4"/>
+                </linearGradient>
+              </defs>
+              <rect x="44" y="4" width="912" height="558" rx="14" fill="url(#lidGrad)"/>
+              <rect x="44" y="4" width="912" height="558" rx="14" fill="none" stroke="#9a9a9a" stroke-width="1.2"/>
+              <rect x="52" y="10" width="896" height="548" rx="10" fill="#c4c4c4"/>
+              <rect x="70" y="18" width="860" height="14" fill="#141416"/>
+              <rect x="70" y="18" width="20"  height="530" fill="#141416"/>
+              <rect x="910" y="18" width="20" height="530" fill="#141416"/>
+              <rect x="70" y="544" width="860" height="14" fill="#141416"/>
+              <circle cx="500" cy="12" r="4.5" fill="#222"/>
+              <circle cx="500" cy="12" r="2"   fill="#0a0a0a" opacity="0.7"/>
+              <rect x="34"  y="558" width="932" height="10" rx="2.5" fill="#868686"/>
+              <rect x="44"  y="561" width="912" height="5"  fill="#a8a8a8" opacity="0.4"/>
+              <path d="M 18,568 Q 18,572 22,574 L 978,574 Q 982,572 982,568 Z" fill="#bcbcbc"/>
+              <path d="M 22,574 L 978,574 L 958,620 Q 954,630 920,632 L 80,632 Q 46,630 42,620 Z"
+                    fill="url(#baseGrad)" stroke="#9a9a9a" stroke-width="0.8"/>
+              <rect x="88"  y="578" width="824" height="38" rx="3" fill="#b0b0b0" opacity="0.4"/>
+              <rect x="378" y="582" width="244" height="26" rx="5.5" fill="#b4b4b4" stroke="#a0a0a0" stroke-width="0.8"/>
+              <g fill="#888" opacity="0.65">
+                <rect x="100" y="585" width="2" height="18" rx="1"/>
+                <rect x="107" y="585" width="2" height="18" rx="1"/>
+                <rect x="114" y="585" width="2" height="18" rx="1"/>
+                <rect x="121" y="585" width="2" height="18" rx="1"/>
+                <rect x="128" y="585" width="2" height="18" rx="1"/>
+                <rect x="135" y="585" width="2" height="18" rx="1"/>
+                <rect x="853" y="585" width="2" height="18" rx="1"/>
+                <rect x="860" y="585" width="2" height="18" rx="1"/>
+                <rect x="867" y="585" width="2" height="18" rx="1"/>
+                <rect x="874" y="585" width="2" height="18" rx="1"/>
+                <rect x="881" y="585" width="2" height="18" rx="1"/>
+                <rect x="888" y="585" width="2" height="18" rx="1"/>
+              </g>
+              <ellipse cx="102" cy="632" rx="14" ry="5" fill="#747474" opacity="0.7"/>
+              <ellipse cx="898" cy="632" rx="14" ry="5" fill="#747474" opacity="0.7"/>
+              <path d="M 42,632 Q 42,640 54,642 L 946,642 Q 958,640 958,632 Z" fill="#b8b8b8"/>
+            </svg>
 
-    <!-- HEADLINE — sibling of #device-scene, inside #main-viewport.
-         #main-viewport has NO transform, so z-index:100 works correctly. -->
-    <div id="headline-wrap">
-      <p id="headline-eyebrow">Blueprint to Reality</p>
-      <h1 id="headline-h1">not just a website —<br>a story.</h1>
-      <div id="headline-rule"></div>
-      <p id="headline-sub">scroll to watch it come alive</p>
-    </div>
+          </div><!-- /laptop-wrap -->
 
-  </div><!-- /main-viewport -->
-</section>
+          <!-- ═══ PHONE ══════════════════════════════════════════════ -->
+          <div id="phone-device" aria-hidden="true">
+            <svg viewBox="0 0 108 218" xmlns="http://www.w3.org/2000/svg">
+              <defs><clipPath id="ph2Clip"><rect x="7" y="14" width="94" height="190" rx="8"/></clipPath></defs>
+              <rect x="0" y="0" width="108" height="218" rx="20" fill="#1a1a1e"/>
+              <rect x="0" y="0" width="108" height="218" rx="20" fill="none" stroke="#333" stroke-width="1.2"/>
+              <rect x="38" y="6" width="32" height="8" rx="4" fill="#111"/>
+              <rect x="7" y="14" width="94" height="190" rx="8" fill="#FAF7F2"/>
+              <rect x="7" y="14" width="94" height="28" fill="#FAF7F2"/>
+              <rect x="7" y="41" width="94" height="1" fill="rgba(28,28,30,0.08)"/>
+              <text x="14" y="30" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="#1C1C1E">Your Future</text>
+              <text x="14" y="40" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="#2563EB">Website.</text>
+              <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=75"
+                     x="7" y="42" width="94" height="100" clip-path="url(#ph2Clip)" preserveAspectRatio="xMidYMid slice"/>
+              <rect x="7" y="42" width="94" height="100" fill="rgba(12,15,20,0.58)"/>
+              <text x="14" y="80"  font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Crafting</text>
+              <text x="14" y="92"  font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Digital</text>
+              <text x="14" y="104" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Luxuries.</text>
+              <rect x="14" y="112" width="44" height="12" rx="6" fill="#2563EB"/>
+              <text x="20" y="121" font-family="Archivo,sans-serif" font-size="5.5" fill="white">View Work</text>
+              <rect x="7" y="142" width="94" height="62" fill="#FAF7F2"/>
+              <text x="13" y="153" font-family="Archivo,sans-serif" font-size="5" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
+              <rect x="9"  y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
+              <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=100&q=70"
+                     x="9" y="158" width="28" height="40" clip-path="url(#pcc1)" preserveAspectRatio="xMidYMid slice"/>
+              <defs><clipPath id="pcc1"><rect x="9" y="158" width="28" height="40" rx="2"/></clipPath></defs>
+              <rect x="41" y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
+              <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=100&q=70"
+                     x="41" y="158" width="28" height="40" clip-path="url(#pcc2)" preserveAspectRatio="xMidYMid slice"/>
+              <defs><clipPath id="pcc2"><rect x="41" y="158" width="28" height="40" rx="2"/></clipPath></defs>
+              <rect x="73" y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
+              <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=100&q=70"
+                     x="73" y="158" width="28" height="40" clip-path="url(#pcc3)" preserveAspectRatio="xMidYMid slice"/>
+              <defs><clipPath id="pcc3"><rect x="73" y="158" width="28" height="40" rx="2"/></clipPath></defs>
+              <rect x="39" y="206" width="30" height="3" rx="1.5" fill="#333"/>
+            </svg>
+          </div>
 
-<section id="after-section">
-  <h2>Your story, beautifully crafted.</h2>
-  <p>From the first wireframe to the final pixel — every element designed with intention, every interaction built for impact.</p>
-  <a href="contact.html" class="cta-btn">Start your project</a>
-</section>
+        </div><!-- /lateral-wrap -->
+      </div><!-- /device-scene -->
+
+      <!-- ── HEADLINE (z-index 100, sibling of device-scene) ────────── -->
+      <!-- Lives in #main-viewport which has no CSS transform,
+           so z-index and absolute centering work exactly as expected. -->
+      <div id="headline-wrap">
+        <p id="headline-eyebrow">Blueprint to Reality</p>
+        <h1 id="headline-h1">not just a website —<br>a story.</h1>
+        <div id="headline-rule"></div>
+        <p id="headline-sub">scroll to watch it come alive</p>
+      </div>
+
+    </div><!-- /main-viewport -->
+  </section>
+
+  <section id="after-section">
+    <h2>Your story, beautifully crafted.</h2>
+    <p>From the first wireframe to the final pixel — every element designed with intention, every interaction built for impact.</p>
+    <a href="contact.html" class="cta-btn">Start your project</a>
+  </section>
 
 <script>
   gsap.registerPlugin(ScrollTrigger);
@@ -356,11 +430,12 @@
   var mask        = document.getElementById('loading-mask');
   var deviceScene = document.getElementById('device-scene');
   var headlineWrap= document.getElementById('headline-wrap');
-  var tabletDev   = document.getElementById('tablet-device');
-  var phoneDev    = document.getElementById('phone-device');
 
-  // ── INITIAL SCALE ──────────────────────────────────────────────────
-  // Zoom #device-scene so the laptop screen fills the full viewport.
+  // ── INITIAL SCALE ─────────────────────────────────────────────────────
+  // Zooms #device-scene so the laptop screen fills the full viewport.
+  // laptop-wrap width W = min(960, 90vw)
+  // screen width  = W × 0.82
+  // screen height = W × 0.51  (= 680/1000 × 0.75)
   function computeInitialScale() {
     var W = Math.min(960, window.innerWidth * 0.9);
     return Math.max(
@@ -368,20 +443,14 @@
       window.innerHeight / (W * 0.51)
     ) * 1.02;
   }
-  var INITIAL_SCALE = computeInitialScale();
 
-  // Apply scale and hide side devices BEFORE releasing the mask.
-  // No GSAP call here touches background-color — zero grey risk.
-  gsap.set(deviceScene, { scale: INITIAL_SCALE, transformOrigin: 'center center' });
-  gsap.set(tabletDev,   { autoAlpha: 0 });
-  gsap.set(phoneDev,    { autoAlpha: 0 });
-
-  // Drop the mask instantly — scale is already applied, so the
-  // chassis is off-screen. User sees only magenta + white headline.
+  // Apply scale then remove the mask. Zero background-color calls in JS.
+  gsap.set(deviceScene, { scale: computeInitialScale(), transformOrigin: 'center center' });
   gsap.set(mask, { autoAlpha: 0 });
 
-  // ── SCROLL TIMELINE ────────────────────────────────────────────────
-  // No background-color animation. No grey anywhere.
+  // ── SCROLL TIMELINE ───────────────────────────────────────────────────
+  // Headline fades → scene zooms out → devices come into frame naturally.
+  // No opacity:0 set on tablet or phone — they are always in the DOM.
   var tl = gsap.timeline({
     scrollTrigger: {
       trigger: '#main-section',
@@ -395,11 +464,9 @@
 
   tl.to(headlineWrap, { autoAlpha: 0, duration: 0.20, ease: 'power1.in' }, 0);
   tl.to(deviceScene,  { scale: 0.82,  duration: 0.75, ease: 'expo.inOut' }, 0);
-  tl.to(tabletDev,    { autoAlpha: 1, duration: 0.25, ease: 'power2.out' }, 0.70);
-  tl.to(phoneDev,     { autoAlpha: 1, duration: 0.25, ease: 'power2.out' }, 0.70);
 
   window.addEventListener('resize', function () {
-    INITIAL_SCALE = computeInitialScale();
+    gsap.set(deviceScene, { scale: computeInitialScale() });
     ScrollTrigger.refresh();
   });
 </script>
