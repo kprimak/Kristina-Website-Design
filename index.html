@@ -680,11 +680,11 @@
   var sweepLocked  = false;
   var sweepDone    = false;
   var sweepVirtual = 0;          // accumulated virtual scroll px
-  var IDLE_BUDGET  = 300;        // shorter idle (~1 scroll click)
+  var IDLE_BUDGET  = 0;          // no idle — painting starts immediately after pop
   var PAINT_BUDGET = 1800;
-  var TOTAL_BUDGET = IDLE_BUDGET + PAINT_BUDGET;
-  var POP_END      = 0.10;
-  var IDLE_END     = IDLE_BUDGET / TOTAL_BUDGET;
+  var TOTAL_BUDGET = PAINT_BUDGET;
+  var POP_END      = 0;
+  var IDLE_END     = 0;
 
   // quickTo smoothers — created once brushFixed exists, used instead of gsap.set
   // so every brush position change interpolates rather than snapping
@@ -725,20 +725,8 @@
       gsap.set(brushFixed, { opacity: 1, scale: 2.8 });
     }
 
-    // Idle phase — tip stays at stroke-1 start, brush wobbles in place
-    if (p <= IDLE_END) {
-      if (p > POP_END) {
-        var idleP  = (p - POP_END) / (IDLE_END - POP_END);
-        var wobble = Math.sin(idleP * Math.PI * 6) * 4;
-        var bounce = Math.sin(idleP * Math.PI * 5) * (vh * 0.012);
-        var s0 = STROKES[0];
-        setBrushAtTip(s0.x0 * w, s0.y0 * h + bounce, -38 + wobble);
-      }
-      return;
-    }
-
-    // Painting phase — p goes IDLE_END → 1
-    var paintP = (p - IDLE_END) / (1 - IDLE_END);
+    // Painting phase — full progress 0→1
+    var paintP = p;
     sweepCtx.lineCap  = 'round';
     sweepCtx.lineJoin = 'round';
 
@@ -820,18 +808,24 @@
     var vw = window.innerWidth;
     var targetX = -33.8;
     var targetY = 0.35 * vh - 43.3 - (vh * 0.5 + 11);
-    // In-screen brush gently dissolves away
+    // In-screen brush gently dissolves
     gsap.to(lsBrush, {
-      opacity: 0, scale: 0.8, duration: 0.5, ease: 'power1.inOut',
+      opacity: 0, scale: 0.8, duration: 0.3, ease: 'power1.inOut',
       onComplete: function () { gsap.set(lsBrush, { opacity: 0, scale: 1, filter: 'none' }); }
     });
-    // Fixed brush materialises: starts tiny, transparent, slightly below —
-    // then grows and floats up in one continuous graceful arc
-    gsap.set(brushFixed, { opacity: 0, x: targetX, y: targetY + vh * 0.12, rotation: -28, scale: 0.4 });
+    // Fixed brush materialises with a glow — grows and floats up in one arc
+    gsap.set(brushFixed, {
+      opacity: 0, x: targetX, y: targetY + vh * 0.10, rotation: -28, scale: 0.5,
+      filter: 'drop-shadow(0 0 18px #FF007F) drop-shadow(0 0 6px #fff) brightness(1.8)'
+    });
     gsap.to(brushFixed, {
       opacity: 1, scale: 2.8, x: targetX, y: targetY, rotation: -38,
-      duration: 1.0, ease: 'power3.out',
-      delay: 0.15
+      duration: 0.55, ease: 'power2.out', delay: 0.08
+    });
+    // Glow fades out once the brush has settled
+    gsap.to(brushFixed, {
+      filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.3)) brightness(1)',
+      duration: 0.6, ease: 'power1.out', delay: 0.5
     });
   }
 
