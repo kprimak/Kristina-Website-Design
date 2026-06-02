@@ -697,11 +697,93 @@
     }
   }
 
+  // Pre-seed a simple deterministic PRNG so bristle offsets are consistent every frame
+  function seededRands(seed, n) {
+    var out = [], x = seed;
+    for (var i = 0; i < n; i++) {
+      x = (x * 1664525 + 1013904223) & 0xffffffff;
+      out.push((x >>> 0) / 0xffffffff);
+    }
+    return out;
+  }
+
   var STROKES = [
-    { x0: 0.50, y0: 0.35, x1: -0.05, y1: 0.62, rot: -38, color: '#ffffff', edge: 'rgba(255,0,127,0.18)' },
-    { x0: -0.05, y0: 0.52, x1:  1.10, y1: 0.82, rot:  35, color: '#FF007F', edge: 'rgba(255,255,255,0.25)' },
-    { x0:  1.10, y0: 0.70, x1: -0.05, y1: 1.05, rot: -35, color: '#ffffff', edge: 'rgba(255,0,127,0.15)' }
+    { x0: 0.50, y0: 0.35, x1: -0.05, y1: 0.62, rot: -38, color: '#ffffff', isWhite: true  },
+    { x0: -0.05, y0: 0.52, x1:  1.10, y1: 0.82, rot:  35, color: '#FF007F', isWhite: false },
+    { x0:  1.10, y0: 0.70, x1: -0.05, y1: 1.05, rot: -35, color: '#ffffff', isWhite: true  }
   ];
+
+  // Pre-generate bristle layout for each stroke (stays same every frame)
+  STROKES.forEach(function (s, si) {
+    var rands = seededRands(si * 997 + 1, 48);
+    s.bristles = [];
+    for (var b = 0; b < 16; b++) {
+      s.bristles.push({
+        t:     (rands[b * 3]     - 0.5) * 0.82, // position across width (-0.41 to +0.41 of half-width)
+        alpha: 0.04 + rands[b * 3 + 1] * 0.07,  // 0.04–0.11
+        w:     0.8  + rands[b * 3 + 2] * 2.2    // 0.8–3.0 px
+      });
+    }
+  });
+
+  // Draw one realistic brush stroke from (x0,y0) to (x1,y1)
+  function drawBrushStroke(ctx, s, x0, y0, x1, y1, h) {
+    var sw      = h * 0.38;                         // core stroke width
+    var angle   = Math.atan2(y1 - y0, x1 - x0);
+    var px      = Math.sin(angle);                  // perpendicular unit vector
+    var py      = -Math.cos(angle);
+    var r = s.isWhite ? '255,255,255' : '255,0,127';
+    var shadow  = s.isWhite ? '255,0,127'   : '255,255,255';
+
+    // ── 1. Soft outer glow (wide, very transparent) ──────────────────────────
+    ctx.lineCap   = 'butt';
+    ctx.lineJoin  = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1);
+    ctx.strokeStyle = 'rgba(' + r + ',0.07)';
+    ctx.lineWidth   = sw * 1.8;
+    ctx.stroke();
+
+    // ── 2. Core body ─────────────────────────────────────────────────────────
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1);
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth   = sw;
+    ctx.stroke();
+
+    // ── 3. Feathered edges (both sides, 3 layers) ────────────────────────────
+    [
+      { dist: sw * 0.52, width: sw * 0.22, alpha: 0.55 },
+      { dist: sw * 0.60, width: sw * 0.14, alpha: 0.28 },
+      { dist: sw * 0.68, width: sw * 0.08, alpha: 0.10 }
+    ].forEach(function (e) {
+      [-1, 1].forEach(function (side) {
+        var ox = px * e.dist * side, oy = py * e.dist * side;
+        ctx.beginPath();
+        ctx.moveTo(x0 + ox, y0 + oy);
+        ctx.lineTo(x1 + ox, y1 + oy);
+        ctx.strokeStyle = 'rgba(' + r + ',' + e.alpha + ')';
+        ctx.lineWidth   = e.width;
+        ctx.stroke();
+      });
+    });
+
+    // ── 4. Bristle marks (pre-seeded so no flicker) ──────────────────────────
+    s.bristles.forEach(function (b) {
+      var off = b.t * sw;
+      var ox  = px * off, oy = py * off;
+      ctx.beginPath();
+      ctx.moveTo(x0 + ox, y0 + oy);
+      ctx.lineTo(x1 + ox, y1 + oy);
+      ctx.strokeStyle = 'rgba(' + shadow + ',' + b.alpha + ')';
+      ctx.lineWidth   = b.w;
+      ctx.stroke();
+    });
+
+    // ── 5. Bright highlight streak near center ───────────────────────────────
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1);
+    ctx.strokeStyle = 'rgba(' + r + ',0.35)';
+    ctx.lineWidth   = sw * 0.12;
+    ctx.stroke();
+  }
 
   function paintSweep(p) {
     if (!sweepCtx) return;
@@ -710,50 +792,28 @@
     sweepCtx.clearRect(0, 0, w, h);
 
     // Position brush so its bristle TIP lands at screen coords (tx, ty).
-    // #brush-fixed: 52×210px, transform-origin 50% 90% = (26px, 189px from TL).
-    // Tip (SVG y=87.5) → 208.8px from TL → 19.8px below origin → 55px at scale 2.8.
-    // Origin natural screen position = (vw/2, vh/2 + 11).
     function setBrushAtTip(tx, ty, rot) {
       getBrushSmoothers();
-      var rotRad  = rot * Math.PI / 180;
+      var rotRad = rot * Math.PI / 180;
       var tipDist = 55;
-      var offX = -tipDist * Math.sin(rotRad);
-      var offY =  tipDist * Math.cos(rotRad);
-      brushQX((tx - offX) - vw * 0.5);
-      brushQY((ty - offY) - (vh * 0.5 + 11));
+      brushQX((tx - (-tipDist * Math.sin(rotRad))) - vw * 0.5);
+      brushQY((ty - ( tipDist * Math.cos(rotRad))) - (vh * 0.5 + 11));
       brushQR(rot);
       gsap.set(brushFixed, { opacity: 1, scale: 2.8 });
     }
 
-    // Painting phase — full progress 0→1
-    var paintP = p;
-    sweepCtx.lineCap  = 'round';
-    sweepCtx.lineJoin = 'round';
-
     for (var i = 0; i < N; i++) {
-      var lp = Math.min(1, Math.max(0, paintP * N - i));
+      var lp = Math.min(1, Math.max(0, p * N - i));
       if (lp <= 0) continue;
       var s    = STROKES[i];
       var tipX = (s.x0 + (s.x1 - s.x0) * lp) * w;
       var tipY = (s.y0 + (s.y1 - s.y0) * lp) * h;
-      sweepCtx.beginPath();
-      sweepCtx.moveTo(s.x0 * w, s.y0 * h);
-      sweepCtx.lineTo(tipX, tipY);
-      sweepCtx.strokeStyle = s.color;
-      sweepCtx.lineWidth   = h * 0.44;
-      sweepCtx.stroke();
-      sweepCtx.beginPath();
-      sweepCtx.moveTo(s.x0 * w, s.y0 * h);
-      sweepCtx.lineTo(tipX, tipY);
-      sweepCtx.strokeStyle = s.edge;
-      sweepCtx.lineWidth   = h * 0.08;
-      sweepCtx.stroke();
+      drawBrushStroke(sweepCtx, s, s.x0 * w, s.y0 * h, tipX, tipY, h);
     }
 
-    // Move brush so tip follows the leading edge of the active stroke
-    var ai   = Math.min(N - 1, Math.floor(paintP * N));
-    var alp  = Math.min(1, paintP * N - ai);
-    var as   = STROKES[ai];
+    var ai    = Math.min(N - 1, Math.floor(p * N));
+    var alp   = Math.min(1, p * N - ai);
+    var as    = STROKES[ai];
     var btipX = (as.x0 + (as.x1 - as.x0) * alp) * w;
     var btipY = (as.y0 + (as.y1 - as.y0) * alp) * h;
     setBrushAtTip(btipX, btipY, as.rot);
