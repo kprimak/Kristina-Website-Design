@@ -41,6 +41,8 @@
       transform-origin: center center;
       will-change: transform;
       z-index: 1;
+      /* Hidden until GSAP sets the correct scale — prevents grey chassis flash */
+      visibility: hidden;
     }
 
     #lateral-wrap {
@@ -346,8 +348,8 @@
 
   var initialScale = computeInitialScale();
 
-  // Start zoomed in (laptop screen = full viewport), devices hidden
-  gsap.set(deviceScene, { scale: initialScale, transformOrigin: 'center center', immediateRender: true });
+  // Apply scale then make visible — chassis never renders at natural size
+  gsap.set(deviceScene, { scale: initialScale, transformOrigin: 'center center', visibility: 'visible', immediateRender: true });
   gsap.set([tablet, phone], { autoAlpha: 0, immediateRender: true });
 
   // Scroll DOWN advances progress 0 → 1:
