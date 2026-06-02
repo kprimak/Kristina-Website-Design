@@ -669,21 +669,20 @@
 
   // ── Scroll-driven brush sweep ─────────────────────────────────────────────────
   // Progress phases (fraction of sweep-wrap scroll):
-  //   0.00 – 0.15  brush pops out (time-based, fires on enter)
-  //   0.15 – 0.35  brush swings side-to-side freely (scroll-driven sine)
-  //   0.35 – 1.00  painting: 3 diagonal strokes, white → magenta → white
-  //                paint grows from brush tip as brush moves
+  //   0.00 – 0.10  brush pops out (time-based, fires on enter)
+  //   0.10 – 0.40  brush idles in place with subtle wobble (2 scrolls worth)
+  //   0.40 – 1.00  painting: 3 diagonal strokes from center, white → magenta → white
 
   var sweepCtx  = null;
-  var POP_END   = 0.08;
-  var SWING_END = 0.18;
+  var POP_END   = 0.10;
+  var SWING_END = 0.40;
 
   // Each stroke: starts where brush is, paints toward the opposite edge.
   // x0/y0 = fraction of viewport at stroke start (brush tip position).
   // x1/y1 = fraction at stroke end.
   var STROKES = [
-    // Stroke 1 — WHITE — from screen center (brush land), diagonally down-left to cover top half
-    { x0: 0.50, y0: 0.35, x1: -0.05, y1: 0.65, rot: -38, color: '#ffffff', edge: 'rgba(255,0,127,0.18)' },
+    // Stroke 1 — WHITE — starts exactly where idle brush sits (center), diagonal down-left
+    { x0: 0.50, y0: 0.35, x1: -0.05, y1: 0.62, rot: -38, color: '#ffffff', edge: 'rgba(255,0,127,0.18)' },
     // Stroke 2 — MAGENTA — from left edge across to right, covers middle band
     { x0: -0.05, y0: 0.52, x1:  1.10, y1: 0.82, rot:  35, color: '#FF007F', edge: 'rgba(255,255,255,0.25)' },
     // Stroke 3 — WHITE — from right edge back to left, covers bottom — reveals About Us
@@ -697,15 +696,17 @@
 
     sweepCtx.clearRect(0, 0, w, h);
 
-    // ── Swing phase: move brush only, no painting ──
+    // ── Idle phase: brush stays in place, subtle in-place wobble ──
     if (p <= SWING_END) {
       if (p > POP_END) {
-        var swP   = (p - POP_END) / (SWING_END - POP_END); // 0→1
-        var angle = swP * Math.PI * 3.2; // ~1.6 swings centered on screen
+        var idleP = (p - POP_END) / (SWING_END - POP_END); // 0→1
+        // Small rotation wobble and tiny vertical bounce — stays centered
+        var wobble = Math.sin(idleP * Math.PI * 6) * 4;   // ±4° rotation flicker
+        var bounce = Math.sin(idleP * Math.PI * 5) * (vh * 0.012); // tiny vertical bob
         gsap.set(brushFixed, {
-          x:        Math.sin(angle) * vw * 0.30,  // centered, swings left/right
-          y:        -(vh * 0.15),
-          rotation: -38 + Math.sin(angle) * 25,
+          x:        0,
+          y:        -(vh * 0.15) + bounce,
+          rotation: -38 + wobble,
           scale:    2.8,
           opacity:  1
         });
