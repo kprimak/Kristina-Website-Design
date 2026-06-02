@@ -24,14 +24,10 @@
     }
 
     html { scroll-behavior: auto; }
-    body {
-      background: var(--cream);
-      font-family: 'Archivo', sans-serif;
-      overflow-x: hidden;
-    }
+    body { background: var(--cream); font-family: 'Archivo', sans-serif; overflow-x: hidden; }
 
     /* ══════════════════════════════════
-       SCROLL SPACE & STICKY VIEWPORT
+       SCROLL SPACE + STICKY CANVAS
     ══════════════════════════════════ */
     #main-section { height: 450vh; }
 
@@ -41,11 +37,12 @@
       width: 100%;
       height: 100vh;
       overflow: hidden;
-      background: #0a0a0a; /* dark backing — never visible when screen fills viewport */
+      background: #0a0a0a;
     }
 
     /* ══════════════════════════════════
-       DEVICE SCENE — GSAP scales this
+       LAYER 0 · DEVICE SCENE
+       GSAP scales this group
     ══════════════════════════════════ */
     #device-scene {
       position: absolute;
@@ -54,7 +51,7 @@
       align-items: center;
       justify-content: center;
       transform-origin: center center;
-      will-change: transform, opacity;
+      will-change: transform;
       z-index: 1;
     }
 
@@ -65,23 +62,23 @@
       justify-content: center;
     }
 
-    /* ══════════════════════════════════
-       MACBOOK WRAP
+    /* MacBook chassis
        SVG viewBox 1000×680
-       Screen: left 9% · top 4.41% · w 82% · h 75%
-    ══════════════════════════════════ */
+       Screen area: x=90 y=30 w=820 h=510
+         left 9% · top 4.41% · w 82% · h 75%
+    */
     #laptop-wrap {
       position: relative;
       width: min(960px, 90vw);
       aspect-ratio: 1000 / 680;
       flex-shrink: 0;
       filter:
-        drop-shadow(0 40px 80px rgba(0,0,0,0.28))
-        drop-shadow(0 10px 24px rgba(0,0,0,0.14));
+        drop-shadow(0 40px 80px rgba(0,0,0,0.30))
+        drop-shadow(0 10px 24px rgba(0,0,0,0.16));
       will-change: transform;
     }
 
-    /* ── Screen window — clips all screen layers to bezel ── */
+    /* Screen window — clips content to bezel */
     #laptop-screen-content {
       position: absolute;
       left:   9%;
@@ -89,29 +86,77 @@
       width:  82%;
       height: 75%;
       overflow: hidden;
-      background: transparent !important; /* NO grey fallback */
+      background: transparent !important;
       z-index: 1;
     }
 
-    /* ── SCREEN LAYER 1 · explosion.webp — hidden until blueprint tears ──
-       Lives inside the screen so zoom-out makes it the laptop wallpaper.  */
+    /* ─────────────────────────────────
+       SCREEN LAYER A · explosion.webp
+       Always present inside the screen.
+       At INITIAL_SCALE the screen fills
+       the viewport — so this image fills
+       the viewport behind the blueprint.
+       After zoom-out it IS the wallpaper.
+    ───────────────────────────────── */
     .paintball-container {
       position: absolute;
       inset: 0;
       z-index: 1;
-      background-color: #ffffff !important;    /* white fallback while image loads */
+      background-color: #ffffff !important;
       background-image: url('explosion.webp');
       background-size: cover;
       background-position: center;
-      transform-origin: center center;
-      will-change: transform, opacity;
     }
 
-    /* ── SCREEN LAYER 2 · Pure white grid blueprint — covers screen at start ── */
-    .blueprint-top-layer {
+    /* ─────────────────────────────────
+       SCREEN LAYER B · finished site
+       Wipes in left→right later
+    ───────────────────────────────── */
+    #finished-layer {
       position: absolute;
       inset: 0;
       z-index: 2;
+      clip-path: inset(0 100% 0 0);
+      will-change: clip-path;
+      overflow: hidden;
+    }
+
+    /* MacBook SVG frame — above screen layers */
+    #laptop-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Side devices */
+    #tablet-device, #phone-device { visibility: hidden; }
+    #tablet-device {
+      position: absolute;
+      right: calc(100% + 20px); top: 50%;
+      transform: translateY(-50%);
+      width: 20%; min-width: 110px;
+    }
+    #phone-device {
+      position: absolute;
+      left: calc(100% + 16px); top: 50%;
+      transform: translateY(-50%);
+      width: 9.5%; min-width: 58px;
+    }
+
+    /* ══════════════════════════════════
+       LAYER 1 · WHITE BLUEPRINT OVERLAY
+       Full-viewport. Sits above device-scene
+       (z-index 10). This is the NON-NEGOTIABLE
+       initial image — pure white + sharp grid.
+       GSAP tears it away on scroll.
+    ══════════════════════════════════ */
+    .blueprint-top-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
       background: #ffffff !important;
       background-image:
         repeating-linear-gradient(
@@ -129,7 +174,7 @@
       transform-origin: center center;
     }
 
-    /* Wireframe annotations on the blueprint */
+    /* Wireframe annotations inside the blueprint */
     .wf-nav {
       position: absolute; top: 4.5%; left: 5%; right: 5%; height: 6%;
       border: 1px dashed rgba(0,0,0,0.2);
@@ -193,101 +238,16 @@
     .wf-card-img  { flex: 0 0 62%; background: rgba(0,0,0,0.06); border-bottom: 1px dashed rgba(0,0,0,0.12); }
     .wf-card-body { flex: 1; padding: 6% 8%; background: rgba(0,0,0,0.02); }
 
-    /* ── SCREEN LAYER 3 · Finished "Your Future Website" — wipes in left→right ── */
-    #finished-layer {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      clip-path: inset(0 100% 0 0);
-      will-change: clip-path;
-      overflow: hidden;
-    }
-
     /* ══════════════════════════════════
-       MACBOOK SVG FRAME — above screen layers
-    ══════════════════════════════════ */
-    #laptop-svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    /* ══════════════════════════════════
-       SIDE DEVICES
-    ══════════════════════════════════ */
-    #tablet-device, #phone-device { visibility: hidden; }
-
-    #tablet-device {
-      position: absolute;
-      right: calc(100% + 20px); top: 50%;
-      transform: translateY(-50%);
-      width: 20%; min-width: 110px;
-    }
-    #phone-device {
-      position: absolute;
-      left: calc(100% + 16px); top: 50%;
-      transform: translateY(-50%);
-      width: 9.5%; min-width: 58px;
-    }
-
-    /* ══════════════════════════════════
-       HEADLINE — fixed, always on top
-    ══════════════════════════════════ */
-    #intro-hero-text {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      z-index: 9000;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center;
-      pointer-events: none;
-      isolation: isolate;
-    }
-    #intro-eyebrow {
-      font-family: 'Archivo', sans-serif;
-      font-size: clamp(0.6rem, 1.2vw, 0.85rem);
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: rgba(0,0,0,0.5);
-      margin-bottom: 1.2rem;
-    }
-    #intro-headline {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 900;
-      font-size: 3.5rem;
-      color: #000000;
-      line-height: 1.2;
-      letter-spacing: -0.02em;
-      margin-bottom: 1.4rem;
-      text-align: center;
-      width: 100%;
-      max-width: 800px;
-    }
-    #intro-rule {
-      width: 40px; height: 1.5px;
-      background: rgba(0,0,0,0.25);
-      margin: 0 auto 1.2rem;
-    }
-    #intro-sub {
-      font-size: clamp(0.7rem, 1.1vw, 0.9rem);
-      color: rgba(0,0,0,0.4);
-      letter-spacing: 0.14em;
-    }
-
-    /* ══════════════════════════════════
-       FRAGMENT SHARDS — fly during rip
-       position:absolute inside #main-viewport
+       FRAGMENT SHARDS — fly during tear
+       z-index 50 = above blueprint (10)
     ══════════════════════════════════ */
     .intro-frag {
       position: absolute;
-      z-index: 50; /* above device-scene (z-index:1) */
+      z-index: 50;
       opacity: 0;
       background: #ffffff;
-      outline: 1px solid rgba(0,0,0,0.15);
+      outline: 1px solid rgba(0,0,0,0.14);
       overflow: hidden;
       pointer-events: none;
     }
@@ -303,13 +263,55 @@
     #if4 { width: 18vw; height: 10vh; top: 30vh; left: 72vw; }
 
     /* ══════════════════════════════════
+       LAYER 2 · HEADLINE
+       position:fixed keeps it above every
+       composited/scaled layer at all times
+    ══════════════════════════════════ */
+    #intro-hero-text {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 9000;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      pointer-events: none;
+      isolation: isolate;
+    }
+    #intro-eyebrow {
+      font-family: 'Archivo', sans-serif;
+      font-size: clamp(0.6rem, 1.2vw, 0.85rem);
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(0,0,0,0.5); margin-bottom: 1.2rem;
+    }
+    #intro-headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      color: #000000;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.4rem;
+      text-align: center;
+      width: 100%; max-width: 800px;
+    }
+    #intro-rule {
+      width: 40px; height: 1.5px;
+      background: rgba(0,0,0,0.25);
+      margin: 0 auto 1.2rem;
+    }
+    #intro-sub {
+      font-size: clamp(0.7rem, 1.1vw, 0.9rem);
+      color: rgba(0,0,0,0.4); letter-spacing: 0.14em;
+    }
+
+    /* ══════════════════════════════════
        FINISHED INNER SITE
     ══════════════════════════════════ */
     .fin-site {
       width: 100%; height: 100%;
       display: flex; flex-direction: column;
-      overflow: hidden;
-      font-family: 'Archivo', sans-serif;
+      overflow: hidden; font-family: 'Archivo', sans-serif;
       background: var(--cream);
     }
     .fin-nav {
@@ -330,8 +332,8 @@
     .fin-nav-cta {
       background: var(--accent); color: #fff;
       font-family: 'Archivo', sans-serif; font-size: clamp(5.5px, 0.85vw, 8.5px);
-      font-weight: 600; padding: 0.35em 1em; border-radius: 100px; border: none;
-      cursor: pointer; letter-spacing: 0.05em; white-space: nowrap;
+      font-weight: 600; padding: 0.35em 1em; border-radius: 100px;
+      border: none; cursor: pointer; letter-spacing: 0.05em; white-space: nowrap;
     }
     .fin-hero { position: relative; flex: 0 0 52%; overflow: hidden; }
     .fin-hero-img {
@@ -366,8 +368,8 @@
     .fin-btn-primary {
       background: var(--accent); color: #fff;
       font-family: 'Archivo', sans-serif; font-size: clamp(5.5px, 0.82vw, 8.5px);
-      font-weight: 600; padding: 0.5em 1.2em; border-radius: 100px; border: none;
-      cursor: pointer; letter-spacing: 0.04em; white-space: nowrap;
+      font-weight: 600; padding: 0.5em 1.2em; border-radius: 100px;
+      border: none; cursor: pointer; letter-spacing: 0.04em; white-space: nowrap;
     }
     .fin-btn-ghost {
       background: transparent; color: rgba(255,255,255,0.6);
@@ -392,10 +394,7 @@
       background: #e8e2d8; display: flex; flex-direction: column;
     }
     .fin-card-img { flex: 1; min-height: 0; overflow: hidden; position: relative; }
-    .fin-card-img img {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: cover; display: block;
-    }
+    .fin-card-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
     .fin-card-tag {
       position: absolute; top: 6px; left: 6px;
       background: rgba(255,255,255,0.9); color: var(--charcoal);
@@ -423,9 +422,7 @@
        AFTER SECTION
     ══════════════════════════════════ */
     #after-section {
-      background: var(--cream);
-      text-align: center;
-      padding: 9rem 2rem 10rem;
+      background: var(--cream); text-align: center; padding: 9rem 2rem 10rem;
     }
     #after-section h2 {
       font-family: 'Space Grotesk', sans-serif; font-weight: 700;
@@ -441,52 +438,42 @@
       font-family: 'Space Grotesk', sans-serif; font-weight: 600;
       font-size: 0.9rem; letter-spacing: 0.04em;
       padding: 1rem 2.5rem; border-radius: 100px; text-decoration: none;
-      transition: background 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
+      transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
     }
     .cta-btn:hover {
       background: var(--accent);
       box-shadow: 0 8px 36px rgba(37,99,235,0.28);
       transform: translateY(-2px);
     }
-
-    @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; transition: none !important; }
-    }
   </style>
 </head>
 <body>
 
 <!-- ═══════════════════════════════════════════════
-     450vh SCROLL SPACE
-     Layer order inside #laptop-screen-content (back→front):
-       1 paintball-container (explosion.webp)
-       2 blueprint-top-layer (white grid, tears away)
-       3 finished-layer      (portfolio, wipes in)
-     MacBook SVG frame sits above all screen layers.
-     #intro-hero-text is position:fixed above everything.
+     LAYER STACKING ORDER (back → front)
+     ─────────────────────────────────────────────
+     z-index 1   #device-scene
+                   └─ #laptop-screen-content
+                        ├─ .paintball-container   ← explosion.webp (always inside screen)
+                        └─ #finished-layer        ← portfolio, wipes in
+                   └─ #laptop-svg               ← MacBook frame
+     z-index 10  .blueprint-top-layer           ← FULL-VIEWPORT white grid (ALWAYS ON TOP at load)
+     z-index 50  .intro-frag × 4               ← white shards fly during tear
+     z-index 9000 #intro-hero-text (fixed)     ← headline, never covered
+     ─────────────────────────────────────────────
+     Because .blueprint-top-layer is position:absolute in #main-viewport
+     it fills 100% of the viewport unconditionally — no JS needed.
+     explosion.webp lives inside the laptop screen so when device-scene
+     scales down the image naturally becomes the laptop wallpaper.
 ═══════════════════════════════════════════════ -->
 <section id="main-section">
   <div id="main-viewport">
 
-    <!-- HEADLINE — fixed, z-index 9000, always on top -->
-    <div id="intro-hero-text">
-      <p id="intro-eyebrow">Blueprint to Reality</p>
-      <h1 id="intro-headline">not just your website —<br>its your story.</h1>
-      <div id="intro-rule"></div>
-      <p id="intro-sub">scroll to watch it come alive</p>
-    </div>
-
-    <!-- FRAGMENT SHARDS — fly out during tear, positioned in viewport space -->
-    <div class="intro-frag" id="if1"></div>
-    <div class="intro-frag" id="if2"></div>
-    <div class="intro-frag" id="if3"></div>
-    <div class="intro-frag" id="if4"></div>
-
-    <!-- DEVICE SCENE — entire group is scaled by GSAP -->
+    <!-- ── LAYER 0 · DEVICE SCENE ─────────────────────────────────── -->
     <div id="device-scene">
       <div id="lateral-wrap">
 
-        <!-- TABLET — left side, revealed in final state -->
+        <!-- TABLET — left, hidden until final reveal -->
         <div id="tablet-device" aria-hidden="true">
           <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -524,50 +511,19 @@
           </svg>
         </div>
 
-        <!-- MACBOOK — main device -->
+        <!-- MACBOOK -->
         <div id="laptop-wrap">
 
-          <!-- SCREEN CONTENT — overflow:hidden clips all layers to bezel -->
+          <!-- Screen area — overflow:hidden clips all layers to bezel -->
           <div id="laptop-screen-content">
 
-            <!-- LAYER 1: explosion.webp — the Mac color blast, initially hidden -->
+            <!-- SCREEN LAYER A: explosion.webp — passively fills the screen.
+                 When device-scene is at INITIAL_SCALE, this image fills the
+                 full viewport behind the blueprint overlay.
+                 When device-scene zooms to scale:1, this becomes the wallpaper. -->
             <div class="paintball-container"></div>
 
-            <!-- LAYER 2: white grid blueprint — covers everything at scroll=0 -->
-            <div class="blueprint-top-layer">
-              <span class="wf-label wf-label-nav">NAVIGATION</span>
-              <div class="wf-nav">
-                <div class="wf-logo"></div>
-                <div class="wf-nav-links"><span></span><span></span><span></span><span></span></div>
-                <div class="wf-cta-pill"></div>
-              </div>
-              <span class="wf-label wf-label-hero">HERO — FULL BLEED IMAGE + OVERLAY</span>
-              <div class="wf-hero-area">
-                <div class="wf-hero-text-block">
-                  <div class="wf-eyebrow"></div>
-                  <div class="wf-h1-a"></div>
-                  <div class="wf-h1-b"></div>
-                  <div class="wf-body-line"></div>
-                  <div class="wf-body-line short"></div>
-                  <div class="wf-btn-row">
-                    <div class="wf-pill-primary"></div>
-                    <div class="wf-pill-ghost"></div>
-                  </div>
-                </div>
-                <div class="wf-hero-img-block">
-                  <div class="wf-x-mark"></div>
-                  <span>FEATURED IMAGE<br>1920 × 1080px</span>
-                </div>
-              </div>
-              <span class="wf-label wf-label-work">SELECTED WORK — 3 COLUMNS</span>
-              <div class="wf-cards-row">
-                <div class="wf-card"><div class="wf-card-img"></div><div class="wf-card-body"></div></div>
-                <div class="wf-card"><div class="wf-card-img"></div><div class="wf-card-body"></div></div>
-                <div class="wf-card"><div class="wf-card-img"></div><div class="wf-card-body"></div></div>
-              </div>
-            </div>
-
-            <!-- LAYER 3: finished portfolio site — wipes in left→right -->
+            <!-- SCREEN LAYER B: finished portfolio — wipes in later -->
             <div id="finished-layer">
               <div class="fin-site">
 
@@ -646,7 +602,7 @@
 
           </div><!-- /laptop-screen-content -->
 
-          <!-- MACBOOK SVG FRAME — renders above screen, transparent screen area -->
+          <!-- MacBook SVG frame — screen area (x=90 y=30 w=820 h=510) transparent -->
           <svg id="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
               <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
@@ -661,14 +617,12 @@
             <rect x="44" y="4" width="912" height="558" rx="14" fill="url(#lidGrad)"/>
             <rect x="44" y="4" width="912" height="558" rx="14" fill="none" stroke="#9a9a9a" stroke-width="1.2"/>
             <rect x="52" y="10" width="896" height="548" rx="10" fill="#c4c4c4"/>
-            <!-- Bezels — screen area x=90 y=30 w=820 h=510 stays transparent -->
             <rect x="70" y="18" width="860" height="14" fill="#141416"/>
             <rect x="70" y="18" width="20"  height="530" fill="#141416"/>
             <rect x="910" y="18" width="20" height="530" fill="#141416"/>
             <rect x="70" y="544" width="860" height="14" fill="#141416"/>
             <circle cx="500" cy="12" r="4.5" fill="#222"/>
             <circle cx="500" cy="12" r="2"   fill="#0a0a0a" opacity="0.7"/>
-            <!-- Hinge + base -->
             <rect x="34"  y="558" width="932" height="10" rx="2.5" fill="#868686"/>
             <rect x="44"  y="561" width="912" height="5"  fill="#a8a8a8" opacity="0.4"/>
             <path d="M 18,568 Q 18,572 22,574 L 978,574 Q 982,572 982,568 Z" fill="#bcbcbc"/>
@@ -695,7 +649,7 @@
             <path d="M 42,632 Q 42,640 54,642 L 946,642 Q 958,640 958,632 Z" fill="#b8b8b8"/>
           </svg>
 
-          <!-- PHONE — right of laptop, revealed in final state -->
+          <!-- PHONE — right side, hidden until final reveal -->
           <div id="phone-device" aria-hidden="true">
             <svg viewBox="0 0 108 218" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -739,6 +693,61 @@
       </div><!-- /lateral-wrap -->
     </div><!-- /device-scene -->
 
+    <!-- ── LAYER 1 · WHITE BLUEPRINT OVERLAY ─────────────────────────
+         position:absolute fills #main-viewport (100vw × 100vh) always.
+         This is the first thing the user sees — no JS dependency.
+         GSAP's clip-path animation tears it away on scroll.
+    ──────────────────────────────────────────────────────────────── -->
+    <div class="blueprint-top-layer">
+      <span class="wf-label wf-label-nav">NAVIGATION</span>
+      <div class="wf-nav">
+        <div class="wf-logo"></div>
+        <div class="wf-nav-links"><span></span><span></span><span></span><span></span></div>
+        <div class="wf-cta-pill"></div>
+      </div>
+      <span class="wf-label wf-label-hero">HERO — FULL BLEED IMAGE + OVERLAY</span>
+      <div class="wf-hero-area">
+        <div class="wf-hero-text-block">
+          <div class="wf-eyebrow"></div>
+          <div class="wf-h1-a"></div>
+          <div class="wf-h1-b"></div>
+          <div class="wf-body-line"></div>
+          <div class="wf-body-line short"></div>
+          <div class="wf-btn-row">
+            <div class="wf-pill-primary"></div>
+            <div class="wf-pill-ghost"></div>
+          </div>
+        </div>
+        <div class="wf-hero-img-block">
+          <div class="wf-x-mark"></div>
+          <span>FEATURED IMAGE<br>1920 × 1080px</span>
+        </div>
+      </div>
+      <span class="wf-label wf-label-work">SELECTED WORK — 3 COLUMNS</span>
+      <div class="wf-cards-row">
+        <div class="wf-card"><div class="wf-card-img"></div><div class="wf-card-body"></div></div>
+        <div class="wf-card"><div class="wf-card-img"></div><div class="wf-card-body"></div></div>
+        <div class="wf-card"><div class="wf-card-img"></div><div class="wf-card-body"></div></div>
+      </div>
+    </div>
+
+    <!-- Fragment shards — white grid pieces that fly during the tear -->
+    <div class="intro-frag" id="if1"></div>
+    <div class="intro-frag" id="if2"></div>
+    <div class="intro-frag" id="if3"></div>
+    <div class="intro-frag" id="if4"></div>
+
+    <!-- ── LAYER 2 · HEADLINE ─────────────────────────────────────────
+         position:fixed — completely outside every stacking context.
+         Black on white at load. Flips to magenta on scroll.
+    ──────────────────────────────────────────────────────────────── -->
+    <div id="intro-hero-text">
+      <p id="intro-eyebrow">Blueprint to Reality</p>
+      <h1 id="intro-headline">not just your website —<br>its your story.</h1>
+      <div id="intro-rule"></div>
+      <p id="intro-sub">scroll to watch it come alive</p>
+    </div>
+
   </div><!-- /main-viewport -->
 </section>
 
@@ -751,47 +760,43 @@
 <script>
   gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
-  // ── Element references ──
+  // ── References ──
   const deviceScene = document.getElementById('device-scene');
   const finLayer    = document.getElementById('finished-layer');
   const tabletDev   = document.getElementById('tablet-device');
   const phoneDev    = document.getElementById('phone-device');
   const bpEl        = document.querySelector('.blueprint-top-layer');
-  const paintball   = document.querySelector('.paintball-container');
 
-  // ── Compute INITIAL_SCALE so the laptop screen exactly fills the viewport ──
+  // ── INITIAL_SCALE: makes the laptop screen fill 100% of the viewport ──
   // laptop-wrap width W = min(960, 90vw)
-  // screen actual width  = W × 0.82
-  // screen actual height = W × (680/1000) × 0.75 = W × 0.51
+  // screen width  = W × 0.82   →  S = vw / (W × 0.82)
+  // screen height = W × 0.51   →  S = vh / (W × 0.51)   [0.51 = 680/1000 × 0.75]
   function computeInitialScale() {
     const W = Math.min(960, window.innerWidth * 0.9);
     return Math.max(
       window.innerWidth  / (W * 0.82),
       window.innerHeight / (W * 0.51)
-    ) * 1.02; /* tiny oversize ensures zero gap at screen edges */
+    ) * 1.02;
   }
 
   let INITIAL_SCALE = computeInitialScale();
 
-  // ── Initial GSAP states ──
+  // ── Initial states ──
   gsap.set(deviceScene, { scale: INITIAL_SCALE, transformOrigin: 'center center' });
   gsap.set(tabletDev,   { autoAlpha: 0, x: 40 });
   gsap.set(phoneDev,    { autoAlpha: 0, x: -40 });
   gsap.set(finLayer,    { clipPath: 'inset(0 100% 0 0)' });
 
-  // explosion.webp starts scaled down + invisible, blueprint covers it
-  gsap.set(paintball,   { scale: 0.85, autoAlpha: 0, transformOrigin: 'center center' });
-
   // GPU compositing hints
-  gsap.set([deviceScene, paintball, finLayer, bpEl], { willChange: 'transform, opacity' });
+  gsap.set([deviceScene, finLayer, bpEl], { willChange: 'transform, opacity' });
 
-  // ══════════════════════════════════════════════════
-  //  SINGLE TIMELINE — 450vh, one ScrollTrigger
+  // ══════════════════════════════════════════════════════════
+  //  TIMELINE — 450vh, one ScrollTrigger
   //
-  //  STEP 1 (0.00–0.06): Blueprint looms — tension
-  //  STEP 2 (0.06–0.35): Blueprint tears, explosion.webp blasts through
-  //  STEP 3 (0.38–1.00): Laptop zoom-out; explosion.webp becomes wallpaper
-  // ══════════════════════════════════════════════════
+  //  Progress 0.00–0.06  Blueprint looms (tension)
+  //  Progress 0.06–0.34  Blueprint tears, explosion.webp revealed
+  //  Progress 0.38–1.00  Laptop zooms out; explosion = wallpaper
+  // ══════════════════════════════════════════════════════════
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger:         '#main-section',
@@ -803,40 +808,36 @@
     },
   });
 
-  // ─── STEP 1 · Blueprint looms forward (0.00–0.06) ───
+  // 0.00 — Blueprint looms slightly forward (visual tension before rip)
   tl.to(bpEl, {
     scale: 1.06, duration: 0.06, ease: 'power2.in', transformOrigin: 'center center',
   }, 0.00);
 
-  // ─── STEP 2a · Simultaneous at 0.06: explosion.webp erupts from behind ───
-  // The exact millisecond the clip-path tear begins, the image blasts into view
-  tl.to(paintball, {
-    scale: 1, autoAlpha: 1, duration: 0.15, ease: 'power4.out',
-  }, 0.06);
+  // 0.06 — THE TEAR BEGINS. Three things happen simultaneously:
 
-  // ─── STEP 2b · Simultaneous at 0.06: headline flips to electric magenta ───
-  tl.to('#intro-headline', {
-    color: '#ff007f', textShadow: '0 4px 20px rgba(0,0,0,0.4)', duration: 0.05, ease: 'power2.out',
-  }, 0.06);
-  tl.to('#intro-eyebrow', { color: 'rgba(255,255,255,0.85)', duration: 0.05, ease: 'power2.out' }, 0.06);
-  tl.to('#intro-rule',    { backgroundColor: 'rgba(255,255,255,0.6)', duration: 0.05 }, 0.06);
-  tl.to('#intro-sub',     { color: 'rgba(255,255,255,0.7)', duration: 0.05 }, 0.07);
-
-  // ─── STEP 2c · Blueprint tears away (0.06–0.34) ───
-  // Phase 1: upper-right corner rips open
+  // 1) Blueprint clip-path rips upper-right away, revealing explosion.webp below
   tl.to(bpEl, {
     clipPath: 'polygon(0% 0%, 0% 0%, 100% 100%, 0% 100%)',
     duration: 0.18, ease: 'power3.inOut',
   }, 0.06);
 
-  // Fragments burst out of the tear and fade
+  // 2) Headline flips: black → electric magenta
+  tl.to('#intro-headline', {
+    color: '#ff007f', textShadow: '0 4px 20px rgba(0,0,0,0.4)',
+    duration: 0.05, ease: 'power2.out',
+  }, 0.06);
+  tl.to('#intro-eyebrow', { color: 'rgba(255,255,255,0.85)', duration: 0.05 }, 0.06);
+  tl.to('#intro-rule',    { backgroundColor: 'rgba(255,255,255,0.6)', duration: 0.05 }, 0.06);
+  tl.to('#intro-sub',     { color: 'rgba(255,255,255,0.7)', duration: 0.05 }, 0.07);
+
+  // 3) White grid fragments fly outward
   tl.fromTo('#if1', { autoAlpha: 0 }, { autoAlpha: 1, x: '-28vw', y: '-18vh', rotation: -28, duration: 0.14, ease: 'power2.out' }, 0.09);
   tl.fromTo('#if2', { autoAlpha: 0 }, { autoAlpha: 1, x:  '22vw', y: '-24vh', rotation:  22, duration: 0.12, ease: 'power2.out' }, 0.10);
   tl.fromTo('#if3', { autoAlpha: 0 }, { autoAlpha: 1, x: '-18vw', y:  '20vh', rotation: -16, duration: 0.13, ease: 'power2.out' }, 0.10);
   tl.fromTo('#if4', { autoAlpha: 0 }, { autoAlpha: 1, x:  '26vw', y: '-14vh', rotation:  35, duration: 0.13, ease: 'power2.out' }, 0.09);
   tl.to(['#if1','#if2','#if3','#if4'], { autoAlpha: 0, duration: 0.06 }, 0.23);
 
-  // Phase 2: lower-left remnant collapses and flies off screen
+  // 0.22 — Lower-left blueprint remnant collapses and flies off screen
   tl.to(bpEl, {
     clipPath: 'polygon(0% 0%, 0% 0%, 0% 0%, 0% 0%)',
     xPercent: -110, yPercent: 110, rotation: 8, opacity: 0,
@@ -844,29 +845,27 @@
   }, 0.22);
   tl.set(bpEl, { display: 'none' }, 0.35);
 
-  // Headline fades just before the laptop chassis becomes visible
+  // 0.35 — Headline fades before chassis frame becomes visible
   tl.to('#intro-hero-text', { autoAlpha: 0, duration: 0.07, ease: 'power2.in' }, 0.35);
 
-  // ─── STEP 3 · Zoom out — explosion.webp becomes laptop wallpaper (0.38–1.00) ───
-  // device-scene scales from INITIAL_SCALE → 1, revealing the MacBook chassis
-  // The screen content (explosion.webp) is already at scale:1 inside the screen,
-  // so it naturally transforms into the laptop wallpaper as the chassis comes into view.
+  // 0.38 — ZOOM OUT: device-scene scales INITIAL_SCALE → 1
+  // explosion.webp (inside the screen) becomes the laptop wallpaper as the chassis reveals
   tl.to(deviceScene, { scale: 1, duration: 0.50, ease: 'expo.inOut' }, 0.38);
 
-  // Finished portfolio site wipes in over the explosion image
+  // 0.50 — Portfolio wipes over the explosion image
   tl.to(finLayer, { clipPath: 'inset(0 0% 0 0)', duration: 0.15, ease: 'power2.inOut' }, 0.50);
 
-  // Pull back to reveal full device grid
+  // 0.85 — Pull back to device grid view
   tl.to(deviceScene, { scale: 0.80, duration: 0.09, ease: 'power2.inOut' }, 0.85);
 
-  // Tablet + phone slide in simultaneously
+  // 0.85 — Tablet + phone arrive simultaneously
   tl.fromTo(tabletDev, { autoAlpha: 0, x: 40 },  { autoAlpha: 1, x: 0, duration: 0.09, ease: 'back.out(1.2)' }, 0.85);
   tl.fromTo(phoneDev,  { autoAlpha: 0, x: -40 }, { autoAlpha: 1, x: 0, duration: 0.09, ease: 'back.out(1.2)' }, 0.85);
 
-  // Gentle final float
+  // 0.96 — Gentle float settles the composition
   tl.to(deviceScene, { y: -8, duration: 0.04, ease: 'sine.out' }, 0.96);
 
-  // ── Resize handler ──
+  // ── Resize ──
   let rsz;
   window.addEventListener('resize', () => {
     clearTimeout(rsz);
@@ -882,7 +881,6 @@
     ScrollTrigger.getAll().forEach(st => st.kill());
     gsap.set(deviceScene, { scale: 0.85 });
     gsap.set(finLayer,    { clipPath: 'inset(0 0% 0 0)' });
-    gsap.set(paintball,   { scale: 1, autoAlpha: 1 });
     gsap.set(bpEl,        { opacity: 0, display: 'none' });
     gsap.set([tabletDev, phoneDev], { autoAlpha: 1, x: 0 });
   }
