@@ -4,121 +4,38 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Not just a website — a story.</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@900&family=Archivo:wght@400&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@900&display=swap" rel="stylesheet" />
   <style>
-    /* ── RESET ─────────────────────────────────────────── */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ── ROOT ──────────────────────────────────────────────
-       html and body fill the viewport and pass magenta down.
-       No grey, no white, no fallback color anywhere.         */
     html, body {
       width: 100%;
       height: 100%;
       background: #FF007F;
     }
 
-    /* ── MAIN ──────────────────────────────────────────────
-       Full-screen flex container. Centers .hero-container
-       both axes. Ready to receive scroll-trigger logic.      */
     main {
       width: 100vw;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #FF007F;
-      overflow: hidden;
     }
 
-    /* ── HERO CONTAINER ────────────────────────────────────
-       The "content layer" that will animate in future steps.
-       - Fills the full viewport initially.
-       - Centered flex column for the headline group.
-       - transform-origin set for the zoom-down animation:
-         GSAP will scale this into the laptop screen later.   */
-    .hero-container {
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      background: #FF007F;
-      transform-origin: center center;
-      /* will-change: transform — enable when GSAP is added */
-    }
-
-    /* ── EYEBROW ───────────────────────────────────────── */
-    .eyebrow {
-      font-family: 'Archivo', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 1.25rem;
-    }
-
-    /* ── HEADLINE ──────────────────────────────────────────
-       White, heavy, centered. No color override needed —
-       the magenta background provides the contrast.          */
-    .headline {
+    h1 {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 900;
-      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      font-size: clamp(2rem, 5vw, 3.5rem);
       color: #ffffff;
-      line-height: 1.15;
-      letter-spacing: -0.03em;
-      margin-bottom: 1.5rem;
-    }
-
-    /* ── DIVIDER ───────────────────────────────────────── */
-    .rule {
-      width: 40px;
-      height: 2px;
-      background: rgba(255, 255, 255, 0.4);
-      margin: 0 auto 1.25rem;
-      border: none;
-    }
-
-    /* ── SUB TEXT ──────────────────────────────────────── */
-    .sub {
-      font-family: 'Archivo', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 400;
-      letter-spacing: 0.18em;
-      color: rgba(255, 255, 255, 0.5);
+      text-align: center;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
     }
   </style>
 </head>
 <body>
-
   <main>
-
-    <!--
-      .hero-container is the anchor for the future GSAP animation.
-      In the next iteration, the laptop/tablet/phone mockups will be
-      added as siblings or children of <main>, and GSAP will scale
-      this container down into the laptop screen on scroll.
-    -->
-    <div class="hero-container">
-      <p class="eyebrow">Blueprint to Reality</p>
-      <h1 class="headline">not just a website —<br>a story.</h1>
-      <hr class="rule" />
-      <p class="sub">scroll to watch it come alive</p>
-    </div>
-
+    <h1>not just a website —<br>a story.</h1>
   </main>
-
 </body>
 </html>
