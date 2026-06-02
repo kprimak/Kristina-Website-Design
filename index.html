@@ -7,7 +7,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Archivo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Archivo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -22,7 +22,6 @@
       --charcoal-soft: #3A3A3C;
       --muted:    #6B6B70;
       --accent:   #2563EB;
-      --bp-bg:    #0C0F14;
     }
 
     html { scroll-behavior: auto; }
@@ -34,7 +33,6 @@
 
     /* ══════════════════════════════════
        MAIN SECTION — single 450vh scroll space
-       Blueprint tear owns 0–42%, zoom-out owns 38–100%.
     ══════════════════════════════════ */
     #main-section { height: 450vh; }
 
@@ -94,7 +92,7 @@
         drop-shadow(0 10px 20px rgba(0,0,0,0.12));
     }
 
-    /* Screen content behind the MacBook SVG */
+    /* Screen content — MUST be transparent so colorful-bg shows through */
     #laptop-screen-content {
       position: absolute;
       left:   9%;
@@ -102,12 +100,12 @@
       width:  82%;
       height: 75%;
       overflow: hidden;
-      background: transparent; /* colorful-bg (z-index:0 behind device-scene) shows through */
+      background: transparent !important;
       z-index: 1;
     }
 
     /* ══════════════════════════════════
-       BLUEPRINT LAYER
+       BLUEPRINT LAYER (hidden — superseded by .blueprint-top-layer)
     ══════════════════════════════════ */
     #blueprint-layer {
       position: absolute;
@@ -115,35 +113,24 @@
       z-index: 2;
       will-change: clip-path, opacity, transform;
       transform-origin: center center;
-      /* full coverage at start — GSAP animates this to perform the rip */
       clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
     }
-    #blueprint-svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
+    #blueprint-svg { width: 100%; height: 100%; display: block; }
 
     /* ══════════════════════════════════
        GRADIENT BASE LAYER
-       Revealed when blueprint rips away
     ══════════════════════════════════ */
     #gradient-bg {
       position: absolute;
       inset: 0;
       z-index: 0;
-      /* Exact match to .colorful-bg — seamless handoff from intro to laptop */
       background: linear-gradient(135deg,
-        #FF2D78 0%,
-        #7B00D4 30%,
-        #004FFF 65%,
-        #FFE600 100%
+        #FF2D78 0%, #7B00D4 30%, #004FFF 65%, #FFE600 100%
       );
     }
 
     /* ══════════════════════════════════
        TORN PAPER EDGE
-       Diagonal seam SVG — top-right → bottom-left
     ══════════════════════════════════ */
     #torn-edge {
       position: absolute;
@@ -156,7 +143,6 @@
 
     /* ══════════════════════════════════
        BLUEPRINT FRAGMENTS
-       Scatter during the rip
     ══════════════════════════════════ */
     .bp-frag {
       position: absolute;
@@ -174,7 +160,6 @@
         repeating-linear-gradient(0deg,   rgba(37,99,235,0.22) 0, rgba(37,99,235,0.22) 1px, transparent 1px, transparent 40px),
         repeating-linear-gradient(90deg,  rgba(37,99,235,0.22) 0, rgba(37,99,235,0.22) 1px, transparent 1px, transparent 40px);
     }
-    /* Each fragment: different size + position for natural scatter feel */
     #bp-f1 { width: 24%; height: 20%; top: 12%; left:  8%; }
     #bp-f2 { width: 16%; height: 14%; top:  6%; left: 58%; }
     #bp-f3 { width: 12%; height: 16%; top: 44%; left: 36%; }
@@ -182,7 +167,6 @@
 
     /* ══════════════════════════════════
        FINISHED SITE LAYER
-       Reveals left → right via clip-path
     ══════════════════════════════════ */
     #finished-layer {
       position: absolute;
@@ -195,8 +179,6 @@
 
     /* ══════════════════════════════════
        INNER PORTFOLIO WEBSITE
-       "Your Future Website"
-       Cream bg · Charcoal text · Blue accents
     ══════════════════════════════════ */
     .fin-site {
       width: 100%;
@@ -207,8 +189,6 @@
       font-family: 'Archivo', sans-serif;
       background: var(--cream);
     }
-
-    /* — Navigation — */
     .fin-nav {
       flex-shrink: 0;
       height: 9%;
@@ -227,9 +207,7 @@
       letter-spacing: -0.03em;
       color: var(--charcoal);
     }
-    .fin-brand span {
-      color: var(--accent);
-    }
+    .fin-brand span { color: var(--accent); }
     .fin-nav-links {
       display: flex;
       gap: clamp(6px, 1.2vw, 14px);
@@ -250,8 +228,6 @@
       letter-spacing: 0.05em;
       white-space: nowrap;
     }
-
-    /* — Hero — */
     .fin-hero {
       position: relative;
       flex: 0 0 52%;
@@ -266,7 +242,6 @@
       object-position: center 40%;
       display: block;
     }
-    /* Gradient: left side darker for text legibility, right stays photographic */
     .fin-hero-overlay {
       position: absolute;
       inset: 0;
@@ -303,10 +278,7 @@
       letter-spacing: -0.045em;
       margin-bottom: 0.55em;
     }
-    .fin-heading em {
-      font-style: normal;
-      color: rgba(255,255,255,0.55);
-    }
+    .fin-heading em { font-style: normal; color: rgba(255,255,255,0.55); }
     .fin-sub {
       font-size: clamp(6px, 0.88vw, 9px);
       color: rgba(255,255,255,0.58);
@@ -343,8 +315,6 @@
       letter-spacing: 0.04em;
       white-space: nowrap;
     }
-
-    /* — Work grid — */
     .fin-work {
       flex: 1;
       min-height: 0;
@@ -390,7 +360,6 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.4s ease;
     }
     .fin-card-tag {
       position: absolute;
@@ -431,13 +400,10 @@
       justify-content: center;
       flex-shrink: 0;
     }
-    .fin-card-arrow svg {
-      width: 55%;
-      height: 55%;
-    }
+    .fin-card-arrow svg { width: 55%; height: 55%; }
 
     /* ══════════════════════════════════
-       MACBOOK SVG FRAME  (z-index above screen)
+       MACBOOK SVG FRAME
     ══════════════════════════════════ */
     #laptop-svg {
       position: absolute;
@@ -450,13 +416,9 @@
 
     /* ══════════════════════════════════
        SIDE DEVICES
-       visibility:hidden until GSAP reveals them
-       so they never ghost at the edges
     ══════════════════════════════════ */
     #tablet-device,
-    #phone-device {
-      visibility: hidden; /* GSAP autoAlpha manages this */
-    }
+    #phone-device { visibility: hidden; }
 
     #tablet-device {
       position: absolute;
@@ -466,7 +428,6 @@
       width: 20%;
       min-width: 110px;
     }
-
     #phone-device {
       position: absolute;
       left: calc(100% + 16px);
@@ -476,23 +437,17 @@
       min-width: 58px;
     }
 
-
-
-    /* ── LAYER 1 · Colorful gradient (base, always behind) ── */
+    /* ── LAYER 0 · Colorful gradient (always behind) ── */
     .colorful-bg {
       position: absolute;
       inset: 0;
       z-index: 0;
-      /* hot pink → deep purple → bright blue → yellow */
       background: linear-gradient(135deg,
-        #FF2D78 0%,
-        #7B00D4 30%,
-        #004FFF 65%,
-        #FFE600 100%
+        #FF2D78 0%, #7B00D4 30%, #004FFF 65%, #FFE600 100%
       );
     }
 
-    /* ── LAYER 2 · Torn paper edge SVG (sits between bg and blueprint) ── */
+    /* ── LAYER 1 · Torn paper edge SVG ── */
     .paper-tear-edge {
       position: absolute;
       inset: 0;
@@ -500,10 +455,9 @@
       height: 100%;
       z-index: 1;
       pointer-events: none;
-      /* shown when clip-path exposes the seam */
     }
 
-    /* ── LAYER 3 · Dark Figma blueprint (rips away on scroll) ── */
+    /* ── LAYER 2 · WHITE BLUEPRINT (rips away on scroll) ── */
     .blueprint-top-layer {
       position: absolute;
       inset: 0;
@@ -528,174 +482,78 @@
     /* Wireframe nav bar */
     .wf-nav {
       position: absolute;
-      top: 4.5%;
-      left: 5%;
-      right: 5%;
-      height: 6%;
+      top: 4.5%; left: 5%; right: 5%; height: 6%;
       border: 1px dashed rgba(0,0,0,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 2%;
+      display: flex; align-items: center;
+      justify-content: space-between; padding: 0 2%;
     }
-    .wf-logo {
-      width: 10%;
-      height: 35%;
-      border: 1px solid rgba(0,0,0,0.25);
-      border-radius: 2px;
-    }
-    .wf-nav-links {
-      display: flex;
-      gap: 1.5%;
-    }
-    .wf-nav-links span {
-      display: block;
-      width: 55px;
-      height: 10px;
-      background: rgba(0,0,0,0.08);
-      border-radius: 2px;
-    }
-    .wf-cta-pill {
-      width: 9%;
-      height: 45%;
-      border: 1px solid rgba(0,0,0,0.3);
-      border-radius: 100px;
-      background: rgba(0,0,0,0.06);
-    }
-    /* Wireframe label text */
+    .wf-logo { width: 10%; height: 35%; border: 1px solid rgba(0,0,0,0.25); border-radius: 2px; }
+    .wf-nav-links { display: flex; gap: 1.5%; }
+    .wf-nav-links span { display: block; width: 55px; height: 10px; background: rgba(0,0,0,0.12); border-radius: 2px; }
+    .wf-cta-pill { width: 9%; height: 45%; border: 1px solid rgba(0,0,0,0.3); border-radius: 100px; background: rgba(0,0,0,0.08); }
+
+    /* Wireframe labels */
     .wf-label {
       position: absolute;
       font-family: 'Courier New', monospace;
       font-size: clamp(8px, 0.75vw, 12px);
       letter-spacing: 0.08em;
-      color: rgba(0,0,0,0.4);
+      color: rgba(0,0,0,0.45);
       pointer-events: none;
     }
     .wf-label-nav  { top: 3%;  left: 5%; }
     .wf-label-hero { top: 12%; left: 5%; }
     .wf-label-work { top: 64%; left: 5%; }
-    /* Wireframe hero section */
+
+    /* Wireframe hero */
     .wf-hero-area {
-      position: absolute;
-      top: 13%;
-      left: 5%;
-      right: 5%;
-      height: 46%;
-      border: 1px dashed rgba(0,0,0,0.15);
-      display: flex;
-      gap: 2%;
+      position: absolute; top: 13%; left: 5%; right: 5%; height: 46%;
+      border: 1px dashed rgba(0,0,0,0.18); display: flex; gap: 2%;
     }
     .wf-hero-text-block {
-      width: 45%;
-      height: 100%;
-      border-right: 1px dashed rgba(0,0,0,0.1);
-      padding: 4% 3%;
-      display: flex;
-      flex-direction: column;
-      gap: 3%;
+      width: 45%; height: 100%;
+      border-right: 1px dashed rgba(0,0,0,0.12);
+      padding: 4% 3%; display: flex; flex-direction: column; gap: 3%;
     }
-    .wf-eyebrow {
-      width: 40%;
-      height: 6px;
-      background: rgba(0,0,0,0.1);
-      border-radius: 2px;
-    }
-    .wf-h1-a, .wf-h1-b {
-      height: 22px;
-      background: rgba(0,0,0,0.1);
-      border-radius: 3px;
-    }
+    .wf-eyebrow  { width: 40%; height: 6px; background: rgba(0,0,0,0.12); border-radius: 2px; }
+    .wf-h1-a, .wf-h1-b { height: 22px; background: rgba(0,0,0,0.12); border-radius: 3px; }
     .wf-h1-a { width: 85%; }
     .wf-h1-b { width: 65%; }
-    .wf-body-line {
-      height: 7px;
-      background: rgba(0,0,0,0.07);
-      border-radius: 2px;
-      width: 90%;
-    }
+    .wf-body-line { height: 7px; background: rgba(0,0,0,0.08); border-radius: 2px; width: 90%; }
     .wf-body-line.short { width: 72%; }
-    .wf-btn-row {
-      display: flex;
-      gap: 3%;
-      margin-top: 2%;
-    }
-    .wf-pill-primary {
-      width: 28%;
-      height: 20px;
-      background: rgba(0,0,0,0.1);
-      border: 1px solid rgba(0,0,0,0.3);
-      border-radius: 100px;
-    }
-    .wf-pill-ghost {
-      width: 22%;
-      height: 20px;
-      border: 1px solid rgba(0,0,0,0.18);
-      border-radius: 100px;
-    }
+    .wf-btn-row { display: flex; gap: 3%; margin-top: 2%; }
+    .wf-pill-primary { width: 28%; height: 20px; background: rgba(0,0,0,0.12); border: 1px solid rgba(0,0,0,0.3); border-radius: 100px; }
+    .wf-pill-ghost   { width: 22%; height: 20px; border: 1px solid rgba(0,0,0,0.2); border-radius: 100px; }
     .wf-hero-img-block {
-      flex: 1;
-      position: relative;
-      border: 1px dashed rgba(0,0,0,0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 6px;
+      flex: 1; position: relative;
+      border: 1px dashed rgba(0,0,0,0.15);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 6px;
     }
     .wf-hero-img-block span {
       font-family: 'Courier New', monospace;
       font-size: clamp(7px, 0.7vw, 10px);
-      color: rgba(0,0,0,0.35);
-      text-align: center;
-      line-height: 1.6;
+      color: rgba(0,0,0,0.38); text-align: center; line-height: 1.6;
     }
-    /* X-mark inside image placeholder */
-    .wf-x-mark {
-      position: absolute;
-      inset: 0;
-    }
+    .wf-x-mark { position: absolute; inset: 0; }
     .wf-x-mark::before, .wf-x-mark::after {
-      content: '';
-      position: absolute;
-      background: rgba(0,0,0,0.08);
-      width: 100%;
-      height: 1px;
-      top: 50%;
-      left: 0;
+      content: ''; position: absolute; background: rgba(0,0,0,0.12);
+      width: 100%; height: 1px; top: 50%; left: 0;
       transform-origin: center center;
     }
     .wf-x-mark::before { transform: rotate(calc(atan2(100%, 100%))); }
     .wf-x-mark::after  { transform: rotate(calc(-1 * atan2(100%, 100%))); }
-    /* Wireframe cards row */
-    .wf-cards-row {
-      position: absolute;
-      top: 65%;
-      left: 5%;
-      right: 5%;
-      bottom: 4%;
-      display: flex;
-      gap: 2%;
-    }
-    .wf-card {
-      flex: 1;
-      border: 1px dashed rgba(0,0,0,0.15);
-      display: flex;
-      flex-direction: column;
-    }
-    .wf-card-img {
-      flex: 0 0 62%;
-      background: rgba(0,0,0,0.05);
-      border-bottom: 1px dashed rgba(0,0,0,0.1);
-    }
-    .wf-card-body {
-      flex: 1;
-      padding: 6% 8%;
-      background: rgba(0,0,0,0.02);
-    }
 
-    /* ── LAYER 4 · Intro hero text — viewport-fixed, above ALL moving layers ──
-       position:fixed takes it out of #main-viewport's stacking context
-       entirely, so clip-path / transform on siblings cannot affect it.     */
+    /* Wireframe cards */
+    .wf-cards-row {
+      position: absolute; top: 65%; left: 5%; right: 5%; bottom: 4%;
+      display: flex; gap: 2%;
+    }
+    .wf-card { flex: 1; border: 1px dashed rgba(0,0,0,0.18); display: flex; flex-direction: column; }
+    .wf-card-img  { flex: 0 0 62%; background: rgba(0,0,0,0.06); border-bottom: 1px dashed rgba(0,0,0,0.12); }
+    .wf-card-body { flex: 1; padding: 6% 8%; background: rgba(0,0,0,0.02); }
+
+    /* ── LAYER 3 · Intro hero text — fixed above all composited layers ── */
     #intro-hero-text {
       position: fixed;
       top: 0; left: 0;
@@ -708,7 +566,6 @@
       justify-content: center;
       text-align: center;
       pointer-events: none;
-      /* isolate ensures this element's compositing layer is independent */
       isolation: isolate;
     }
     #intro-eyebrow {
@@ -719,6 +576,8 @@
       color: rgba(0,0,0,0.5);
       margin-bottom: 1.2rem;
     }
+
+    /* ── HEADLINE: stark solid black, 3.5rem, split into two lines via <br> ── */
     #intro-headline {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 900;
@@ -727,11 +586,11 @@
       line-height: 1.2;
       letter-spacing: -0.02em;
       margin-bottom: 1.4rem;
-      white-space: pre-line;
       text-align: center;
       width: 100%;
       max-width: 800px;
     }
+
     #intro-rule {
       width: 40px;
       height: 1.5px;
@@ -744,7 +603,7 @@
       letter-spacing: 0.14em;
     }
 
-    /* ── Intro fragment pieces ── */
+    /* Intro fragment pieces */
     .intro-frag {
       position: absolute;
       z-index: 6;
@@ -815,38 +674,26 @@
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════
-     MAIN — Blueprint Tear → Laptop Zoom-Out
-     450vh scroll space · 100vh sticky viewport
-     Layer order (back→front):
-       0 colorful-bg  →  1 device-scene  →  2 blueprint  →  3 tear-edge  →  4 fragments  →  9000 hero-text
-═══════════════════════════════════════════════ -->
 <section id="main-section">
   <div id="main-viewport">
 
-    <!-- LAYER 0 · Colorful gradient base — sits behind everything, shows through transparent MacBook screen -->
+    <!-- LAYER 0 · Colorful gradient base — always visible behind everything -->
     <div class="colorful-bg"></div>
 
-    <!-- LAYER 1 · Device scene — MacBook at computeInitialScale (screen fills viewport at scroll=0) -->
-    <!-- blueprint-top-layer (z-index:2) covers this during intro; colorful-bg shows through transparent screen -->
-
-    <!-- LAYER 2 · Torn paper edge SVG — diagonal seam -->
+    <!-- LAYER 1 · Torn paper edge SVG -->
     <svg class="paper-tear-edge" viewBox="0 0 1440 900"
          xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
-      <!-- Shadow on the bottom face of the tear -->
       <path d="M1440,0 L1390,20 L1340,7 L1290,24 L1240,8 L1190,22 L1140,6 L1090,26
                L1040,10 L990,25 L940,7 L890,22 L840,8 L790,26 L740,10 L690,24 L640,7
                L590,23 L540,9 L490,27 L440,11 L390,25 L340,7 L290,23 L240,9 L190,26
                L140,8 L90,24 L40,7 L0,20 L0,900 L1440,900 Z"
             fill="rgba(0,0,0,0.22)"/>
-      <!-- Bright jagged edge — the tear seam -->
       <path d="M1440,0 L1390,20 L1340,7 L1290,24 L1240,8 L1190,22 L1140,6 L1090,26
                L1040,10 L990,25 L940,7 L890,22 L840,8 L790,26 L740,10 L690,24 L640,7
                L590,23 L540,9 L490,27 L440,11 L390,25 L340,7 L290,23 L240,9 L190,26
                L140,8 L90,24 L40,7 L0,20"
             fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="3"
             stroke-linecap="round" stroke-linejoin="round"/>
-      <!-- Soft glow behind the seam -->
       <path d="M1440,0 L1390,20 L1340,7 L1290,24 L1240,8 L1190,22 L1140,6 L1090,26
                L1040,10 L990,25 L940,7 L890,22 L840,8 L790,26 L740,10 L690,24 L640,7
                L590,23 L540,9 L490,27 L440,11 L390,25 L340,7 L290,23 L240,9 L190,26
@@ -855,7 +702,7 @@
             stroke-linecap="round" stroke-linejoin="round" opacity="0.12"/>
     </svg>
 
-    <!-- LAYER 3 · Dark Figma blueprint (clip-path rips away on scroll) -->
+    <!-- LAYER 2 · WHITE BLUEPRINT — clip-path tears away on scroll -->
     <div class="blueprint-top-layer">
       <span class="wf-label wf-label-nav">NAVIGATION</span>
       <div class="wf-nav">
@@ -895,75 +742,63 @@
     <div class="intro-frag" id="if3"></div>
     <div class="intro-frag" id="if4"></div>
 
-    <!-- LAYER 5 · Hero text — position:fixed floats above all composited layers -->
+    <!-- LAYER 3 · Hero text — position:fixed floats above all composited layers -->
     <div id="intro-hero-text">
       <p id="intro-eyebrow">Blueprint to Reality</p>
-      <h1 id="intro-headline">not just a website —
-a story.</h1>
+      <h1 id="intro-headline">not just a website —<br>a story.</h1>
       <div id="intro-rule"></div>
       <p id="intro-sub">scroll to watch it come alive</p>
     </div>
 
-    <!-- ─── LAYER 1 · Device scene (inserted here between colorful-bg and blueprint) ─── -->
-
+    <!-- DEVICE SCENE — MacBook + tablet + phone -->
     <div id="device-scene">
       <div id="lateral-wrap">
 
-        <!-- ① TABLET — left, hidden via autoAlpha until State 5 -->
+        <!-- TABLET — left, hidden until reveal -->
         <div id="tablet-device" aria-hidden="true">
           <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <clipPath id="tabClip"><rect x="12" y="20" width="176" height="226" rx="3"/></clipPath>
-              <linearGradient id="tabFade" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="transparent"/>
-                <stop offset="100%" stop-color="rgba(12,15,20,0.85)"/>
-              </linearGradient>
+              <clipPath id="tab2Clip"><rect x="12" y="20" width="176" height="226" rx="3"/></clipPath>
             </defs>
-            <!-- Body -->
             <rect x="2" y="2" width="196" height="266" rx="18" fill="#1e1e22"/>
             <rect x="2" y="2" width="196" height="266" rx="18" fill="none" stroke="#38383c" stroke-width="1.2"/>
             <circle cx="100" cy="258" r="8" fill="#2a2a2e" stroke="#3a3a3e" stroke-width="1"/>
-            <!-- Screen -->
             <rect x="12" y="20" width="176" height="226" rx="3" fill="#FAF7F2"/>
-            <!-- Hero image -->
-            <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80"
-                   x="12" y="66" width="176" height="108" clip-path="url(#tabClip2)" preserveAspectRatio="xMidYMid slice"/>
-            <defs><clipPath id="tabClip2"><rect x="12" y="66" width="176" height="108"/></clipPath></defs>
-            <rect x="12" y="66" width="176" height="108" fill="rgba(12,15,20,0.55)"/>
-            <!-- Nav bar on cream -->
             <rect x="12" y="20" width="176" height="44" fill="#FAF7F2"/>
             <rect x="12" y="63" width="176" height="1" fill="rgba(28,28,30,0.08)"/>
-            <text x="22" y="45" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="#1C1C1E" letter-spacing="-0.5">Your Future</text>
-            <text x="22" y="58" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="#2563EB" letter-spacing="-0.5">Website.</text>
-            <!-- Hero text over image -->
-            <text x="22" y="106" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="white">Crafting Digital</text>
-            <text x="22" y="119" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="white">Luxuries.</text>
-            <rect x="22" y="126" width="48" height="13" rx="6" fill="#2563EB"/>
-            <text x="30" y="135.5" font-family="Archivo,sans-serif" font-size="6" fill="white">View Work</text>
-            <!-- Cards on cream -->
+            <text x="22" y="43" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#1C1C1E" letter-spacing="-0.4">Your Future</text>
+            <text x="22" y="56" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#2563EB" letter-spacing="-0.4">Website.</text>
+            <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=75"
+                   x="12" y="64" width="176" height="110" preserveAspectRatio="xMidYMid slice"/>
+            <rect x="12" y="64" width="176" height="110" fill="rgba(12,15,20,0.58)"/>
+            <text x="22" y="106" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Crafting Digital</text>
+            <text x="22" y="120" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Luxuries.</text>
+            <rect x="22" y="128" width="52" height="14" rx="7" fill="#2563EB"/>
+            <text x="30" y="138" font-family="Archivo,sans-serif" font-size="6" fill="white">View Work</text>
             <rect x="12" y="174" width="176" height="72" fill="#FAF7F2"/>
-            <rect x="14" y="178" width="54" height="64" rx="2" fill="#e8e2d8"/>
+            <text x="18" y="184" font-family="Archivo,sans-serif" font-size="6" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
+            <rect x="14" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
             <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=200&q=70"
-                   x="14" y="178" width="54" height="64" clip-path="url(#tc1)" preserveAspectRatio="xMidYMid slice"/>
-            <defs><clipPath id="tc1"><rect x="14" y="178" width="54" height="64" rx="2"/></clipPath></defs>
-            <rect x="74" y="178" width="54" height="64" rx="2" fill="#e8e2d8"/>
+                   x="14" y="190" width="52" height="50" clip-path="url(#tcc1)" preserveAspectRatio="xMidYMid slice"/>
+            <defs><clipPath id="tcc1"><rect x="14" y="190" width="52" height="50" rx="3"/></clipPath></defs>
+            <rect x="72" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
             <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=200&q=70"
-                   x="74" y="178" width="54" height="64" clip-path="url(#tc2)" preserveAspectRatio="xMidYMid slice"/>
-            <defs><clipPath id="tc2"><rect x="74" y="178" width="54" height="64" rx="2"/></clipPath></defs>
-            <rect x="134" y="178" width="54" height="64" rx="2" fill="#e8e2d8"/>
+                   x="72" y="190" width="52" height="50" clip-path="url(#tcc2)" preserveAspectRatio="xMidYMid slice"/>
+            <defs><clipPath id="tcc2"><rect x="72" y="190" width="52" height="50" rx="3"/></clipPath></defs>
+            <rect x="130" y="190" width="58" height="50" rx="3" fill="#e8e2d8"/>
             <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=200&q=70"
-                   x="134" y="178" width="54" height="64" clip-path="url(#tc3)" preserveAspectRatio="xMidYMid slice"/>
-            <defs><clipPath id="tc3"><rect x="134" y="178" width="54" height="64" rx="2"/></clipPath></defs>
+                   x="130" y="190" width="58" height="50" clip-path="url(#tcc3)" preserveAspectRatio="xMidYMid slice"/>
+            <defs><clipPath id="tcc3"><rect x="130" y="190" width="58" height="50" rx="3"/></clipPath></defs>
           </svg>
         </div>
 
-        <!-- ② MACBOOK — main device -->
+        <!-- MACBOOK — main device -->
         <div id="laptop-wrap">
 
-          <!-- ③ SCREEN CONTENT — transparent so colorful-bg shows through -->
+          <!-- SCREEN CONTENT — transparent so colorful-bg shows through -->
           <div id="laptop-screen-content">
 
-            <!-- Blueprint layer -->
+            <!-- Hidden legacy blueprint SVG (GSAP hides this; the overlay .blueprint-top-layer handles the intro) -->
             <div id="blueprint-layer">
               <svg id="blueprint-svg" viewBox="0 0 820 510"
                    xmlns="http://www.w3.org/2000/svg"
@@ -986,119 +821,38 @@ a story.</h1>
                     <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
                   </filter>
                 </defs>
-
-                <!-- Background + grid -->
                 <rect width="820" height="510" fill="#0C0F14"/>
                 <rect width="820" height="510" fill="url(#dotGrid)"/>
-
-                <!-- Ruler lines -->
                 <line x1="0" y1="20" x2="820" y2="20" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
                 <line x1="20" y1="0" x2="20" y2="510" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
-                <g stroke="rgba(37,99,235,0.25)" stroke-width="0.7">
-                  <line x1="100" y1="16" x2="100" y2="20"/>
-                  <line x1="200" y1="16" x2="200" y2="20"/>
-                  <line x1="300" y1="16" x2="300" y2="20"/>
-                  <line x1="400" y1="16" x2="400" y2="20"/>
-                  <line x1="500" y1="16" x2="500" y2="20"/>
-                  <line x1="600" y1="16" x2="600" y2="20"/>
-                  <line x1="700" y1="16" x2="700" y2="20"/>
-                  <line x1="800" y1="16" x2="800" y2="20"/>
-                </g>
-                <g font-family="'Courier New',monospace" font-size="7" fill="rgba(37,99,235,0.38)" text-anchor="middle">
-                  <text x="100" y="14">100</text>
-                  <text x="200" y="14">200</text>
-                  <text x="400" y="14">400</text>
-                  <text x="600" y="14">600</text>
-                  <text x="800" y="14">800</text>
-                </g>
-                <text x="3" y="17" font-family="'Courier New',monospace" font-size="7" fill="rgba(37,99,235,0.5)">0,0</text>
-
                 <!-- Navigation wireframe -->
                 <rect x="30" y="28" width="760" height="44"
                       fill="rgba(37,99,235,0.05)" stroke="rgba(37,99,235,0.45)"
                       stroke-width="0.8" stroke-dasharray="5,3"/>
                 <rect x="44" y="38" width="70" height="10" rx="2"
                       fill="rgba(37,99,235,0.15)" stroke="rgba(37,99,235,0.4)" stroke-width="0.6"/>
-                <rect x="280" y="40" width="40" height="7" rx="2" fill="rgba(37,99,235,0.1)" stroke="rgba(37,99,235,0.3)" stroke-width="0.5"/>
-                <rect x="330" y="40" width="40" height="7" rx="2" fill="rgba(37,99,235,0.1)" stroke="rgba(37,99,235,0.3)" stroke-width="0.5"/>
-                <rect x="380" y="40" width="40" height="7" rx="2" fill="rgba(37,99,235,0.1)" stroke="rgba(37,99,235,0.3)" stroke-width="0.5"/>
                 <rect x="714" y="37" width="66" height="18" rx="9"
                       fill="rgba(37,99,235,0.22)" stroke="rgba(37,99,235,0.6)" stroke-width="0.8"/>
-                <text x="747" y="49" font-family="'Courier New',monospace" font-size="6.5"
-                      fill="rgba(37,99,235,0.8)" text-anchor="middle">CTA</text>
-                <text x="30" y="24" font-family="'Courier New',monospace" font-size="7.5"
-                      fill="rgba(37,99,235,0.55)" letter-spacing="0.06em">NAVIGATION</text>
-
                 <!-- Hero wireframe -->
                 <rect x="30" y="84" width="760" height="210"
                       fill="rgba(37,99,235,0.04)" stroke="rgba(37,99,235,0.35)"
                       stroke-width="0.8" stroke-dasharray="5,3"/>
-                <text x="30" y="80" font-family="'Courier New',monospace" font-size="7.5"
-                      fill="rgba(37,99,235,0.55)" letter-spacing="0.06em">HERO — FULL BLEED IMAGE + OVERLAY</text>
-                <!-- Hero text block -->
-                <rect x="46" y="102" width="340" height="170"
-                      fill="rgba(37,99,235,0.07)" stroke="rgba(37,99,235,0.30)"
-                      stroke-width="0.7" stroke-dasharray="3,3"/>
-                <rect x="62" y="116" width="90" height="6" rx="1.5" fill="rgba(37,99,235,0.2)"/>
-                <rect x="62" y="130" width="260" height="16" rx="2"
-                      fill="rgba(37,99,235,0.12)" stroke="rgba(37,99,235,0.25)" stroke-width="0.5"/>
-                <rect x="62" y="152" width="200" height="16" rx="2"
-                      fill="rgba(37,99,235,0.12)" stroke="rgba(37,99,235,0.25)" stroke-width="0.5"/>
-                <rect x="62" y="178" width="240" height="5" rx="1" fill="rgba(37,99,235,0.12)"/>
-                <rect x="62" y="188" width="210" height="5" rx="1" fill="rgba(37,99,235,0.12)"/>
-                <rect x="62" y="198" width="190" height="5" rx="1" fill="rgba(37,99,235,0.12)"/>
-                <rect x="62" y="216" width="100" height="22" rx="11"
-                      fill="rgba(37,99,235,0.22)" stroke="rgba(37,99,235,0.6)" stroke-width="0.8"/>
-                <rect x="172" y="216" width="80" height="22" rx="11"
-                      fill="none" stroke="rgba(37,99,235,0.35)" stroke-width="0.8"/>
-                <!-- Hero image box -->
                 <rect x="410" y="102" width="364" height="170"
                       fill="rgba(37,99,235,0.06)" stroke="rgba(37,99,235,0.28)"
                       stroke-width="0.7" stroke-dasharray="3,3"/>
                 <line x1="410" y1="102" x2="774" y2="272" stroke="rgba(37,99,235,0.15)" stroke-width="0.8"/>
                 <line x1="774" y1="102" x2="410" y2="272" stroke="rgba(37,99,235,0.15)" stroke-width="0.8"/>
-                <text x="592" y="192" font-family="'Courier New',monospace" font-size="8"
-                      fill="rgba(37,99,235,0.35)" text-anchor="middle">FEATURED IMAGE</text>
-                <text x="592" y="203" font-family="'Courier New',monospace" font-size="7"
-                      fill="rgba(37,99,235,0.25)" text-anchor="middle">1600 × 900px</text>
-
                 <!-- Cards wireframe -->
-                <text x="30" y="313" font-family="'Courier New',monospace" font-size="7.5"
-                      fill="rgba(37,99,235,0.55)" letter-spacing="0.06em">SELECTED WORK — 3 COLUMNS</text>
                 <rect x="30" y="318" width="232" height="162"
                       fill="rgba(37,99,235,0.04)" stroke="rgba(37,99,235,0.32)"
                       stroke-width="0.8" stroke-dasharray="4,3"/>
-                <rect x="30" y="318" width="232" height="100" fill="rgba(37,99,235,0.07)" stroke="none"/>
-                <line x1="30" y1="318" x2="262" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
-                <line x1="262" y1="318" x2="30" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
-                <rect x="48" y="428" width="120" height="6" rx="1.5" fill="rgba(37,99,235,0.15)"/>
-                <rect x="48" y="440" width="60" height="6" rx="1.5" fill="rgba(37,99,235,0.22)"/>
                 <rect x="294" y="318" width="232" height="162"
                       fill="rgba(37,99,235,0.04)" stroke="rgba(37,99,235,0.32)"
                       stroke-width="0.8" stroke-dasharray="4,3"/>
-                <rect x="294" y="318" width="232" height="100" fill="rgba(37,99,235,0.07)" stroke="none"/>
-                <line x1="294" y1="318" x2="526" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
-                <line x1="526" y1="318" x2="294" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
-                <rect x="312" y="428" width="120" height="6" rx="1.5" fill="rgba(37,99,235,0.15)"/>
-                <rect x="312" y="440" width="60" height="6" rx="1.5" fill="rgba(37,99,235,0.22)"/>
                 <rect x="558" y="318" width="232" height="162"
                       fill="rgba(37,99,235,0.04)" stroke="rgba(37,99,235,0.32)"
                       stroke-width="0.8" stroke-dasharray="4,3"/>
-                <rect x="558" y="318" width="232" height="100" fill="rgba(37,99,235,0.07)" stroke="none"/>
-                <line x1="558" y1="318" x2="790" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
-                <line x1="790" y1="318" x2="558" y2="418" stroke="rgba(37,99,235,0.12)" stroke-width="0.7"/>
-                <rect x="576" y="428" width="120" height="6" rx="1.5" fill="rgba(37,99,235,0.15)"/>
-                <rect x="576" y="440" width="60" height="6" rx="1.5" fill="rgba(37,99,235,0.22)"/>
-
-                <!-- Dimension annotation -->
-                <line x1="30" y1="498" x2="790" y2="498"
-                      stroke="rgba(37,99,235,0.22)" stroke-width="0.7" stroke-dasharray="2,4"/>
-                <line x1="30"  y1="494" x2="30"  y2="502" stroke="rgba(37,99,235,0.35)" stroke-width="0.8"/>
-                <line x1="790" y1="494" x2="790" y2="502" stroke="rgba(37,99,235,0.35)" stroke-width="0.8"/>
-                <text x="410" y="497" font-family="'Courier New',monospace" font-size="6.5"
-                      fill="rgba(37,99,235,0.40)" text-anchor="middle">1440px — FULL WIDTH LAYOUT</text>
-
-                <!-- Animated draw path: glow + crisp -->
+                <!-- Animated draw path -->
                 <path id="draw-path-glow"
                       d="M 68,50 C 120,80 160,160 280,190 C 380,215 460,200 560,248 C 640,285 700,370 752,454"
                       stroke="#2563EB" stroke-width="6" fill="none" opacity="0.35"
@@ -1107,18 +861,12 @@ a story.</h1>
                       d="M 68,50 C 120,80 160,160 280,190 C 380,215 460,200 560,248 C 640,285 700,370 752,454"
                       stroke="#2563EB" stroke-width="1.8" fill="none"
                       filter="url(#lineGlow)" stroke-linecap="round"/>
-
                 <!-- Anchor points -->
                 <circle id="anchor-start" cx="68"  cy="50"  r="5"   fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" opacity="0" filter="url(#dotGlow)"/>
                 <circle id="anchor-mid1"  cx="280" cy="190" r="4.5" fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1"   opacity="0" filter="url(#dotGlow)"/>
                 <circle id="anchor-mid2"  cx="560" cy="248" r="4.5" fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1"   opacity="0" filter="url(#dotGlow)"/>
                 <circle id="anchor-end"   cx="752" cy="454" r="5"   fill="#2563EB" stroke="rgba(255,255,255,0.6)" stroke-width="1.2" opacity="0" filter="url(#dotGlow)"/>
-                <line id="handle-1" x1="68" y1="50" x2="120" y2="80"
-                      stroke="rgba(37,99,235,0.35)" stroke-width="0.8" stroke-dasharray="2,2" opacity="0"/>
-                <line id="handle-2" x1="752" y1="454" x2="700" y2="370"
-                      stroke="rgba(37,99,235,0.35)" stroke-width="0.8" stroke-dasharray="2,2" opacity="0"/>
-
-                <!-- Cursor (pen tool) -->
+                <!-- Cursor -->
                 <g id="cursor-el" opacity="0">
                   <path d="M 0,0 L 0,19 L 5.5,14.5 L 8.5,22 L 11,21 L 8,13.5 L 14.5,13.5 Z"
                         fill="rgba(0,0,0,0.28)" transform="translate(1.5,1.5)"/>
@@ -1128,27 +876,23 @@ a story.</h1>
                   <circle cx="0" cy="0" r="1.8" fill="white" opacity="0.7"/>
                 </g>
               </svg>
-            </div><!-- /blueprint-layer -->
+            </div>
 
-            <!-- Torn paper edge — diagonal seam top-right → bottom-left -->
-            <!-- SVG viewBox matches blueprint: 820 × 510                 -->
+            <!-- Torn paper edge inside screen -->
             <svg id="torn-edge" viewBox="0 0 820 510" xmlns="http://www.w3.org/2000/svg"
                  preserveAspectRatio="none" aria-hidden="true">
-              <!-- Shadow on lower-right face of the tear -->
               <path d="M820,0 L780,22 L740,55 L700,70 L660,105 L620,120
                        L580,155 L540,170 L500,205 L460,220 L420,254
                        L380,269 L340,304 L300,319 L260,354 L220,369
                        L180,404 L140,419 L100,452 L60,468 L20,502 L0,510
                        L820,510 Z"
                     fill="rgba(0,0,0,0.22)"/>
-              <!-- Jagged tear edge — bright highlight -->
               <path d="M820,0 L780,22 L740,55 L700,70 L660,105 L620,120
                        L580,155 L540,170 L500,205 L460,220 L420,254
                        L380,269 L340,304 L300,319 L260,354 L220,369
                        L180,404 L140,419 L100,452 L60,468 L20,502 L0,510"
                     fill="none" stroke="rgba(255,255,255,0.90)" stroke-width="2.5"
                     stroke-linecap="round" stroke-linejoin="round"/>
-              <!-- Soft glow along the edge -->
               <path d="M820,0 L780,22 L740,55 L700,70 L660,105 L620,120
                        L580,155 L540,170 L500,205 L460,220 L420,254
                        L380,269 L340,304 L300,319 L260,354 L220,369
@@ -1157,20 +901,16 @@ a story.</h1>
                     stroke-linecap="round" stroke-linejoin="round" opacity="0.18"/>
             </svg>
 
-            <!-- Blueprint fragments — scatter as the paper tears -->
+            <!-- Blueprint fragments -->
             <div class="bp-frag" id="bp-f1"></div>
             <div class="bp-frag" id="bp-f2"></div>
             <div class="bp-frag" id="bp-f3"></div>
             <div class="bp-frag" id="bp-f4"></div>
 
-            <!-- ─────────────────────────────────────────
-                 FINISHED INNER SITE — "Your Future Website"
-                 Cream · Charcoal · Blue
-            ───────────────────────────────────────── -->
+            <!-- FINISHED INNER SITE -->
             <div id="finished-layer">
               <div class="fin-site">
 
-                <!-- Navigation -->
                 <nav class="fin-nav">
                   <span class="fin-brand">Your Future <span>Website.</span></span>
                   <div class="fin-nav-links">
@@ -1182,7 +922,6 @@ a story.</h1>
                   <button class="fin-nav-cta">Start a project →</button>
                 </nav>
 
-                <!-- Hero -->
                 <div class="fin-hero">
                   <img
                     class="fin-hero-img"
@@ -1201,14 +940,13 @@ a story.</h1>
                   </div>
                 </div>
 
-                <!-- Selected work -->
                 <div class="fin-work">
                   <span class="fin-work-label">Selected Work</span>
                   <div class="fin-cards">
 
                     <div class="fin-card">
                       <div class="fin-card-img">
-                        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=600&q=80" alt="Brand strategy project"/>
+                        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=600&q=80" alt="Brand strategy"/>
                         <span class="fin-card-tag">Brand Strategy</span>
                       </div>
                       <div class="fin-card-footer">
@@ -1223,7 +961,7 @@ a story.</h1>
 
                     <div class="fin-card">
                       <div class="fin-card-img">
-                        <img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=600&q=80" alt="Web design project"/>
+                        <img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=600&q=80" alt="Web design"/>
                         <span class="fin-card-tag">Web Design</span>
                       </div>
                       <div class="fin-card-footer">
@@ -1238,7 +976,7 @@ a story.</h1>
 
                     <div class="fin-card">
                       <div class="fin-card-img">
-                        <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" alt="Motion and film project"/>
+                        <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80" alt="Motion and film"/>
                         <span class="fin-card-tag">Motion &amp; Film</span>
                       </div>
                       <div class="fin-card-footer">
@@ -1255,11 +993,11 @@ a story.</h1>
                 </div>
 
               </div>
-            </div><!-- /finished-layer -->
+            </div>
 
           </div><!-- /laptop-screen-content -->
 
-          <!-- ④ MACBOOK SVG FRAME — screen area (x=90 y=30 w=820 h=510) transparent -->
+          <!-- MACBOOK SVG FRAME -->
           <svg id="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
               <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
@@ -1271,22 +1009,17 @@ a story.</h1>
                 <stop offset="100%" stop-color="#a4a4a4"/>
               </linearGradient>
             </defs>
-            <!-- Lid -->
             <rect x="44" y="4" width="912" height="558" rx="14" fill="url(#lidGrad)"/>
             <rect x="44" y="4" width="912" height="558" rx="14" fill="none" stroke="#9a9a9a" stroke-width="1.2"/>
             <rect x="52" y="10" width="896" height="548" rx="10" fill="#c4c4c4"/>
-            <!-- Bezel (screen area x=90,y=30,w=820,h=510 stays transparent) -->
             <rect x="70" y="18" width="860" height="14" fill="#141416"/>
             <rect x="70" y="18" width="20" height="530" fill="#141416"/>
             <rect x="910" y="18" width="20" height="530" fill="#141416"/>
             <rect x="70" y="544" width="860" height="14" fill="#141416"/>
-            <!-- Camera -->
             <circle cx="500" cy="12" r="4.5" fill="#222"/>
             <circle cx="500" cy="12" r="2"   fill="#0a0a0a" opacity="0.7"/>
-            <!-- Hinge -->
             <rect x="34"  y="558" width="932" height="10" rx="2.5" fill="#868686"/>
             <rect x="44"  y="561" width="912" height="5"  fill="#a8a8a8" opacity="0.4"/>
-            <!-- Base -->
             <path d="M 18,568 Q 18,572 22,574 L 978,574 Q 982,572 982,568 Z" fill="#bcbcbc"/>
             <path d="M 22,574 L 978,574 L 958,620 Q 954,630 920,632 L 80,632 Q 46,630 42,620 Z" fill="url(#baseGrad)" stroke="#9a9a9a" stroke-width="0.8"/>
             <rect x="88"  y="578" width="824" height="38" rx="3" fill="#b0b0b0" opacity="0.4"/>
@@ -1310,54 +1043,7 @@ a story.</h1>
             <path d="M 42,632 Q 42,640 54,642 L 946,642 Q 958,640 958,632 Z" fill="#b8b8b8"/>
           </svg>
 
-          <!-- ⑤ TABLET — positioned relative to laptop-wrap -->
-          <div id="tablet-device" aria-hidden="true">
-            <!-- SVG defined above; duplicated here as an inline reference won't work -->
-            <!-- Full tablet SVG below -->
-            <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <clipPath id="tab2Clip"><rect x="12" y="20" width="176" height="226" rx="3"/></clipPath>
-                <linearGradient id="tab2Fade" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="transparent"/>
-                  <stop offset="100%" stop-color="rgba(12,15,20,0.85)"/>
-                </linearGradient>
-              </defs>
-              <rect x="2" y="2" width="196" height="266" rx="18" fill="#1e1e22"/>
-              <rect x="2" y="2" width="196" height="266" rx="18" fill="none" stroke="#38383c" stroke-width="1.2"/>
-              <circle cx="100" cy="258" r="8" fill="#2a2a2e" stroke="#3a3a3e" stroke-width="1"/>
-              <rect x="12" y="20" width="176" height="226" rx="3" fill="#FAF7F2"/>
-              <!-- Nav on cream -->
-              <rect x="12" y="20" width="176" height="44" fill="#FAF7F2"/>
-              <rect x="12" y="63" width="176" height="1" fill="rgba(28,28,30,0.08)"/>
-              <text x="22" y="43" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#1C1C1E" letter-spacing="-0.4">Your Future</text>
-              <text x="22" y="56" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#2563EB" letter-spacing="-0.4">Website.</text>
-              <!-- Hero image -->
-              <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=75"
-                     x="12" y="64" width="176" height="110" preserveAspectRatio="xMidYMid slice"/>
-              <rect x="12" y="64" width="176" height="110" fill="rgba(12,15,20,0.58)"/>
-              <text x="22" y="106" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Crafting Digital</text>
-              <text x="22" y="120" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Luxuries.</text>
-              <rect x="22" y="128" width="52" height="14" rx="7" fill="#2563EB"/>
-              <text x="30" y="138" font-family="Archivo,sans-serif" font-size="6" fill="white">View Work</text>
-              <!-- Work cards on cream -->
-              <rect x="12" y="174" width="176" height="72" fill="#FAF7F2"/>
-              <text x="18" y="184" font-family="Archivo,sans-serif" font-size="6" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
-              <rect x="14" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
-              <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=200&q=70"
-                     x="14" y="190" width="52" height="50" clip-path="url(#tcc1)" preserveAspectRatio="xMidYMid slice"/>
-              <defs><clipPath id="tcc1"><rect x="14" y="190" width="52" height="50" rx="3"/></clipPath></defs>
-              <rect x="72" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
-              <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=200&q=70"
-                     x="72" y="190" width="52" height="50" clip-path="url(#tcc2)" preserveAspectRatio="xMidYMid slice"/>
-              <defs><clipPath id="tcc2"><rect x="72" y="190" width="52" height="50" rx="3"/></clipPath></defs>
-              <rect x="130" y="190" width="58" height="50" rx="3" fill="#e8e2d8"/>
-              <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=200&q=70"
-                     x="130" y="190" width="58" height="50" clip-path="url(#tcc3)" preserveAspectRatio="xMidYMid slice"/>
-              <defs><clipPath id="tcc3"><rect x="130" y="190" width="58" height="50" rx="3"/></clipPath></defs>
-            </svg>
-          </div>
-
-          <!-- ⑥ PHONE — positioned relative to laptop-wrap -->
+          <!-- PHONE — right of laptop -->
           <div id="phone-device" aria-hidden="true">
             <svg viewBox="0 0 108 218" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -1366,23 +1052,19 @@ a story.</h1>
               <rect x="0" y="0" width="108" height="218" rx="20" fill="#1a1a1e"/>
               <rect x="0" y="0" width="108" height="218" rx="20" fill="none" stroke="#333" stroke-width="1.2"/>
               <rect x="38" y="6" width="32" height="8" rx="4" fill="#111"/>
-              <!-- Screen: cream bg -->
               <rect x="7" y="14" width="94" height="190" rx="8" fill="#FAF7F2"/>
-              <!-- Nav on cream -->
               <rect x="7" y="14" width="94" height="28" fill="#FAF7F2"/>
               <rect x="7" y="41" width="94" height="1" fill="rgba(28,28,30,0.08)"/>
               <text x="14" y="30" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="#1C1C1E">Your Future</text>
               <text x="14" y="40" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="#2563EB">Website.</text>
-              <!-- Hero image -->
               <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=75"
                      x="7" y="42" width="94" height="100" clip-path="url(#ph2Clip)" preserveAspectRatio="xMidYMid slice"/>
               <rect x="7" y="42" width="94" height="100" fill="rgba(12,15,20,0.58)"/>
-              <text x="14" y="80" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Crafting</text>
-              <text x="14" y="92" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Digital</text>
+              <text x="14" y="80"  font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Crafting</text>
+              <text x="14" y="92"  font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Digital</text>
               <text x="14" y="104" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Luxuries.</text>
               <rect x="14" y="112" width="44" height="12" rx="6" fill="#2563EB"/>
               <text x="20" y="121" font-family="Archivo,sans-serif" font-size="5.5" fill="white">View Work</text>
-              <!-- Work on cream -->
               <rect x="7" y="142" width="94" height="62" fill="#FAF7F2"/>
               <text x="13" y="153" font-family="Archivo,sans-serif" font-size="5" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
               <rect x="9"  y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
@@ -1397,45 +1079,37 @@ a story.</h1>
               <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=100&q=70"
                      x="73" y="158" width="28" height="40" clip-path="url(#pcc3)" preserveAspectRatio="xMidYMid slice"/>
               <defs><clipPath id="pcc3"><rect x="73" y="158" width="28" height="40" rx="2"/></clipPath></defs>
-              <!-- Home indicator -->
               <rect x="39" y="206" width="30" height="3" rx="1.5" fill="#333"/>
             </svg>
           </div>
 
         </div><!-- /laptop-wrap -->
-
       </div><!-- /lateral-wrap -->
     </div><!-- /device-scene -->
 
   </div><!-- /main-viewport -->
-</section><!-- /main-section -->
+</section>
 
-<!-- After section -->
 <section id="after-section">
   <h2>Your story, beautifully crafted.</h2>
   <p>From the first wireframe to the final pixel — every element designed with intention, every interaction built for impact. Across every device, every screen, every scroll.</p>
   <a href="contact.html" class="cta-btn">Start your project</a>
 </section>
 
-
 <script>
   gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
   // ── References ──
-  const deviceScene  = document.getElementById('device-scene');
-  const bpLayer      = document.getElementById('blueprint-layer');
-  const finLayer     = document.getElementById('finished-layer');
-  const cursorEl     = document.getElementById('cursor-el');
-  const drawPath     = document.getElementById('draw-path');
-  const drawGlow     = document.getElementById('draw-path-glow');
-  const tabletDev    = document.getElementById('tablet-device');
-  const phoneDev     = document.getElementById('phone-device');
+  const deviceScene = document.getElementById('device-scene');
+  const bpLayer     = document.getElementById('blueprint-layer');
+  const finLayer    = document.getElementById('finished-layer');
+  const drawPath    = document.getElementById('draw-path');
+  const drawGlow    = document.getElementById('draw-path-glow');
+  const tabletDev   = document.getElementById('tablet-device');
+  const phoneDev    = document.getElementById('phone-device');
+  const bpEl        = document.querySelector('.blueprint-top-layer');
 
-  // ════════════════════════════════════════
-  //  INITIAL SCALE
-  //  Makes MacBook screen fill the viewport.
-  //  Screen at 1×: laptopW × 0.82 wide, × 0.51 tall
-  // ════════════════════════════════════════
+  // ── Compute initial scale so MacBook screen fills the viewport ──
   function computeInitialScale() {
     const W = Math.min(960, window.innerWidth * 0.9);
     return Math.max(
@@ -1447,52 +1121,29 @@ a story.</h1>
   let INITIAL_SCALE = computeInitialScale();
   gsap.set(deviceScene, { scale: INITIAL_SCALE, transformOrigin: 'center center' });
 
-  // Side devices: hidden + offset (autoAlpha = opacity + visibility)
+  // Side devices: hidden + offset
   gsap.set(tabletDev, { autoAlpha: 0, x: 40 });
   gsap.set(phoneDev,  { autoAlpha: 0, x: -40 });
 
-  // ════════════════════════════════════════
-  //  PATH LENGTHS for stroke-dashoffset draw
-  // ════════════════════════════════════════
+  // Path lengths for stroke-dashoffset draw animation
   const pathLen     = drawPath.getTotalLength();
   const pathLenGlow = drawGlow.getTotalLength();
-
   gsap.set(drawPath, { attr: { 'stroke-dasharray': pathLen,     'stroke-dashoffset': pathLen     } });
   gsap.set(drawGlow, { attr: { 'stroke-dasharray': pathLenGlow, 'stroke-dashoffset': pathLenGlow } });
 
-  // ════════════════════════════════════════
-  //  HARDWARE ACCELERATION
-  //  Force GPU compositing on every element the timeline touches so the
-  //  browser never drops to a software rasterise path during fast scrolls.
-  // ════════════════════════════════════════
+  // GPU compositing on all animated elements
   gsap.set([deviceScene, '#laptop-wrap', '#laptop-screen-content', bpLayer, finLayer], {
     willChange: 'transform, opacity',
   });
 
-  // ════════════════════════════════════════
-  //  SINGLE UNIFIED TIMELINE  —  450vh, one ScrollTrigger
-  //
-  //  0.00–0.42 : Blueprint paper-tear intro
-  //    0.00–0.06 : blueprint scales forward (tension)
-  //    0.06      : text color-shift as rip begins
-  //    0.06–0.24 : Phase 1 — upper-right tears away
-  //    0.09–0.23 : fragments burst out and fade
-  //    0.22–0.34 : Phase 2 — lower-left flies off screen
-  //    0.35–0.42 : headline fades, zoom starts overlapping
-  //
-  //  0.38–1.00 : MacBook zoom-out (colorful-bg visible through transparent screen)
-  //    0.38–0.88 : scale INITIAL → 1  (expo.inOut, the cinematic main event)
-  //    0.50–0.65 : finished site wipes in left→right
-  //    0.85–0.94 : pull-back to device grid
-  //    0.85      : tablet + phone glide in simultaneously
-  //    0.96–1.00 : gentle float
-  // ════════════════════════════════════════
-  const bpEl = document.querySelector('.blueprint-top-layer');
-
+  // Initial layer states
   gsap.set('.colorful-bg', { opacity: 1, zIndex: 0 });
-  gsap.set(finLayer, { clipPath: 'inset(0 100% 0 0)' }); // finished site hidden at start
-  gsap.set(bpLayer,  { opacity: 0 });                    // small in-screen blueprint: always hidden
+  gsap.set(finLayer, { clipPath: 'inset(0 100% 0 0)' });
+  gsap.set(bpLayer,  { opacity: 0 }); // small in-screen blueprint always hidden
 
+  // ══════════════════════════════════════
+  //  SINGLE UNIFIED TIMELINE — 450vh, one ScrollTrigger
+  // ══════════════════════════════════════
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger:         '#main-section',
@@ -1504,31 +1155,39 @@ a story.</h1>
     },
   });
 
-  // ─── PHASE 1: Blueprint tear (0.00–0.42) ───
+  // ─── PHASE 1: White blueprint tear (0.00 – 0.42) ───
 
-  // Blueprint scales forward (looming tension)
-  tl.to(bpEl, { scale: 1.06, duration: 0.06, ease: 'power2.in', transformOrigin: 'center center' }, 0.00);
+  // Blueprint looms forward — tension before the rip
+  tl.to(bpEl, {
+    scale: 1.06, duration: 0.06, ease: 'power2.in', transformOrigin: 'center center',
+  }, 0.00);
 
-  // Text color-shift as the rip begins
-  tl.to('#intro-headline', { color: '#ff007f', textShadow: '0 4px 20px rgba(0,0,0,0.4)', duration: 0.05, ease: 'power2.out' }, 0.06);
-  tl.to('#intro-eyebrow',  { color: 'rgba(255,255,255,0.8)', duration: 0.05, ease: 'power2.out' }, 0.06);
-  tl.to('#intro-rule',     { backgroundColor: 'rgba(255,255,255,0.6)', duration: 0.05 }, 0.06);
-  tl.to('#intro-sub',      { color: 'rgba(255,255,255,0.65)', duration: 0.05 }, 0.07);
+  // SIMULTANEOUS at 0.06: text flips from #000000 → electric magenta #ff007f
+  // the exact millisecond the white paper starts to tear
+  tl.to('#intro-headline', {
+    color: '#ff007f',
+    textShadow: '0 4px 20px rgba(0,0,0,0.4)',
+    duration: 0.05,
+    ease: 'power2.out',
+  }, 0.06);
+  tl.to('#intro-eyebrow', { color: 'rgba(255,255,255,0.8)', duration: 0.05, ease: 'power2.out' }, 0.06);
+  tl.to('#intro-rule',    { backgroundColor: 'rgba(255,255,255,0.6)', duration: 0.05 }, 0.06);
+  tl.to('#intro-sub',     { color: 'rgba(255,255,255,0.65)', duration: 0.05 }, 0.07);
 
-  // Phase 1: upper-right tears away (clip-path collapses to lower-left triangle)
+  // Phase 1 rip: upper-right corner tears away
   tl.to(bpEl, {
     clipPath: 'polygon(0% 0%, 0% 0%, 100% 100%, 0% 100%)',
     duration: 0.18, ease: 'power3.inOut',
   }, 0.06);
 
-  // Fragments burst outward then fade
+  // Fragments burst outward, then fade
   tl.fromTo('#if1', { autoAlpha: 0 }, { autoAlpha: 1, x: '-28vw', y: '-18vh', rotation: -28, duration: 0.14, ease: 'power2.out' }, 0.09);
   tl.fromTo('#if2', { autoAlpha: 0 }, { autoAlpha: 1, x:  '22vw', y: '-24vh', rotation:  22, duration: 0.12, ease: 'power2.out' }, 0.10);
   tl.fromTo('#if3', { autoAlpha: 0 }, { autoAlpha: 1, x: '-18vw', y:  '20vh', rotation: -16, duration: 0.13, ease: 'power2.out' }, 0.10);
   tl.fromTo('#if4', { autoAlpha: 0 }, { autoAlpha: 1, x:  '26vw', y: '-14vh', rotation:  35, duration: 0.13, ease: 'power2.out' }, 0.09);
   tl.to(['#if1','#if2','#if3','#if4'], { autoAlpha: 0, duration: 0.06 }, 0.23);
 
-  // Phase 2: lower-left remnant collapses and flies off-screen (triple-layer exit)
+  // Phase 2: lower-left remnant collapses and flies off-screen
   tl.to(bpEl, {
     clipPath: 'polygon(0% 0%, 0% 0%, 0% 0%, 0% 0%)',
     xPercent: -110, yPercent: 110, rotation: 8, opacity: 0,
@@ -1536,32 +1195,27 @@ a story.</h1>
   }, 0.22);
   tl.set(bpEl, { display: 'none' }, 0.35);
 
-  // Headline fades just before chassis becomes visible during zoom
+  // Headline fades just before chassis becomes visible
   tl.to('#intro-hero-text', { autoAlpha: 0, duration: 0.07, ease: 'power2.in' }, 0.35);
 
-  // ─── PHASE 2: MacBook zoom-out (0.38–1.00) ───
-  // At 0.38 the device-scene is still at INITIAL_SCALE (screen fills viewport).
-  // The colorful-bg shows through the transparent screen — seamless.
-  // As scale drops toward 1, the MacBook chassis reveals itself around the screen.
-
+  // ─── PHASE 2: MacBook zoom-out (0.38 – 1.00) ───
+  // colorful-bg shows through transparent screen — seamless handoff
   tl.to(deviceScene, { scale: 1, duration: 0.50, ease: 'expo.inOut' }, 0.38);
 
-  // Finished site wipes in during mid-zoom (colorful bg → "Your Future Website")
+  // Finished site wipes in left → right during mid-zoom
   tl.to(finLayer, { clipPath: 'inset(0 0% 0 0)', duration: 0.15, ease: 'power2.inOut' }, 0.50);
 
   // Pull-back to device grid
   tl.to(deviceScene, { scale: 0.80, duration: 0.09, ease: 'power2.inOut' }, 0.85);
 
-  // Tablet + phone arrive simultaneously mid-pull-back
+  // Tablet + phone arrive simultaneously
   tl.fromTo(tabletDev, { autoAlpha: 0, x: 40 },  { autoAlpha: 1, x: 0, duration: 0.09, ease: 'back.out(1.2)' }, 0.85);
   tl.fromTo(phoneDev,  { autoAlpha: 0, x: -40 }, { autoAlpha: 1, x: 0, duration: 0.09, ease: 'back.out(1.2)' }, 0.85);
 
   // Gentle float settles the final composition
   tl.to(deviceScene, { y: -8, duration: 0.04, ease: 'sine.out' }, 0.96);
 
-  // ════════════════════════════════════════
-  //  RESIZE — recompute + refresh
-  // ════════════════════════════════════════
+  // ── Resize handler ──
   let rsz;
   window.addEventListener('resize', () => {
     clearTimeout(rsz);
@@ -1572,9 +1226,7 @@ a story.</h1>
     }, 220);
   });
 
-  // ════════════════════════════════════════
-  //  REDUCED MOTION
-  // ════════════════════════════════════════
+  // ── Reduced motion ──
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     ScrollTrigger.getAll().forEach(st => st.kill());
     gsap.set(deviceScene, { scale: 0.85 });
