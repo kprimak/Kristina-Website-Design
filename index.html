@@ -254,6 +254,14 @@
       letter-spacing: -0.01em;
       max-width: 640px;
     }
+    .about-graphic {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: flex-start;
+    }
+    .about-graphic svg {
+      display: block;
+    }
     @media (max-width: 640px) {
       .about-block {
         grid-template-columns: 1fr;
@@ -561,6 +569,39 @@
       </div>
       <div class="about-body">
         <p class="about-quote">I started this agency after watching two businesses I loved fade away: my grandmother's jewelry shop and a local restaurant where I worked. They didn't fail because their work lacked value — they failed because they lacked a digital voice in a crowded world.</p>
+        <div class="about-graphic">
+          <!-- Jewelry ring + food bowl -->
+          <svg viewBox="0 0 240 80" width="240" height="80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Ring band -->
+            <ellipse cx="44" cy="54" rx="20" ry="7" stroke="#FF007F" stroke-width="1.8"/>
+            <!-- Gem top facets -->
+            <polygon points="44,14 56,34 44,38 32,34" fill="#FF007F" opacity="0.15" stroke="#FF007F" stroke-width="1.5" stroke-linejoin="round"/>
+            <polygon points="44,14 56,34 44,26" fill="#FF007F" opacity="0.4"/>
+            <polygon points="44,14 32,34 44,26" fill="#FF007F" opacity="0.2"/>
+            <!-- Band sides connecting to gem -->
+            <line x1="32" y1="34" x2="24" y2="50" stroke="#FF007F" stroke-width="1.8"/>
+            <line x1="56" y1="34" x2="64" y2="50" stroke="#FF007F" stroke-width="1.8"/>
+            <!-- Inner ring arc -->
+            <path d="M24,50 Q44,62 64,50" stroke="#FF007F" stroke-width="1.8"/>
+
+            <!-- Divider -->
+            <line x1="96" y1="20" x2="96" y2="64" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="3,3"/>
+
+            <!-- Bowl / plate -->
+            <ellipse cx="172" cy="60" rx="34" ry="8" stroke="#000" stroke-width="1.6" opacity="0.15" fill="#000" />
+            <path d="M138,52 Q138,30 172,28 Q206,30 206,52" stroke="#000" stroke-width="1.6" fill="#f7f7f7"/>
+            <ellipse cx="172" cy="52" rx="34" ry="8" stroke="#000" stroke-width="1.6" fill="none"/>
+            <!-- Steam -->
+            <path d="M158,24 Q155,17 158,11" stroke="#000" stroke-width="1.4" stroke-linecap="round" opacity="0.3"/>
+            <path d="M172,22 Q169,14 172,8" stroke="#000" stroke-width="1.4" stroke-linecap="round" opacity="0.3"/>
+            <path d="M186,24 Q183,17 186,11" stroke="#000" stroke-width="1.4" stroke-linecap="round" opacity="0.3"/>
+            <!-- Cutlery -->
+            <line x1="222" y1="26" x2="222" y2="60" stroke="#000" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+            <path d="M218,26 L218,38 Q222,42 226,38 L226,26" stroke="#000" stroke-width="1.3" stroke-linecap="round" opacity="0.5" fill="none"/>
+            <line x1="232" y1="26" x2="232" y2="60" stroke="#000" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+            <path d="M232,26 Q236,30 235,38 L232,40" stroke="#000" stroke-width="1.3" stroke-linecap="round" opacity="0.5" fill="none"/>
+          </svg>
+        </div>
       </div>
     </div>
 
@@ -573,6 +614,50 @@
       </div>
       <div class="about-body">
         <p class="about-text">We design and develop high-impact websites specifically for small and medium-sized businesses. We turn your unique brand story into a seamless digital experience, ensuring you have the professional presence needed to compete and thrive in today's market.</p>
+        <div class="about-graphic">
+          <!-- Small shop + medium shop -->
+          <svg viewBox="0 0 240 80" width="240" height="80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Small business — left -->
+            <rect x="8" y="34" width="46" height="38" stroke="#000" stroke-width="1.6" fill="#fafafa"/>
+            <rect x="8" y="26" width="46" height="12" stroke="#000" stroke-width="1.6" fill="#FF007F" opacity="0.15"/>
+            <!-- Awning scallop -->
+            <path d="M8,38 Q14,32 20,38 Q26,32 32,38 Q38,32 44,38 Q50,32 54,38" stroke="#FF007F" stroke-width="1.4" fill="none"/>
+            <!-- Door -->
+            <rect x="22" y="50" width="14" height="22" stroke="#000" stroke-width="1.4" fill="#fff"/>
+            <circle cx="33" cy="61" r="1.2" fill="#000"/>
+            <!-- Window -->
+            <rect x="10" y="42" width="10" height="8" stroke="#000" stroke-width="1.2" fill="#e8f4ff" opacity="0.8"/>
+            <!-- Sign -->
+            <rect x="14" y="28" width="24" height="6" rx="1" fill="#FF007F" opacity="0.7"/>
+            <!-- Ground line -->
+            <line x1="4" y1="72" x2="60" y2="72" stroke="#000" stroke-width="1" opacity="0.15"/>
+
+            <!-- Divider -->
+            <line x1="96" y1="14" x2="96" y2="72" stroke="#e0e0e0" stroke-width="1" stroke-dasharray="3,3"/>
+
+            <!-- Medium business — right, taller -->
+            <rect x="110" y="18" width="72" height="54" stroke="#000" stroke-width="1.6" fill="#fafafa"/>
+            <!-- Facade lines suggesting floors -->
+            <line x1="110" y1="36" x2="182" y2="36" stroke="#000" stroke-width="1" opacity="0.12"/>
+            <line x1="110" y1="54" x2="182" y2="54" stroke="#000" stroke-width="1" opacity="0.12"/>
+            <!-- Windows row 1 -->
+            <rect x="117" y="22" width="12" height="10" stroke="#000" stroke-width="1.2" fill="#e8f4ff" opacity="0.8"/>
+            <rect x="135" y="22" width="12" height="10" stroke="#000" stroke-width="1.2" fill="#e8f4ff" opacity="0.8"/>
+            <rect x="153" y="22" width="12" height="10" stroke="#000" stroke-width="1.2" fill="#e8f4ff" opacity="0.8"/>
+            <!-- Windows row 2 -->
+            <rect x="117" y="40" width="12" height="10" stroke="#000" stroke-width="1.2" fill="#e8f4ff" opacity="0.8"/>
+            <rect x="153" y="40" width="12" height="10" stroke="#000" stroke-width="1.2" fill="#e8f4ff" opacity="0.8"/>
+            <!-- Door -->
+            <rect x="133" y="56" width="16" height="16" stroke="#000" stroke-width="1.4" fill="#fff"/>
+            <circle cx="146" cy="64" r="1.2" fill="#000"/>
+            <!-- Awning over door -->
+            <path d="M128,56 L141,48 L155,56" stroke="#FF007F" stroke-width="1.5" fill="#FF007F" opacity="0.2"/>
+            <!-- Sign band -->
+            <rect x="110" y="10" width="72" height="10" stroke="#000" stroke-width="1.4" fill="#FF007F" opacity="0.15"/>
+            <!-- Ground line -->
+            <line x1="106" y1="72" x2="186" y2="72" stroke="#000" stroke-width="1" opacity="0.15"/>
+          </svg>
+        </div>
       </div>
     </div>
 
@@ -585,6 +670,30 @@
       </div>
       <div class="about-body">
         <p class="about-text">We are local, and we want local brands to thrive. We provide the personalized, high-touch marketing strategy that large agencies often overlook, giving you the dedicated attention your brand deserves. Let us be the local partner that helps your business get the global attention it deserves.</p>
+        <div class="about-graphic">
+          <!-- Location pin with community radiating lines -->
+          <svg viewBox="0 0 200 80" width="200" height="80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Pin body -->
+            <path d="M80,10 C64,10 52,22 52,36 C52,54 80,72 80,72 C80,72 108,54 108,36 C108,22 96,10 80,10 Z" stroke="#FF007F" stroke-width="1.8" fill="#FF007F" opacity="0.08"/>
+            <path d="M80,10 C64,10 52,22 52,36 C52,54 80,72 80,72 C80,72 108,54 108,36 C108,22 96,10 80,10 Z" stroke="#FF007F" stroke-width="1.8"/>
+            <!-- Pin inner circle -->
+            <circle cx="80" cy="35" r="10" stroke="#FF007F" stroke-width="1.6" fill="#FF007F" opacity="0.2"/>
+            <!-- Heart inside pin -->
+            <path d="M76,33 C76,31 78,29 80,31 C82,29 84,31 84,33 C84,36 80,39 80,39 C80,39 76,36 76,33 Z" fill="#FF007F"/>
+
+            <!-- Radiating arcs — community / local signal -->
+            <path d="M40,20 Q24,36 40,52" stroke="#000" stroke-width="1.2" stroke-linecap="round" opacity="0.18"/>
+            <path d="M32,14 Q10,36 32,58" stroke="#000" stroke-width="1.2" stroke-linecap="round" opacity="0.1"/>
+            <path d="M120,20 Q136,36 120,52" stroke="#000" stroke-width="1.2" stroke-linecap="round" opacity="0.18"/>
+            <path d="M128,14 Q150,36 128,58" stroke="#000" stroke-width="1.2" stroke-linecap="round" opacity="0.1"/>
+
+            <!-- Small dot nodes on arcs — like a network/community -->
+            <circle cx="36" cy="36" r="2.5" fill="#000" opacity="0.2"/>
+            <circle cx="22" cy="36" r="2" fill="#000" opacity="0.12"/>
+            <circle cx="124" cy="36" r="2.5" fill="#000" opacity="0.2"/>
+            <circle cx="138" cy="36" r="2" fill="#000" opacity="0.12"/>
+          </svg>
+        </div>
       </div>
     </div>
 
