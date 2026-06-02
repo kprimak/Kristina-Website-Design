@@ -113,6 +113,14 @@
     }
     .device.phone svg { display: block; width: 100%; height: auto; }
 
+    #white-cover {
+      position: absolute;
+      inset: 0;
+      background: #ffffff;
+      z-index: 5;
+      pointer-events: none;
+    }
+
     #headline-wrap {
       position: absolute;
       inset: 0;
@@ -453,6 +461,8 @@
       </div>
     </div>
 
+    <div id="white-cover"></div>
+
     <div id="headline-wrap">
       <p class="eyebrow">Blueprint to Reality</p>
       <h1 class="headline">not just a website —<br>a story.</h1>
@@ -479,6 +489,7 @@
   var phone        = document.querySelector('.device.phone');
   var laptopScreen = document.querySelector('.laptop-screen');
   var lsCover      = document.querySelector('.ls-cover');
+  var whiteCover   = document.getElementById('white-cover');
 
   function computeInitialScale() {
     var W = Math.min(960, window.innerWidth * 0.9);
@@ -512,8 +523,9 @@
   // Phase 1 — colour: white → magenta
   tl.fromTo(viewport, { backgroundColor: '#ffffff' }, { backgroundColor: '#FF007F', duration: 0.35, ease: 'none' }, 0);
 
-  // Phase 2 — zoom out + headline fade
+  // Phase 2 — zoom out + headline fade + white cover lifts
   tl.to(headlineWrap, { autoAlpha: 0, duration: 0.18, ease: 'power1.in' }, 0.28);
+  tl.to(whiteCover,   { autoAlpha: 0, duration: 0.30, ease: 'power1.in' }, 0.28);
   tl.to(deviceScene,  { scale: 0.82, duration: 0.52, ease: 'expo.inOut' }, 0.30);
 
   // Phase 3 — side devices appear, laptop screen mockup reveals
