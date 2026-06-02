@@ -746,6 +746,10 @@
     if (sweepLocked) return;
     sweepLocked = true;
     var sy = window.scrollY;
+    // Pin the device timeline at its end state before fixing the body,
+    // so ScrollTrigger's scroll-position change doesn't reset it back to the hero.
+    tl.progress(1);
+    tl.scrollTrigger && tl.scrollTrigger.kill();
     document.body.style.position   = 'fixed';
     document.body.style.top        = -sy + 'px';
     document.body.style.left       = '0';
