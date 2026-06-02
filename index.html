@@ -405,9 +405,9 @@
   tl.to(deviceScene,  { scale: 0.82, duration: 0.45, ease: 'expo.inOut' }, 0.25);
 
   // Phase 3 — instant snap-in
-  tl.to(tablet, { autoAlpha: 1, duration: 0.05, ease: 'none' }, 0.75);
-  tl.to(phone,  { autoAlpha: 1, duration: 0.05, ease: 'none' }, 0.75);
-  tl.to(lsFo,   { opacity: 1,   duration: 0.05, ease: 'none' }, 0.75);
+  tl.to(tablet, { autoAlpha: 1, duration: 0.05, ease: 'none' }, 0.50);
+  tl.to(phone,  { autoAlpha: 1, duration: 0.05, ease: 'none' }, 0.50);
+  tl.to(lsFo,   { opacity: 1,   duration: 0.05, ease: 'none' }, 0.50);
 
   window.addEventListener('resize', function () {
     gsap.set(deviceScene, { scale: computeInitialScale() });
