@@ -467,19 +467,20 @@
     immediateRender: true
   });
 
-  gsap.set([tablet, phone], {
-    autoAlpha: 0,
-    immediateRender: true
-  });
+  gsap.set(tablet, { autoAlpha: 0, x: -280, immediateRender: true });
+  gsap.set(phone,  { autoAlpha: 0, x:  280, immediateRender: true });
 
   /* Remove mask after states are locked in */
   gsap.set(mask, { autoAlpha: 0 });
 
   /* ── SCROLL TIMELINE ─────────────────────────────────────────────────
-     Progress 0.00–0.20 : headline fades out
-     Progress 0.00–0.75 : scene zooms from initialScale → 0.82
-                          (chassis emerges, devices come into frame)
-     Progress 0.72–1.00 : tablet and phone fade in                      */
+     Phase 1 — "first scroll"  (0.00–0.48)
+       0.00–0.18 : headline fades out
+       0.00–0.48 : scene zooms from initialScale → 0.82 (laptop revealed)
+
+     Phase 2 — "second scroll" (0.52–1.00)
+       0.52–0.92 : tablet slides in from left + fades in
+       0.52–0.92 : phone  slides in from right + fades in               */
   var tl = gsap.timeline({
     scrollTrigger: {
       trigger:         '#main-section',
@@ -491,29 +492,33 @@
     }
   });
 
+  /* Phase 1 */
   tl.to(headlineWrap, {
     autoAlpha: 0,
-    duration:  0.20,
+    duration:  0.18,
     ease:      'power1.in'
   }, 0);
 
   tl.to(deviceScene, {
     scale:    0.82,
-    duration: 0.75,
+    duration: 0.48,
     ease:     'expo.inOut'
   }, 0);
 
+  /* Phase 2 */
   tl.to(tablet, {
     autoAlpha: 1,
-    duration:  0.28,
-    ease:      'power2.out'
-  }, 0.72);
+    x:         0,
+    duration:  0.40,
+    ease:      'power3.out'
+  }, 0.52);
 
   tl.to(phone, {
     autoAlpha: 1,
-    duration:  0.28,
-    ease:      'power2.out'
-  }, 0.72);
+    x:         0,
+    duration:  0.40,
+    ease:      'power3.out'
+  }, 0.52);
 
   /* ── RESIZE ──────────────────────────────────────────────────────── */
   window.addEventListener('resize', function () {
