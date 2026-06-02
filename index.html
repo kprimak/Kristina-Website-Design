@@ -749,6 +749,9 @@
         wipeCanvas.height = window.innerHeight;
         sweepCtx = wipeCanvas.getContext('2d');
       }
+      // Hide the in-screen brush the instant the fixed one takes over
+      gsap.set(document.querySelector('.ls-brush'), { opacity: 0 });
+
       // Canvas starts transparent — strokes paint over the scene as brush moves
       sweepCtx.clearRect(0, 0, wipeCanvas.width, wipeCanvas.height);
       gsap.set(wipeCanvas, { opacity: 1 });
@@ -793,6 +796,8 @@
       gsap.set(wipeCanvas,  { opacity: 0 });
       gsap.set(brushFixed,  { opacity: 0 });
       if (sweepCtx) { sweepCtx.clearRect(0, 0, wipeCanvas.width, wipeCanvas.height); sweepCtx = null; }
+      // Restore in-screen brush if user scrolls back
+      gsap.set(document.querySelector('.ls-brush'), { opacity: 1 });
     }
   });
 
