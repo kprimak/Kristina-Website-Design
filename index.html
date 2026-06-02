@@ -149,6 +149,20 @@
       color: rgba(0,0,0,0.35);
     }
 
+    /* ── Airplane ── */
+    #airplane {
+      position: fixed;
+      bottom: 12vh;
+      right: 8vw;
+      width: 90px;
+      height: 90px;
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      filter: drop-shadow(0 8px 24px rgba(0,0,0,0.18));
+    }
+    #airplane svg { width: 100%; height: 100%; display: block; }
+
     /* ── About Section ── */
     #about-section {
       background: #ffffff;
@@ -437,6 +451,30 @@
   </div>
 </section>
 
+<!-- Airplane flies in with mock website, then flies off into About section -->
+<div id="airplane" aria-hidden="true">
+  <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+    <!-- jet silhouette, pointing upper-right -->
+    <g transform="rotate(-35, 40, 40)">
+      <!-- fuselage -->
+      <ellipse cx="40" cy="40" rx="28" ry="7" fill="#1C1C1E"/>
+      <!-- nose cone -->
+      <polygon points="68,40 56,34 56,46" fill="#1C1C1E"/>
+      <!-- main wings -->
+      <polygon points="44,40 24,20 20,40 24,60" fill="#1C1C1E"/>
+      <!-- tail fin vertical -->
+      <polygon points="16,40 8,28 12,40" fill="#333"/>
+      <!-- tail wings horizontal -->
+      <polygon points="16,40 6,34 10,40 6,46" fill="#333"/>
+      <!-- engine pods -->
+      <ellipse cx="32" cy="28" rx="7" ry="3" fill="#444" transform="rotate(10,32,28)"/>
+      <ellipse cx="32" cy="52" rx="7" ry="3" fill="#444" transform="rotate(-10,32,52)"/>
+      <!-- window strip -->
+      <rect x="30" y="37" width="20" height="6" rx="3" fill="#FF007F" opacity="0.8"/>
+    </g>
+  </svg>
+</div>
+
 <section id="about-section">
   <div class="about-inner">
 
@@ -502,6 +540,7 @@
   var tabletCover  = document.getElementById('tablet-cover');
   var phoneCover   = document.getElementById('phone-cover');
   var whiteCover   = document.getElementById('white-cover');
+  var airplane     = document.getElementById('airplane');
 
   function computeInitialScale() {
     var W = Math.min(960, window.innerWidth * 0.9);
@@ -545,10 +584,26 @@
   tl.to(tablet, { autoAlpha: 1, duration: 0, ease: 'none' }, 0.50);
   tl.to(phone,  { autoAlpha: 1, duration: 0, ease: 'none' }, 0.50);
 
-  // Phase 3b — all three screens snap to mock website one scroll later (0.65)
+  // Phase 3b — all three screens + airplane snap in (0.65)
   tl.to(tabletCover, { opacity: 0, duration: 0, ease: 'none' }, 0.65);
   tl.to(phoneCover,  { opacity: 0, duration: 0, ease: 'none' }, 0.65);
   tl.to(lsFo,        { opacity: 1, duration: 0, ease: 'none' }, 0.65);
+  tl.to(airplane,    { opacity: 1, duration: 0, ease: 'none' }, 0.65);
+
+  // Airplane flies off when About section enters viewport
+  gsap.to(airplane, {
+    x: '60vw',
+    y: '-60vh',
+    rotation: -20,
+    opacity: 0,
+    duration: 1.2,
+    ease: 'power2.in',
+    scrollTrigger: {
+      trigger: '#about-section',
+      start: 'top 80%',
+      toggleActions: 'play none none reverse'
+    }
+  });
 
   window.addEventListener('resize', function () {
     gsap.set(deviceScene, { scale: computeInitialScale() });
