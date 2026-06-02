@@ -149,6 +149,90 @@
       color: rgba(0,0,0,0.35);
     }
 
+    /* ── About Section ── */
+    #about-section {
+      background: #0a0a0a;
+      padding: 8rem 2rem 7rem;
+    }
+    .about-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .about-header {
+      margin-bottom: 5rem;
+    }
+    .about-kicker {
+      display: block;
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #FF007F;
+      margin-bottom: 2rem;
+    }
+    .about-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      color: #ffffff;
+      line-height: 1.12;
+      letter-spacing: -0.04em;
+    }
+    .about-divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: 0 0 3.5rem;
+    }
+    .about-block {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 2rem;
+      margin-bottom: 3.5rem;
+      align-items: start;
+    }
+    .about-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding-top: 0.2rem;
+    }
+    .about-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: 0.7rem;
+      color: #FF007F;
+      letter-spacing: 0.1em;
+    }
+    .about-label {
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+    .about-quote {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+      color: #ffffff;
+      line-height: 1.55;
+      letter-spacing: -0.02em;
+    }
+    .about-text {
+      font-family: 'Archivo', sans-serif;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.85;
+      max-width: 640px;
+    }
+    @media (max-width: 640px) {
+      .about-block {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
     #after-section {
       background: #0a0a0a;
       text-align: center;
@@ -348,6 +432,53 @@
       <h1 class="headline">Not just a website —<br>a story.</h1>
       <hr class="rule" />
       <p class="sub">scroll to watch it come alive</p>
+    </div>
+
+  </div>
+</section>
+
+<section id="about-section">
+  <div class="about-inner">
+
+    <div class="about-header">
+      <span class="about-kicker">About the Studio</span>
+      <h2 class="about-title">We build digital voices<br>for the businesses<br>that deserve to be heard.</h2>
+    </div>
+
+    <div class="about-divider"></div>
+
+    <div class="about-block">
+      <div class="about-meta">
+        <span class="about-num">01</span>
+        <span class="about-label">Our Why</span>
+      </div>
+      <div class="about-body">
+        <p class="about-quote">"I started this agency after watching two businesses I loved fade away: my grandmother's jewelry shop and a local restaurant where I worked. They didn't fail because their work lacked value — they failed because they lacked a digital voice in a crowded world."</p>
+      </div>
+    </div>
+
+    <div class="about-divider"></div>
+
+    <div class="about-block">
+      <div class="about-meta">
+        <span class="about-num">02</span>
+        <span class="about-label">What We Do</span>
+      </div>
+      <div class="about-body">
+        <p class="about-text">We design and develop high-impact websites specifically for small and medium-sized businesses. We turn your unique brand story into a seamless digital experience, ensuring you have the professional presence needed to compete and thrive in today's market.</p>
+      </div>
+    </div>
+
+    <div class="about-divider"></div>
+
+    <div class="about-block">
+      <div class="about-meta">
+        <span class="about-num">03</span>
+        <span class="about-label">Why Work With Us?</span>
+      </div>
+      <div class="about-body">
+        <p class="about-text">We are local, and we want local brands to thrive. We provide the personalized, high-touch marketing strategy that large agencies often overlook, giving you the dedicated attention your brand deserves. Let us be the local partner that helps your business get the global attention it deserves.</p>
+      </div>
     </div>
 
   </div>
