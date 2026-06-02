@@ -7,100 +7,81 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Archivo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@900&family=Archivo:wght@400&display=swap" rel="stylesheet" />
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
-
-  <!-- CRITICAL: compute INITIAL_SCALE and apply it BEFORE first paint.
-       This prevents the grey-chassis flash that appears when GSAP
-       hasn't run yet and #device-scene has no transform. -->
-  <script>
-    (function () {
-      function calcScale() {
-        var W = Math.min(960, window.innerWidth * 0.9);
-        return Math.max(
-          window.innerWidth  / (W * 0.82),
-          window.innerHeight / (W * 0.51)
-        ) * 1.02;
-      }
-      // Write the scale directly to the element style before render.
-      // Uses DOMContentLoaded fallback if <body> isn't parsed yet.
-      function applyScale() {
-        var el = document.getElementById('device-scene');
-        if (el) {
-          var s = calcScale();
-          el.style.transform       = 'scale(' + s + ')';
-          el.style.transformOrigin = 'center center';
-        }
-      }
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', applyScale);
-      } else {
-        applyScale();
-      }
-    })();
-  </script>
 
   <style>
-    /* ── GLOBAL WHITE-OUT (applied before any other rule) ── */
-    html, body, .laptop-screen, .container, .main-wrapper {
-      background-color: #ffffff !important;
-      background: #ffffff !important;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── HEADLINE: always visible, fixed to viewport center ── */
-    h1, .main-headline {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      color: #000000 !important;
-      position: fixed !important;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 99999 !important;
-      text-align: center;
-      width: max-content;
-      pointer-events: none;
-    }
+    /* White everywhere — no exceptions */
+    html, body { background: #ffffff !important; }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Archivo', sans-serif; overflow-x: hidden; }
 
-    :root {
-      --cream:    #FAF7F2;
-      --charcoal: #1C1C1E;
-      --muted:    #6B6B70;
-      --accent:   #2563EB;
-    }
-
-    html { scroll-behavior: auto; background: #ffffff; }
-    body { background: #ffffff; font-family: 'Archivo', sans-serif; overflow-x: hidden; }
-
-    /* ══════════════════════════════════
-       SCROLL SPACE + STICKY CANVAS
-    ══════════════════════════════════ */
+    /* ── SCROLL SPACE ── */
     #main-section { height: 450vh; }
 
-    /* Pure white — this is the only color seen on page load.
-       No background images. No gradients. No grey fallbacks. */
+    /* ── STICKY CANVAS — white, always ── */
     #main-viewport {
       position: sticky;
       top: 0;
       width: 100%;
       height: 100vh;
       overflow: hidden;
-      background: #ffffff;
+      background: #ffffff !important;
     }
 
-    /* ══════════════════════════════════
-       DEVICE SCENE
-       GSAP scales this entire group as one.
-       At INITIAL_SCALE the laptop screen
-       fills the full viewport — showing only
-       the white canvas and headline.
-    ══════════════════════════════════ */
+    /* ── HEADLINE — lives at viewport level, never inside a transform ──
+       position:fixed is NOT used because a transformed ancestor traps it.
+       Instead the headline sits in #main-viewport (no transform on it)
+       and is centered with flex. GSAP fades it out during zoom-out. */
+    #headline-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 100;
+      pointer-events: none;
+    }
+    #headline-eyebrow {
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #000000;
+      opacity: 0.45;
+      margin-bottom: 1.1rem;
+    }
+    #headline-h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: #000000 !important;
+      line-height: 1.18;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.2rem;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    #headline-rule {
+      width: 40px;
+      height: 1.5px;
+      background: rgba(0,0,0,0.22);
+      margin: 0 auto 1rem;
+    }
+    #headline-sub {
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      color: rgba(0,0,0,0.38);
+    }
+
+    /* ── DEVICE SCENE — GSAP scales this group ── */
     #device-scene {
       position: absolute;
       inset: 0;
@@ -119,10 +100,7 @@
       justify-content: center;
     }
 
-    /* MacBook chassis — SVG viewBox 1000×680
-       Screen area: x=90 y=30 w=820 h=510
-         left 9% · top 4.41% · w 82% · h 75%
-    */
+    /* MacBook chassis */
     #laptop-wrap {
       position: relative;
       width: min(960px, 90vw);
@@ -131,10 +109,9 @@
       filter:
         drop-shadow(0 40px 80px rgba(0,0,0,0.28))
         drop-shadow(0 10px 24px rgba(0,0,0,0.14));
-      will-change: transform;
     }
 
-    /* Screen window — clips all screen content to the bezel */
+    /* Screen window */
     #laptop-screen-content {
       position: absolute;
       left:   9%;
@@ -142,61 +119,11 @@
       width:  82%;
       height: 75%;
       overflow: hidden;
+      background: #ffffff !important;
       z-index: 1;
     }
 
-    /* ─────────────────────────────────
-       WHITE CANVAS
-       Pure white fill. No grid lines at
-       page load — just the headline.
-       The white background IS the scene.
-    ───────────────────────────────── */
-    .white-canvas {
-      position: absolute;
-      inset: 0;
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 5%;
-      z-index: 1;
-    }
-
-    /* Headline — centered in the white screen.
-       At INITIAL_SCALE the screen fills the viewport,
-       so this headline appears perfectly viewport-centered. */
-    #grid-eyebrow {
-      font-family: 'Archivo', sans-serif;
-      font-size: 11px;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: rgba(0, 0, 0, 0.45);
-      margin-bottom: 18px;
-    }
-    #grid-headline {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 900;
-      font-size: 28px;
-      color: #000000;
-      line-height: 1.18;
-      letter-spacing: -0.03em;
-      margin-bottom: 20px;
-    }
-    #grid-rule {
-      width: 40px;
-      height: 1.5px;
-      background: rgba(0, 0, 0, 0.22);
-      margin: 0 auto 18px;
-    }
-    #grid-sub {
-      font-size: 9px;
-      letter-spacing: 0.14em;
-      color: rgba(0, 0, 0, 0.38);
-    }
-
-    /* MacBook SVG frame — above screen layers */
+    /* MacBook SVG frame */
     #laptop-svg {
       position: absolute;
       inset: 0;
@@ -206,11 +133,7 @@
       pointer-events: none;
     }
 
-    /* ══════════════════════════════════
-       SIDE DEVICES
-       Hidden at page load via GSAP.
-       Revealed during zoom-out animation.
-    ══════════════════════════════════ */
+    /* Side devices */
     #tablet-device {
       position: absolute;
       right: calc(100% + 20px);
@@ -218,11 +141,7 @@
       transform: translateY(-50%);
       width: 20%;
       min-width: 110px;
-      filter:
-        drop-shadow(0 20px 40px rgba(0,0,0,0.20))
-        drop-shadow(0 6px 14px rgba(0,0,0,0.12));
-      will-change: transform, opacity;
-      /* GSAP controls visibility — do not set display:none */
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.20));
     }
     #phone-device {
       position: absolute;
@@ -231,18 +150,12 @@
       transform: translateY(-50%);
       width: 9.5%;
       min-width: 58px;
-      filter:
-        drop-shadow(0 20px 40px rgba(0,0,0,0.20))
-        drop-shadow(0 6px 14px rgba(0,0,0,0.12));
-      will-change: transform, opacity;
-      /* GSAP controls visibility — do not set display:none */
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.20));
     }
 
-    /* ══════════════════════════════════
-       AFTER SECTION
-    ══════════════════════════════════ */
+    /* After section */
     #after-section {
-      background: var(--cream);
+      background: #ffffff;
       text-align: center;
       padding: 9rem 2rem 10rem;
     }
@@ -250,21 +163,21 @@
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
       font-size: clamp(2rem, 4vw, 3.8rem);
-      color: var(--charcoal);
+      color: #1C1C1E;
       letter-spacing: -0.04em;
       margin-bottom: 1.4rem;
     }
     #after-section p {
       max-width: 500px;
       margin: 0 auto 2.6rem;
-      color: var(--muted);
+      color: #6B6B70;
       line-height: 1.78;
       font-size: 1.05rem;
     }
     .cta-btn {
       display: inline-block;
-      background: var(--charcoal);
-      color: #fff;
+      background: #1C1C1E;
+      color: #ffffff;
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 600;
       font-size: 0.9rem;
@@ -272,61 +185,19 @@
       padding: 1rem 2.5rem;
       border-radius: 100px;
       text-decoration: none;
-      transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
-    }
-    .cta-btn:hover {
-      background: var(--accent);
-      box-shadow: 0 8px 36px rgba(37, 99, 235, 0.28);
-      transform: translateY(-2px);
-    }
-
-    /* ══════════════════════════════════
-       GLOBAL WHITE-OUT — final authority
-       Runs after all other rules.
-    ══════════════════════════════════ */
-    * {
-      background-color: transparent !important;
-    }
-    html, body, #root, .main-container, .wrapper,
-    #main-viewport, #main-section, .white-canvas {
-      background-color: #ffffff !important;
-    }
-    h1, .main-headline {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      color: #000000 !important;
-      position: fixed !important;
-      z-index: 99999 !important;
     }
   </style>
 </head>
 <body>
 
-<!--
-  LAYER ORDER (back → front at page load)
-  ────────────────────────────────────────
-  #main-viewport  bg:#ffffff          — pure white backdrop
-  #device-scene   scaled by GSAP      — the one group that animates
-    #tablet-device  opacity:0          — hidden, revealed on scroll
-    #laptop-wrap
-      #laptop-screen-content
-        .white-canvas                  — white + headline (fills viewport at INITIAL_SCALE)
-      #laptop-svg                      — aluminium chassis frame
-    #phone-device   opacity:0          — hidden, revealed on scroll
-  ────────────────────────────────────────
-  Initial view: white canvas fills 100vw×100vh, headline centered.
-  On scroll:    #device-scene scales from INITIAL_SCALE → 0.82,
-                chassis appears, then tablet + phone fade in.
--->
-
 <section id="main-section">
   <div id="main-viewport">
 
+    <!-- DEVICE SCENE — scaled by GSAP (z-index 1, behind headline) -->
     <div id="device-scene">
       <div id="lateral-wrap">
 
-        <!-- ── TABLET — left of laptop, hidden until reveal ── -->
+        <!-- TABLET -->
         <div id="tablet-device" aria-hidden="true">
           <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -364,22 +235,9 @@
           </svg>
         </div>
 
-        <!-- ── MACBOOK ── -->
+        <!-- MACBOOK -->
         <div id="laptop-wrap">
-
-          <div id="laptop-screen-content">
-            <!-- Pure white canvas with centered headline.
-                 At INITIAL_SCALE this fills the entire viewport.
-                 This is the ONLY thing visible on page load. -->
-            <div class="white-canvas">
-              <p id="grid-eyebrow">Blueprint to Reality</p>
-              <h1 id="grid-headline">not just a website —<br>a story.</h1>
-              <div id="grid-rule"></div>
-              <p id="grid-sub">scroll to watch it come alive</p>
-            </div>
-          </div>
-
-          <!-- MacBook aluminium chassis — screen area transparent -->
+          <div id="laptop-screen-content"></div>
           <svg id="laptop-svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <defs>
               <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
@@ -425,10 +283,9 @@
             <ellipse cx="898" cy="632" rx="14" ry="5" fill="#747474" opacity="0.7"/>
             <path d="M 42,632 Q 42,640 54,642 L 946,642 Q 958,640 958,632 Z" fill="#b8b8b8"/>
           </svg>
+        </div>
 
-        </div><!-- /laptop-wrap -->
-
-        <!-- ── PHONE — right of laptop, hidden until reveal ── -->
+        <!-- PHONE -->
         <div id="phone-device" aria-hidden="true">
           <svg viewBox="0 0 108 218" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -471,81 +328,78 @@
       </div><!-- /lateral-wrap -->
     </div><!-- /device-scene -->
 
+    <!-- HEADLINE — lives in #main-viewport, NOT inside #device-scene.
+         #main-viewport has NO transform, so z-index and centering work
+         exactly as expected. z-index 100 puts it above #device-scene (z-index 1). -->
+    <div id="headline-wrap">
+      <p id="headline-eyebrow">Blueprint to Reality</p>
+      <h1 id="headline-h1">not just a website —<br>a story.</h1>
+      <div id="headline-rule"></div>
+      <p id="headline-sub">scroll to watch it come alive</p>
+    </div>
+
   </div><!-- /main-viewport -->
 </section>
 
 <section id="after-section">
   <h2>Your story, beautifully crafted.</h2>
-  <p>From the first wireframe to the final pixel — every element designed with intention, every interaction built for impact. Across every device, every screen, every scroll.</p>
+  <p>From the first wireframe to the final pixel — every element designed with intention, every interaction built for impact.</p>
   <a href="contact.html" class="cta-btn">Start your project</a>
 </section>
 
 <script>
-  gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+  gsap.registerPlugin(ScrollTrigger);
 
-  const deviceScene = document.getElementById('device-scene');
-  const tabletDev   = document.getElementById('tablet-device');
-  const phoneDev    = document.getElementById('phone-device');
+  const deviceScene  = document.getElementById('device-scene');
+  const headlineWrap = document.getElementById('headline-wrap');
+  const tabletDev    = document.getElementById('tablet-device');
+  const phoneDev     = document.getElementById('phone-device');
 
-  // ── INITIAL_SCALE ──────────────────────────────────────────────────────
-  // Makes the laptop screen fill 100% of the viewport on page load.
-  // laptop-wrap:  W = min(960, 90vw)
-  // screen width:  W × 0.82
-  // screen height: W × 0.51   (= 680/1000 × 0.75)
+  // ── INITIAL SCALE ──────────────────────────────────────────────────────
+  // Scales #device-scene so the laptop screen fills the full viewport.
+  // laptop-wrap width W = min(960, 90vw)
+  // screen width  = W × 0.82
+  // screen height = W × 0.51  (= 680/1000 × 0.75)
   function computeInitialScale() {
-    const W = Math.min(960, window.innerWidth * 0.9);
+    var W = Math.min(960, window.innerWidth * 0.9);
     return Math.max(
       window.innerWidth  / (W * 0.82),
       window.innerHeight / (W * 0.51)
     ) * 1.02;
   }
 
-  let INITIAL_SCALE = computeInitialScale();
+  var INITIAL_SCALE = computeInitialScale();
 
-  // ── INITIAL STATES ─────────────────────────────────────────────────────
-  // Zoom in so the laptop screen fills the full viewport.
-  // Tablet and phone are invisible — GSAP will reveal them on scroll.
+  // Apply immediately — before GSAP's first tick.
+  // The headline is NOT inside #device-scene so its position
+  // is unaffected by this transform.
   gsap.set(deviceScene, { scale: INITIAL_SCALE, transformOrigin: 'center center' });
   gsap.set(tabletDev,   { autoAlpha: 0 });
   gsap.set(phoneDev,    { autoAlpha: 0 });
 
-  // ── SCROLL ANIMATION ───────────────────────────────────────────────────
-  // Single timeline. Only two things happen:
-  //   1. The entire scene zooms out (chassis appears)
-  //   2. Tablet and phone fade in alongside the laptop
-  const tl = gsap.timeline({
+  // ── SCROLL TIMELINE ────────────────────────────────────────────────────
+  var tl = gsap.timeline({
     scrollTrigger: {
       trigger: '#main-section',
       start:  'top top',
       end:    'bottom bottom',
       scrub:  2,
-      fastScrollEnd:    true,
+      fastScrollEnd:   true,
       preventOverlaps: 'mainTimeline'
     }
   });
 
-  // Phase 1 (progress 0 → 0.75): zoom out — reveals chassis, keyboard, base
-  tl.to(deviceScene, {
-    scale:    0.82,
-    duration: 0.75,
-    ease:     'expo.inOut'
-  }, 0);
+  // Step 1: fade out the headline as the zoom begins
+  tl.to(headlineWrap, { autoAlpha: 0, duration: 0.20, ease: 'power1.in' }, 0);
 
-  // Phase 2 (progress 0.70 → 1.0): side devices appear
-  tl.to(tabletDev, {
-    autoAlpha: 1,
-    duration:  0.30,
-    ease:      'power2.out'
-  }, 0.70);
+  // Step 2: zoom out the device scene — chassis and keyboard emerge
+  tl.to(deviceScene, { scale: 0.82, duration: 0.75, ease: 'expo.inOut' }, 0);
 
-  tl.to(phoneDev, {
-    autoAlpha: 1,
-    duration:  0.30,
-    ease:      'power2.out'
-  }, 0.70);
+  // Step 3: side devices fade in
+  tl.to(tabletDev, { autoAlpha: 1, duration: 0.25, ease: 'power2.out' }, 0.70);
+  tl.to(phoneDev,  { autoAlpha: 1, duration: 0.25, ease: 'power2.out' }, 0.70);
 
-  // ── RESIZE ─────────────────────────────────────────────────────────────
-  window.addEventListener('resize', () => {
+  window.addEventListener('resize', function () {
     INITIAL_SCALE = computeInitialScale();
     ScrollTrigger.refresh();
   });
