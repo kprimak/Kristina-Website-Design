@@ -11,7 +11,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -150,47 +149,36 @@
       color: rgba(0,0,0,0.35);
     }
 
-    /* ── Airplane on laptop screen ── */
+    /* ── Paper airplane ── */
     .ls-plane {
       position: absolute;
-      bottom: 22%;
-      right: 8%;
-      width: 42px;
-      height: 56px;
+      bottom: 18%;
+      right: 10%;
+      width: 36px;
+      height: 46px;
       pointer-events: none;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.25));
+      filter: drop-shadow(0 3px 8px rgba(0,0,0,0.3));
     }
-    /* Fixed copy that animates across viewport */
     #plane-fixed {
       position: fixed;
       left: 50%;
       top: 50%;
       width: 52px;
-      height: 70px;
-      margin: -35px 0 0 -26px;
+      height: 66px;
+      margin: -33px 0 0 -26px;
       z-index: 200;
       opacity: 0;
       pointer-events: none;
-      filter: drop-shadow(0 6px 16px rgba(0,0,0,0.22));
-      transform-origin: 50% 50%;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+      transform-origin: 50% 25%;
     }
-    /* White wipe that expands behind the plane */
-    #plane-wipe {
-      position: fixed;
-      inset: 0;
-      background: #ffffff;
-      z-index: 180;
-      pointer-events: none;
-      clip-path: circle(0% at 50% 50%);
-    }
-    /* Hidden SVG holding the circular flight path */
-    #flight-svg {
+    /* Canvas that paints the white trail behind the plane */
+    #wipe-canvas {
       position: fixed;
       top: 0; left: 0;
-      width: 100%; height: 100%;
-      overflow: visible;
+      width: 100vw; height: 100vh;
+      z-index: 180;
       pointer-events: none;
-      z-index: 0;
       opacity: 0;
     }
 
@@ -385,19 +373,14 @@
                   <div style="position:relative;z-index:2;padding:1.4rem 1.4rem 1rem;height:100%;display:flex;flex-direction:column;justify-content:flex-end;">
                     <h2 style="font-size:1.15rem;font-weight:700;color:#fff;line-height:1.2;margin:0 0 0.65rem;">Crafting Digital<br/>Luxuries.</h2>
                     <button style="align-self:flex-start;background:#2563EB;color:#fff;border:none;border-radius:100px;padding:0.3rem 0.85rem;font-family:'Archivo',sans-serif;font-size:0.5rem;cursor:default;">View Work</button>
-                    <!-- airplane on the screen — the fixed copy animates from this position -->
-                    <svg class="ls-plane" viewBox="0 0 52 70" xmlns="http://www.w3.org/2000/svg">
-                      <ellipse cx="26" cy="36" rx="5" ry="30" fill="#e8eaed"/>
-                      <ellipse cx="25" cy="36" rx="1.5" ry="25" fill="rgba(255,255,255,0.45)"/>
-                      <ellipse cx="26" cy="10" rx="4" ry="6" fill="#d0d3d8"/>
-                      <path d="M26,32 L1,52 L4,57 L26,44 L48,57 L51,52 Z" fill="#dde0e5"/>
-                      <path d="M26,32 L1,52 L4,52 L26,36 L48,52 L51,52 L26,32Z" fill="rgba(0,0,0,0.07)"/>
-                      <ellipse cx="11" cy="50" rx="5" ry="3" fill="#c0c4cc"/>
-                      <ellipse cx="41" cy="50" rx="5" ry="3" fill="#c0c4cc"/>
-                      <path d="M26,59 L17,66 L18,68 L26,62 L34,68 L35,66 Z" fill="#dde0e5"/>
-                      <ellipse cx="26" cy="60" rx="1.8" ry="5" fill="#c8ccd4"/>
-                      <ellipse cx="26" cy="16" rx="2.5" ry="3.5" fill="#5ba4e8" opacity="0.85"/>
-                      <rect x="23.5" y="24" width="5" height="20" rx="2.5" fill="rgba(91,164,232,0.3)"/>
+                    <!-- paper airplane on the screen -->
+                    <svg class="ls-plane" viewBox="0 0 44 56" xmlns="http://www.w3.org/2000/svg">
+                      <polygon points="22,56 0,8 22,18" fill="#f5f5f5"/>
+                      <polygon points="22,56 44,8 22,18" fill="#e0e0e0"/>
+                      <polygon points="22,18 0,8 22,0 44,8" fill="#ececec"/>
+                      <line x1="22" y1="0" x2="22" y2="56" stroke="rgba(0,0,0,0.12)" stroke-width="0.8"/>
+                      <line x1="22" y1="8" x2="0" y2="8" stroke="rgba(0,0,0,0.08)" stroke-width="0.5"/>
+                      <line x1="22" y1="8" x2="44" y2="8" stroke="rgba(0,0,0,0.08)" stroke-width="0.5"/>
                     </svg>
                   </div>
                 </div>
@@ -496,26 +479,19 @@
   </div>
 </section>
 
-<!-- Fixed airplane that animates across the viewport -->
+<!-- Fixed paper airplane that animates down across the viewport -->
 <div id="plane-fixed" aria-hidden="true">
-  <svg viewBox="0 0 52 70" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="26" cy="36" rx="5" ry="30" fill="#e8eaed"/>
-    <ellipse cx="25" cy="36" rx="1.5" ry="25" fill="rgba(255,255,255,0.45)"/>
-    <ellipse cx="26" cy="10" rx="4" ry="6" fill="#d0d3d8"/>
-    <path d="M26,32 L1,52 L4,57 L26,44 L48,57 L51,52 Z" fill="#dde0e5"/>
-    <path d="M26,32 L1,52 L4,52 L26,36 L48,52 L51,52 L26,32Z" fill="rgba(0,0,0,0.07)"/>
-    <ellipse cx="11" cy="50" rx="5" ry="3" fill="#c0c4cc"/>
-    <ellipse cx="41" cy="50" rx="5" ry="3" fill="#c0c4cc"/>
-    <path d="M26,59 L17,66 L18,68 L26,62 L34,68 L35,66 Z" fill="#dde0e5"/>
-    <ellipse cx="26" cy="60" rx="1.8" ry="5" fill="#c8ccd4"/>
-    <ellipse cx="26" cy="16" rx="2.5" ry="3.5" fill="#5ba4e8" opacity="0.85"/>
-    <rect x="23.5" y="24" width="5" height="20" rx="2.5" fill="rgba(91,164,232,0.3)"/>
+  <svg viewBox="0 0 44 56" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="22,56 0,8 22,18" fill="#f5f5f5"/>
+    <polygon points="22,56 44,8 22,18" fill="#e0e0e0"/>
+    <polygon points="22,18 0,8 22,0 44,8" fill="#ececec"/>
+    <line x1="22" y1="0" x2="22" y2="56" stroke="rgba(0,0,0,0.12)" stroke-width="0.8"/>
+    <line x1="22" y1="8" x2="0" y2="8" stroke="rgba(0,0,0,0.08)" stroke-width="0.5"/>
+    <line x1="22" y1="8" x2="44" y2="8" stroke="rgba(0,0,0,0.08)" stroke-width="0.5"/>
   </svg>
 </div>
-<!-- Hidden SVG for the circular MotionPath -->
-<svg id="flight-svg" aria-hidden="true"><circle id="flight-path" cx="0" cy="0" r="0" fill="none"/></svg>
-<!-- White wipe overlay -->
-<div id="plane-wipe" aria-hidden="true"></div>
+<!-- Canvas that paints the white wipe trail behind the plane -->
+<canvas id="wipe-canvas" aria-hidden="true"></canvas>
 
 <section id="about-section">
   <div class="about-inner">
@@ -571,20 +547,19 @@
 </section>
 
 <script>
-  gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+  gsap.registerPlugin(ScrollTrigger);
 
   var viewport     = document.getElementById('main-viewport');
   var deviceScene  = document.getElementById('device-scene');
   var headlineWrap = document.getElementById('headline-wrap');
   var tablet       = document.querySelector('.device.tablet');
   var phone        = document.querySelector('.device.phone');
-  var lsFo        = document.getElementById('ls-fo');
-  var tabletCover = document.getElementById('tablet-cover');
-  var phoneCover  = document.getElementById('phone-cover');
-  var whiteCover  = document.getElementById('white-cover');
-  var planeFixed  = document.getElementById('plane-fixed');
-  var planeWipe   = document.getElementById('plane-wipe');
-  var flightPath  = document.getElementById('flight-path');
+  var lsFo         = document.getElementById('ls-fo');
+  var tabletCover  = document.getElementById('tablet-cover');
+  var phoneCover   = document.getElementById('phone-cover');
+  var whiteCover   = document.getElementById('white-cover');
+  var planeFixed   = document.getElementById('plane-fixed');
+  var wipeCanvas   = document.getElementById('wipe-canvas');
 
   function computeInitialScale() {
     var W = Math.min(960, window.innerWidth * 0.9);
@@ -633,71 +608,74 @@
   tl.to(phoneCover,  { opacity: 0, duration: 0, ease: 'none' }, 0.65);
   tl.to(lsFo,        { opacity: 1, duration: 0, ease: 'none' }, 0.65);
 
-  // ── Airplane circular flight ────────────────────────────────────────────────
-  // Triggered once the main sticky section has fully scrolled through.
-  // The plane appears at viewport center (matching the laptop screen position),
-  // follows a circular MotionPath arc across the whole viewport, and a white
-  // wipe expands behind it — dissolving into the About Us section.
+  // ── Paper airplane dive + canvas wipe ────────────────────────────────────────
+  // When the main sticky section exits the viewport, the paper plane appears at
+  // the laptop screen center, dives down in a left-curving path, and a canvas
+  // paints white behind it each frame — stripping the device scene and magenta
+  // background away to reveal the About Us section underneath.
   var flightPlayed = false;
+  var ctx = null;
+  var tickerFn = null;
+
+  function paintWipe() {
+    if (!ctx) return;
+    var b = planeFixed.getBoundingClientRect();
+    var px = b.left + b.width  * 0.5;
+    var py = b.top  + b.height * 0.25; // paint at the nose tip
+    ctx.beginPath();
+    ctx.arc(px, py, 110, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+  }
 
   ScrollTrigger.create({
-    trigger:  '#main-section',
-    start:    'bottom 85%',
-    onEnter: function() {
+    trigger: '#main-section',
+    start:   'bottom 85%',
+    onEnter: function () {
       if (flightPlayed) return;
       flightPlayed = true;
 
-      // Size the circle to viewport dimensions
-      var vw = window.innerWidth, vh = window.innerHeight;
-      var r  = Math.min(vw * 0.28, vh * 0.30);
-      var cx = vw * 0.50;
-      var cy = vh * 0.50 - r;           // center above screen mid-point
+      // Size canvas to viewport
+      wipeCanvas.width  = window.innerWidth;
+      wipeCanvas.height = window.innerHeight;
+      ctx = wipeCanvas.getContext('2d');
+      gsap.set(wipeCanvas, { opacity: 1 });
 
-      flightPath.setAttribute('cx', cx);
-      flightPath.setAttribute('cy', cy);
-      flightPath.setAttribute('r',  r);
+      // Plane starts at viewport center, nose pointing straight down (rotation 0)
+      gsap.set(planeFixed, { opacity: 1, x: 0, y: 0, rotation: 0 });
 
-      var tFlight = gsap.timeline({ defaults: { ease: 'none' } });
+      // Hook canvas painter to GSAP ticker
+      tickerFn = paintWipe;
+      gsap.ticker.add(tickerFn);
 
-      // Plane snaps visible at viewport center (where the laptop screen is)
-      tFlight.set(planeFixed, { opacity: 1, x: 0, y: 0, rotation: 0 });
-
-      // Full circular arc — start at bottom of circle (3 o'clock + 90° = 6 o'clock)
-      tFlight.to(planeFixed, {
-        duration: 2.8,
-        ease: 'power1.inOut',
-        motionPath: {
-          path:        '#flight-path',
-          align:       '#flight-path',
-          alignOrigin: [0.5, 0.5],
-          autoRotate:  true,
-          start:       0.25,
-          end:         1.25
+      // Dive path: straight down → curve left → continue down → exit bottom-left
+      var tFlight = gsap.timeline({
+        onComplete: function () {
+          gsap.ticker.remove(tickerFn);
+          // Fill any remaining pixels and hold briefly
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, wipeCanvas.width, wipeCanvas.height);
+          // Fade canvas out — About Us section is now in view underneath
+          gsap.to(wipeCanvas, { opacity: 0, duration: 0.7, delay: 0.15,
+            onComplete: function() { ctx = null; }
+          });
         }
       });
 
-      // White wipe starts expanding at 0.8s and covers the screen by 2.8s
-      tFlight.to(planeWipe, {
-        clipPath: 'circle(150% at 50% 50%)',
-        duration: 2.0,
-        ease: 'power2.inOut'
-      }, 0.8);
-
-      // Plane fades just before fully covered
-      tFlight.to(planeFixed, { opacity: 0, duration: 0.4, ease: 'power1.in' }, 2.2);
-
-      // Wipe fades out — reveals About Us section beneath
-      tFlight.to(planeWipe, {
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power1.inOut'
-      }, 3.0);
+      tFlight
+        .to(planeFixed, { y: '14vh', rotation:  5, duration: 0.55, ease: 'power1.in' })
+        .to(planeFixed, { x: '-8vw',  y: '30vh', rotation: 18, duration: 0.55, ease: 'power1.inOut' })
+        .to(planeFixed, { x: '-20vw', y: '50vh', rotation: 28, duration: 0.55, ease: 'none' })
+        .to(planeFixed, { x: '-28vw', y: '72vh', rotation: 20, duration: 0.45, ease: 'none' })
+        .to(planeFixed, { x: '-30vw', y: '100vh', rotation: 10, opacity: 0, duration: 0.45, ease: 'power1.in' });
     },
-    onLeaveBack: function() {
+    onLeaveBack: function () {
       flightPlayed = false;
-      gsap.killTweensOf([planeFixed, planeWipe]);
+      gsap.ticker.remove(tickerFn);
+      gsap.killTweensOf(planeFixed);
+      if (ctx) ctx.clearRect(0, 0, wipeCanvas.width, wipeCanvas.height);
+      gsap.set(wipeCanvas, { opacity: 0 });
       gsap.set(planeFixed, { opacity: 0, x: 0, y: 0, rotation: 0 });
-      gsap.set(planeWipe,  { clipPath: 'circle(0% at 50% 50%)', opacity: 1 });
     }
   });
 
