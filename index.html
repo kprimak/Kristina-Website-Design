@@ -13,22 +13,57 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
 
+  <!-- CRITICAL: compute INITIAL_SCALE and apply it BEFORE first paint.
+       This prevents the grey-chassis flash that appears when GSAP
+       hasn't run yet and #device-scene has no transform. -->
+  <script>
+    (function () {
+      function calcScale() {
+        var W = Math.min(960, window.innerWidth * 0.9);
+        return Math.max(
+          window.innerWidth  / (W * 0.82),
+          window.innerHeight / (W * 0.51)
+        ) * 1.02;
+      }
+      // Write the scale directly to the element style before render.
+      // Uses DOMContentLoaded fallback if <body> isn't parsed yet.
+      function applyScale() {
+        var el = document.getElementById('device-scene');
+        if (el) {
+          var s = calcScale();
+          el.style.transform       = 'scale(' + s + ')';
+          el.style.transformOrigin = 'center center';
+        }
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyScale);
+      } else {
+        applyScale();
+      }
+    })();
+  </script>
+
   <style>
+    /* ── GLOBAL WHITE-OUT (applied before any other rule) ── */
     html, body, .laptop-screen, .container, .main-wrapper {
       background-color: #ffffff !important;
       background: #ffffff !important;
     }
 
-    .main-headline, h1 {
-      display: flex !important;
+    /* ── HEADLINE: always visible, fixed to viewport center ── */
+    h1, .main-headline {
+      display: block !important;
       visibility: visible !important;
       opacity: 1 !important;
       color: #000000 !important;
-      z-index: 99999 !important;
       position: fixed !important;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      z-index: 99999 !important;
+      text-align: center;
+      width: max-content;
+      pointer-events: none;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,7 +75,7 @@
       --accent:   #2563EB;
     }
 
-    html { scroll-behavior: auto; }
+    html { scroll-behavior: auto; background: #ffffff; }
     body { background: #ffffff; font-family: 'Archivo', sans-serif; overflow-x: hidden; }
 
     /* ══════════════════════════════════
@@ -243,6 +278,26 @@
       background: var(--accent);
       box-shadow: 0 8px 36px rgba(37, 99, 235, 0.28);
       transform: translateY(-2px);
+    }
+
+    /* ══════════════════════════════════
+       GLOBAL WHITE-OUT — final authority
+       Runs after all other rules.
+    ══════════════════════════════════ */
+    * {
+      background-color: transparent !important;
+    }
+    html, body, #root, .main-container, .wrapper,
+    #main-viewport, #main-section, .white-canvas {
+      background-color: #ffffff !important;
+    }
+    h1, .main-headline {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      color: #000000 !important;
+      position: fixed !important;
+      z-index: 99999 !important;
     }
   </style>
 </head>
