@@ -155,6 +155,14 @@
       color: rgba(0,0,0,0.35);
     }
 
+    .ls-cover {
+      position: absolute;
+      inset: 0;
+      background: #ffffff;
+      z-index: 10;
+      pointer-events: none;
+    }
+
     /* ── Laptop screen mini-site ── */
     .ls-nav {
       background: #FAF7F2;
@@ -337,6 +345,7 @@
         <!-- LAPTOP -->
         <div class="device laptop">
           <div class="laptop-screen">
+            <div class="ls-cover"></div>
             <div class="ls-nav">
               <span class="ls-brand-top">Your Future</span>
               <span class="ls-brand-blue">Website.</span>
@@ -469,6 +478,7 @@
   var tablet       = document.querySelector('.device.tablet');
   var phone        = document.querySelector('.device.phone');
   var laptopScreen = document.querySelector('.laptop-screen');
+  var lsCover      = document.querySelector('.ls-cover');
 
   function computeInitialScale() {
     var W = Math.min(960, window.innerWidth * 0.9);
@@ -506,9 +516,10 @@
   tl.to(headlineWrap, { autoAlpha: 0, duration: 0.18, ease: 'power1.in' }, 0.28);
   tl.to(deviceScene,  { scale: 0.82, duration: 0.52, ease: 'expo.inOut' }, 0.30);
 
-  // Phase 3 — side devices appear
-  tl.to(tablet, { autoAlpha: 1, duration: 0.20, ease: 'power2.out' }, 0.80);
-  tl.to(phone,  { autoAlpha: 1, duration: 0.20, ease: 'power2.out' }, 0.80);
+  // Phase 3 — side devices appear, laptop screen mockup reveals
+  tl.to(tablet,   { autoAlpha: 1, duration: 0.20, ease: 'power2.out' }, 0.80);
+  tl.to(phone,    { autoAlpha: 1, duration: 0.20, ease: 'power2.out' }, 0.80);
+  tl.to(lsCover,  { autoAlpha: 0, duration: 0.20, ease: 'power1.out' }, 0.80);
 
   window.addEventListener('resize', function () {
     gsap.set(deviceScene, { scale: computeInitialScale() });
