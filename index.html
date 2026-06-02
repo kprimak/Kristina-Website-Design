@@ -680,11 +680,22 @@
   var sweepLocked  = false;
   var sweepDone    = false;
   var sweepVirtual = 0;          // accumulated virtual scroll px
-  var IDLE_BUDGET  = 600;
+  var IDLE_BUDGET  = 300;        // shorter idle (~1 scroll click)
   var PAINT_BUDGET = 1800;
   var TOTAL_BUDGET = IDLE_BUDGET + PAINT_BUDGET;
-  var POP_END      = 0.10;       // fraction of TOTAL at which pop animation ends
-  var IDLE_END     = IDLE_BUDGET / TOTAL_BUDGET;  // ~0.25
+  var POP_END      = 0.10;
+  var IDLE_END     = IDLE_BUDGET / TOTAL_BUDGET;
+
+  // quickTo smoothers — created once brushFixed exists, used instead of gsap.set
+  // so every brush position change interpolates rather than snapping
+  var brushQX, brushQY, brushQR;
+  function getBrushSmoothers() {
+    if (!brushQX) {
+      brushQX = gsap.quickTo(brushFixed, 'x',        { duration: 0.18, ease: 'power2.out' });
+      brushQY = gsap.quickTo(brushFixed, 'y',        { duration: 0.18, ease: 'power2.out' });
+      brushQR = gsap.quickTo(brushFixed, 'rotation', { duration: 0.18, ease: 'power2.out' });
+    }
+  }
 
   var STROKES = [
     { x0: 0.50, y0: 0.35, x1: -0.05, y1: 0.62, rot: -38, color: '#ffffff', edge: 'rgba(255,0,127,0.18)' },
@@ -703,18 +714,15 @@
     // Tip (SVG y=87.5) → 208.8px from TL → 19.8px below origin → 55px at scale 2.8.
     // Origin natural screen position = (vw/2, vh/2 + 11).
     function setBrushAtTip(tx, ty, rot) {
+      getBrushSmoothers();
       var rotRad  = rot * Math.PI / 180;
-      var tipDist = 55; // px from transform-origin to tip at scale 2.8
-      // tip = origin + rotate([0, tipDist], rot)  →  origin = tip - that
+      var tipDist = 55;
       var offX = -tipDist * Math.sin(rotRad);
       var offY =  tipDist * Math.cos(rotRad);
-      gsap.set(brushFixed, {
-        opacity:  1,
-        x:        (tx - offX) - vw * 0.5,
-        y:        (ty - offY) - (vh * 0.5 + 11),
-        rotation: rot,
-        scale:    2.8
-      });
+      brushQX((tx - offX) - vw * 0.5);
+      brushQY((ty - offY) - (vh * 0.5 + 11));
+      brushQR(rot);
+      gsap.set(brushFixed, { opacity: 1, scale: 2.8 });
     }
 
     // Idle phase — tip stays at stroke-1 start, brush wobbles in place
@@ -831,6 +839,7 @@
   }
 
   function resetSweep() {
+    brushQX = brushQY = brushQR = null;
     gsap.killTweensOf(wipeCanvas);
     gsap.killTweensOf(brushFixed);
     gsap.set(wipeCanvas, { opacity: 0 });
