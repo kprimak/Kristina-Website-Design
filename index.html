@@ -1675,20 +1675,20 @@
         var sectionW = carSection.offsetWidth;
         var carW     = 580;
         // Stop with car center at ~88% across — car sits in rightmost quarter
-        var stopX    = sectionW * 0.94 - carW * 0.5;
+        var stopX    = sectionW * 1.01 - carW * 0.5;
 
         var tl = gsap.timeline();
 
-        // 1. Zoom in fast from off-screen left, overshoot slightly, settle at right edge
+        // 1. Cruise in from off-screen left, overshoot slightly, settle at right edge
         tl.to(carWrap, {
           x: stopX + 60,
-          duration: 1.0,
-          ease: 'power3.in'
+          duration: 1.8,
+          ease: 'power2.in'
         })
         // 2. Brake — small bounce back to final stop position
         .to(carWrap, {
           x: stopX,
-          duration: 0.35,
+          duration: 0.5,
           ease: 'power2.out'
         });
 
