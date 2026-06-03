@@ -288,10 +288,11 @@
     }
     #car-road-text {
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
+      top: 0; bottom: 0;
       left: 5%;
       right: 34%;
+      display: flex;
+      align-items: center;
       opacity: 0;
     }
     #car-road-text .road-kicker {
@@ -1724,7 +1725,7 @@
       if (activeTl) { activeTl.kill(); activeTl = null; }
       gsap.set(carWrap,   { x: 0 });
       gsap.set(flybyWrap, { x: 0, opacity: 0.85 });
-      gsap.set(roadText,  { opacity: 0, y: 18 });
+      gsap.set(roadText,  { opacity: 0, y: 0 });
       gsap.set(speedLines, { opacity: 0 });
     }
 
@@ -1738,7 +1739,7 @@
         resetCars();
         var sectionW = carSection.offsetWidth;
         var carW     = 366;
-        var stopX    = sectionW * 1.24 - carW * 0.5;
+        var stopX    = sectionW * 1.32 - carW * 0.5;
         var flybyEnd = sectionW + 500;
 
         activeTl = gsap.timeline();
@@ -1776,15 +1777,11 @@
           }
         );
 
-        // Text rises after main car passes
-        gsap.set(roadText, { y: 18 });
-        gsap.to(roadText, {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          ease: 'power2.out',
-          delay: 2.6
-        });
+        // Text fades in after main car passes
+        gsap.fromTo(roadText,
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', delay: 2.6 }
+        );
 
         // Tail light glow pulse as car brakes
         var tailGlows = carSection.querySelectorAll('[stroke="#FF007F"][stroke-width="3"], [stroke="#FF007F"][stroke-width="2"]');
