@@ -433,12 +433,94 @@
 
     /* ── Quote Section ── */
     #quote-section {
-      background: #fff;
-      padding: 7rem 2rem 8rem;
+      background: #0a0a0a;
+      padding: 7rem 5% 8rem;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 5vw;
     }
     .quote-inner {
-      max-width: 680px;
-      margin: 0 auto;
+      flex: 0 0 auto;
+      width: min(520px, 100%);
+    }
+    .quote-kicker { color: #FF007F; }
+    .quote-title { color: #fff; }
+    .quote-sub { color: rgba(255,255,255,0.45); }
+    .quote-field label { color: rgba(255,255,255,0.7); }
+    .quote-field input,
+    .quote-field textarea {
+      background: #141414;
+      border-color: #2a2a2a;
+      color: #fff;
+    }
+    .quote-field input::placeholder,
+    .quote-field textarea::placeholder { color: rgba(255,255,255,0.2); }
+    .quote-field input:focus,
+    .quote-field textarea:focus {
+      border-color: #FF007F;
+      background: #1a1a1a;
+    }
+    /* ── Runway panel ── */
+    #quote-runway {
+      flex: 1 1 auto;
+      position: relative;
+      min-height: 340px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+    }
+    #jet-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+    }
+    #jet-svg { width: 100%; display: block; overflow: visible; }
+    /* Engine glow elements — hidden by default */
+    .jet-engine-glow {
+      opacity: 0;
+      transition: opacity 0.3s;
+      filter: blur(4px);
+    }
+    /* Heat rings */
+    .jet-heat-ring {
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    /* Contrail */
+    #jet-contrail {
+      position: absolute;
+      top: 50%;
+      right: 100%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #FF007F 40%, #FF007F 70%, transparent 100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+    /* Runway line */
+    .runway-line {
+      position: absolute;
+      bottom: 28%;
+      left: -10%;
+      right: -10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08) 20%, rgba(255,255,255,0.08) 80%, transparent);
+    }
+    .runway-dashes {
+      position: absolute;
+      bottom: calc(28% + 12px);
+      left: 0; right: 0;
+      height: 1px;
+      background: repeating-linear-gradient(90deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 18px, transparent 18px, transparent 34px);
+    }
+    @media (max-width: 860px) {
+      #quote-section { flex-direction: column; }
+      #quote-runway { min-height: 200px; width: 100%; }
     }
     .quote-kicker {
       display: block;
@@ -1625,8 +1707,81 @@
         <label for="q-details">Give us some details</label>
         <textarea id="q-details" name="details" placeholder="Tell us about your business, what you're looking for, your timeline, and any inspiration you have in mind…" required></textarea>
       </div>
-      <button type="submit" class="quote-submit">Send My Quote Request →</button>
+      <button type="submit" class="quote-submit" id="quote-submit-btn">Send My Quote Request →</button>
     </form>
+  </div>
+
+  <!-- ── Runway Panel ── -->
+  <div id="quote-runway">
+    <div class="runway-line"></div>
+    <div class="runway-dashes"></div>
+    <div id="jet-wrap">
+      <div id="jet-contrail"></div>
+      <svg id="jet-svg" viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+        <!-- ── Engine glow (behind plane) ── -->
+        <ellipse class="jet-engine-glow" cx="38" cy="88" rx="18" ry="8" fill="#FF007F"/>
+        <ellipse class="jet-engine-glow" cx="38" cy="112" rx="18" ry="8" fill="#FF007F"/>
+
+        <!-- ── Heat rings (concentric, animate outward on hover) ── -->
+        <circle class="jet-heat-ring" id="hr1" cx="30" cy="100" r="14" fill="none" stroke="#FF007F" stroke-width="1"/>
+        <circle class="jet-heat-ring" id="hr2" cx="30" cy="100" r="22" fill="none" stroke="#FF007F" stroke-width="0.8"/>
+        <circle class="jet-heat-ring" id="hr3" cx="30" cy="100" r="30" fill="none" stroke="#FF007F" stroke-width="0.5"/>
+
+        <!-- ── Fuselage ── -->
+        <path d="M 390,100
+                 L 360,90 L 300,82 L 220,78 L 160,76 L 110,78
+                 L 70,82 L 44,88 L 32,92 L 28,100
+                 L 32,108 L 44,112 L 70,118 L 110,122
+                 L 160,124 L 220,122 L 300,118 L 360,110 Z"
+              fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linejoin="round"/>
+
+        <!-- ── Nose detail line ── -->
+        <line x1="390" y1="100" x2="370" y2="100" stroke="#ffffff" stroke-width="0.6" opacity="0.4"/>
+
+        <!-- ── Cockpit ── -->
+        <ellipse cx="330" cy="100" rx="18" ry="7" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.7"/>
+        <ellipse cx="330" cy="100" rx="10" ry="4" fill="#ffffff" opacity="0.06"/>
+
+        <!-- ── Delta wings ── -->
+        <!-- Right wing (top of SVG) -->
+        <path d="M 220,78 L 160,76 L 80,18 L 60,22 L 100,78"
+              fill="none" stroke="#ffffff" stroke-width="1.3" stroke-linejoin="round"/>
+        <!-- Wing inner structure lines -->
+        <line x1="180" y1="77" x2="105" y2="34" stroke="#ffffff" stroke-width="0.5" opacity="0.3"/>
+        <line x1="140" y1="77" x2="80" y2="38" stroke="#ffffff" stroke-width="0.4" opacity="0.2"/>
+
+        <!-- Left wing (bottom of SVG) -->
+        <path d="M 220,122 L 160,124 L 80,182 L 60,178 L 100,122"
+              fill="none" stroke="#ffffff" stroke-width="1.3" stroke-linejoin="round"/>
+        <!-- Wing inner structure lines -->
+        <line x1="180" y1="123" x2="105" y2="166" stroke="#ffffff" stroke-width="0.5" opacity="0.3"/>
+        <line x1="140" y1="123" x2="80" y2="162" stroke="#ffffff" stroke-width="0.4" opacity="0.2"/>
+
+        <!-- ── Canards (near nose) ── -->
+        <!-- Right canard -->
+        <path d="M 300,82 L 282,58 L 268,78" fill="none" stroke="#ffffff" stroke-width="1.1" stroke-linejoin="round"/>
+        <!-- Left canard -->
+        <path d="M 300,118 L 282,142 L 268,122" fill="none" stroke="#ffffff" stroke-width="1.1" stroke-linejoin="round"/>
+
+        <!-- ── Tail fins ── -->
+        <!-- Dorsal fin suggestion (center) -->
+        <path d="M 80,82 L 58,68 L 44,88" fill="none" stroke="#ffffff" stroke-width="1" stroke-linejoin="round" opacity="0.7"/>
+        <path d="M 80,118 L 58,132 L 44,112" fill="none" stroke="#ffffff" stroke-width="1" stroke-linejoin="round" opacity="0.7"/>
+
+        <!-- ── Engine nozzles ── -->
+        <rect x="26" y="83" width="16" height="10" rx="3" fill="none" stroke="#ffffff" stroke-width="1.1"/>
+        <rect x="26" y="107" width="16" height="10" rx="3" fill="none" stroke="#ffffff" stroke-width="1.1"/>
+        <!-- Nozzle inner rings -->
+        <ellipse cx="34" cy="88" rx="4" ry="3" fill="none" stroke="#ffffff" stroke-width="0.6" opacity="0.5"/>
+        <ellipse cx="34" cy="112" rx="4" ry="3" fill="none" stroke="#ffffff" stroke-width="0.6" opacity="0.5"/>
+
+        <!-- ── Magenta wingtip accent line ── -->
+        <line x1="60" y1="22" x2="80" y2="18" stroke="#FF007F" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- ── Fuselage center spine ── -->
+        <line x1="390" y1="100" x2="28" y2="100" stroke="#ffffff" stroke-width="0.4" opacity="0.15" stroke-dasharray="4 6"/>
+      </svg>
+    </div>
   </div>
 </section>
 
@@ -1795,6 +1950,90 @@
           });
         });
       }
+    });
+  })();
+
+  // ── Jet Takeoff Animation ────────────────────────────────────────
+  (function () {
+    var submitBtn  = document.getElementById('quote-submit-btn');
+    var jetWrap    = document.getElementById('jet-wrap');
+    var contrail   = document.getElementById('jet-contrail');
+    var glows      = document.querySelectorAll('.jet-engine-glow');
+    var heatRings  = [
+      document.getElementById('hr1'),
+      document.getElementById('hr2'),
+      document.getElementById('hr3')
+    ];
+    if (!submitBtn || !jetWrap) return;
+
+    var heatTl = null;
+    var launched = false;
+
+    function startEngines() {
+      if (launched) return;
+      // Glow the engines
+      gsap.to(glows, { opacity: 0.7, duration: 0.35, ease: 'power2.out' });
+      // Pulse heat rings outward repeatedly
+      heatTl = gsap.timeline({ repeat: -1 });
+      heatRings.forEach(function (ring, i) {
+        heatTl.fromTo(ring,
+          { attr: { r: 8 + i * 8 }, opacity: 0.8 },
+          { attr: { r: 20 + i * 14 }, opacity: 0, duration: 0.7, ease: 'power1.out' },
+          i * 0.18
+        );
+      });
+    }
+
+    function stopEngines() {
+      if (launched) return;
+      gsap.to(glows, { opacity: 0, duration: 0.4 });
+      if (heatTl) { heatTl.kill(); heatTl = null; }
+      gsap.set(heatRings, { opacity: 0 });
+    }
+
+    submitBtn.addEventListener('mouseenter', startEngines);
+    submitBtn.addEventListener('mouseleave', stopEngines);
+    submitBtn.addEventListener('focus', startEngines);
+    submitBtn.addEventListener('blur', stopEngines);
+
+    // Takeoff on click — fire before form submit
+    submitBtn.addEventListener('click', function () {
+      if (launched) return;
+      launched = true;
+      if (heatTl) { heatTl.kill(); }
+
+      var runway = document.getElementById('quote-runway');
+      var runwayW = runway ? runway.offsetWidth : window.innerWidth;
+
+      var tl = gsap.timeline();
+
+      // Rev up: glows full bright, rings burst
+      tl.to(glows, { opacity: 1, scale: 1.4, duration: 0.25, ease: 'power3.out', transformOrigin: 'center center' })
+        .to(glows, { opacity: 0, duration: 0.1 }, '+=0.05')
+
+        // Contrail appears as plane launches
+        .set(contrail, { width: 0, opacity: 1 })
+
+        // Plane shoots right
+        .to(jetWrap, {
+          x: runwayW + 500,
+          duration: 0.65,
+          ease: 'power4.in'
+        }, '<')
+
+        // Contrail stretches left behind the plane
+        .to(contrail, {
+          width: runwayW * 0.8,
+          duration: 0.5,
+          ease: 'power2.out'
+        }, '<')
+
+        // Contrail fades out
+        .to(contrail, {
+          opacity: 0,
+          duration: 0.6,
+          ease: 'power1.in'
+        }, '-=0.2');
     });
   })();
 </script>
