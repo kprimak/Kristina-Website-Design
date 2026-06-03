@@ -463,6 +463,109 @@
       }
     }
 
+    /* ── Quote Section ── */
+    #quote-section {
+      background: #fff;
+      padding: 7rem 2rem 8rem;
+    }
+    .quote-inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .quote-kicker {
+      display: block;
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: #FF007F;
+      margin-bottom: 1rem;
+    }
+    .quote-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: #0a0a0a;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin: 0 0 0.75rem;
+    }
+    .quote-sub {
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(0,0,0,0.5);
+      margin: 0 0 3rem;
+      line-height: 1.6;
+    }
+    .quote-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .quote-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+    .quote-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .quote-field label {
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #0a0a0a;
+    }
+    .quote-field input,
+    .quote-field textarea {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      color: #0a0a0a;
+      background: #fafafa;
+      border: 1.5px solid #e4e4e4;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: none;
+    }
+    .quote-field input:focus,
+    .quote-field textarea:focus {
+      border-color: #FF007F;
+      background: #fff;
+    }
+    .quote-field textarea {
+      min-height: 130px;
+    }
+    .quote-submit {
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      background: #FF007F;
+      border: none;
+      border-radius: 6px;
+      padding: 1rem 2.5rem;
+      cursor: pointer;
+      align-self: flex-start;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .quote-submit:hover {
+      background: #e0006e;
+      transform: translateY(-1px);
+    }
+    .quote-divider {
+      width: 32px;
+      height: 2px;
+      background: #FF007F;
+      margin-bottom: 2.5rem;
+    }
     #after-section {
       background: #0a0a0a;
       text-align: center;
@@ -1589,6 +1692,45 @@
 
 <!-- Brush sweep trigger — placed after About Us so the animation follows that section -->
 <div id="sweep-wrap" style="height:2px;"></div>
+
+<!-- ── Quote Section ───────────────────────────────────────────── -->
+<section id="quote-section">
+  <div class="quote-inner">
+    <span class="quote-kicker">Free Consultation</span>
+    <h2 class="quote-title">Get your free<br>personalized quote today.</h2>
+    <p class="quote-sub">Tell us about your project and we'll get back to you within 24 hours with a tailored proposal.</p>
+    <div class="quote-divider"></div>
+    <form class="quote-form" action="https://formspree.io/f/xpzgkwqr" method="POST">
+      <input type="hidden" name="_replyto" value="kr.primak@gmail.com"/>
+      <input type="hidden" name="_subject" value="New Quote Request — Kristina Website Design"/>
+      <div class="quote-row">
+        <div class="quote-field">
+          <label for="q-first">First Name</label>
+          <input type="text" id="q-first" name="first_name" placeholder="Jane" required/>
+        </div>
+        <div class="quote-field">
+          <label for="q-last">Last Name</label>
+          <input type="text" id="q-last" name="last_name" placeholder="Smith" required/>
+        </div>
+      </div>
+      <div class="quote-row">
+        <div class="quote-field">
+          <label for="q-email">Email</label>
+          <input type="email" id="q-email" name="email" placeholder="jane@example.com" required/>
+        </div>
+        <div class="quote-field">
+          <label for="q-phone">Phone Number</label>
+          <input type="tel" id="q-phone" name="phone" placeholder="+1 (555) 000-0000"/>
+        </div>
+      </div>
+      <div class="quote-field">
+        <label for="q-details">Give us some details</label>
+        <textarea id="q-details" name="details" placeholder="Tell us about your business, what you're looking for, your timeline, and any inspiration you have in mind…" required></textarea>
+      </div>
+      <button type="submit" class="quote-submit">Send My Quote Request →</button>
+    </form>
+  </div>
+</section>
 
 <section id="after-section">
   <h2>Your story, beautifully crafted.</h2>
