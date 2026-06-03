@@ -316,7 +316,7 @@
       top: 50%;
       transform: translateY(-50%);
       left: -720px;
-      width: 430px;
+      width: 366px;
     }
     #car-road-text {
       position: absolute;
@@ -1711,28 +1711,38 @@
       flybyWrap.appendChild(mainSvg.cloneNode(true));
     }
 
-    gsap.set(carWrap, { x: 0 });
-    gsap.set(flybyWrap, { x: 0 });
+    var activeTl = null;
+
+    function resetCars() {
+      if (activeTl) { activeTl.kill(); activeTl = null; }
+      gsap.set(carWrap,   { x: 0 });
+      gsap.set(flybyWrap, { x: 0, opacity: 0.85 });
+      gsap.set(roadText,  { opacity: 0, y: 18 });
+      gsap.set(speedLines, { opacity: 0 });
+    }
+
+    resetCars();
 
     ScrollTrigger.create({
       trigger: carSection,
       start: 'top 80%',
-      once: true,
+      onLeaveBack: resetCars,
       onEnter: function () {
+        resetCars();
         var sectionW = carSection.offsetWidth;
-        var carW     = 430;
+        var carW     = 366;
         var stopX    = sectionW * 1.24 - carW * 0.5;
-        var flybyEnd = sectionW + 500; // fully off-screen right
+        var flybyEnd = sectionW + 500;
 
-        var tl = gsap.timeline();
+        activeTl = gsap.timeline();
 
         // Phase 1: flyby car races across and disappears
-        tl.to(flybyWrap, {
+        activeTl.to(flybyWrap, {
           x: flybyEnd,
-          duration: 0.75,
+          duration: 0.55,
           ease: 'power3.in'
         })
-        .to(flybyWrap, { opacity: 0, duration: 0.15, ease: 'none' }, '-=0.15')
+        .to(flybyWrap, { opacity: 0, duration: 0.12, ease: 'none' }, '-=0.12')
 
         // Phase 2: brief pause, then main car enters
         .add(function () {}, '+=0.15')
