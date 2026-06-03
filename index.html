@@ -266,7 +266,7 @@
     #car-zoom-section {
       background: #050505;
       overflow: hidden;
-      height: 200px;
+      height: 240px;
       position: relative;
       display: flex;
       align-items: center;
@@ -275,6 +275,19 @@
       position: absolute;
       inset: 0;
       background: radial-gradient(ellipse 80% 60% at 50% 50%, #0e0e0e 0%, #050505 100%);
+    }
+    /* White road edge strips — top and bottom */
+    #car-zoom-section .road-stripe-top {
+      position: absolute;
+      top: 8px; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 8%, rgba(255,255,255,0.55) 92%, transparent 100%);
+    }
+    #car-zoom-section .road-stripe-bottom {
+      position: absolute;
+      bottom: 8px; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 8%, rgba(255,255,255,0.55) 92%, transparent 100%);
     }
     #car-zoom-section .track-line {
       position: absolute;
@@ -863,6 +876,8 @@
 <!-- ── Car Zoom Section ──────────────────────────────────────────── -->
 <section id="car-zoom-section">
   <div class="track-surface"></div>
+  <div class="road-stripe-top"></div>
+  <div class="road-stripe-bottom"></div>
   <div class="track-line"></div>
   <div class="track-line-2"></div>
   <!-- Text that appears after car passes -->
