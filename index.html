@@ -303,6 +303,14 @@
       transform: translateY(-90px);
       background: linear-gradient(90deg, transparent 0%, #FF007F33 20%, #FF007F33 80%, transparent 100%);
     }
+    #car-flyby-wrap {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: -500px;
+      width: 340px;
+      opacity: 0.85;
+    }
     #car-svg-wrap {
       position: absolute;
       top: 50%;
@@ -892,6 +900,8 @@
   <div class="road-stripe-bottom"></div>
   <div class="track-line"></div>
   <div class="track-line-2"></div>
+  <!-- Flyby car (races across and exits) -->
+  <div id="car-flyby-wrap"></div>
   <!-- Text that appears after car passes -->
   <div id="car-road-text">
     <h2 class="road-headline">Built for where you are.<br>Designed for where you're going.</h2>
@@ -1690,11 +1700,19 @@
   // ── Car Zoom Animation ──────────────────────────────────────────
   (function () {
     var carWrap    = document.getElementById('car-svg-wrap');
+    var flybyWrap  = document.getElementById('car-flyby-wrap');
     var carSection = document.getElementById('car-zoom-section');
     var roadText   = document.getElementById('car-road-text');
     var speedLines = carSection.querySelector('#speed-lines');
 
+    // Clone the main car SVG into the flyby wrapper
+    var mainSvg = carWrap.querySelector('svg');
+    if (mainSvg && flybyWrap) {
+      flybyWrap.appendChild(mainSvg.cloneNode(true));
+    }
+
     gsap.set(carWrap, { x: 0 });
+    gsap.set(flybyWrap, { x: 0 });
 
     ScrollTrigger.create({
       trigger: carSection,
@@ -1703,43 +1721,52 @@
       onEnter: function () {
         var sectionW = carSection.offsetWidth;
         var carW     = 430;
-        // Stop with car center at ~88% across — car sits in rightmost quarter
         var stopX    = sectionW * 1.24 - carW * 0.5;
+        var flybyEnd = sectionW + 500; // fully off-screen right
 
         var tl = gsap.timeline();
 
-        // 1. Cruise in from off-screen left, overshoot slightly, settle at right edge
-        tl.to(carWrap, {
+        // Phase 1: flyby car races across and disappears
+        tl.to(flybyWrap, {
+          x: flybyEnd,
+          duration: 0.75,
+          ease: 'power3.in'
+        })
+        .to(flybyWrap, { opacity: 0, duration: 0.15, ease: 'none' }, '-=0.15')
+
+        // Phase 2: brief pause, then main car enters
+        .add(function () {}, '+=0.15')
+
+        // 3. Main car zooms in, overshoots, brakes
+        .to(carWrap, {
           x: stopX + 60,
           duration: 1.4,
           ease: 'power2.in'
         })
-        // 2. Brake — small bounce back to final stop position
         .to(carWrap, {
           x: stopX,
           duration: 0.5,
           ease: 'power2.out'
         });
 
-        // Speed lines: fade in during zoom, fade out as car brakes
+        // Speed lines during flyby
         gsap.fromTo(speedLines,
           { opacity: 0 },
-          { opacity: 0.5, duration: 0.5, ease: 'power1.out',
+          { opacity: 0.6, duration: 0.4, ease: 'power1.out',
             onComplete: function () {
-              gsap.to(speedLines, { opacity: 0, duration: 0.4 });
+              gsap.to(speedLines, { opacity: 0, duration: 0.3 });
             }
           }
         );
 
-        // Text rises up after car passes the left half of screen
-        // Car takes ~0.6s to cross center, then text appears
+        // Text rises after main car passes
         gsap.set(roadText, { y: 18 });
         gsap.to(roadText, {
           opacity: 1,
           y: 0,
           duration: 0.9,
           ease: 'power2.out',
-          delay: 1.5
+          delay: 2.6
         });
 
         // Tail light glow pulse as car brakes
