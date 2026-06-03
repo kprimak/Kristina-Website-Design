@@ -262,6 +262,32 @@
     .about-graphic svg {
       display: block;
     }
+    /* ── Car Zoom Section ── */
+    #car-zoom-section {
+      background: #000;
+      overflow: hidden;
+      height: 220px;
+      position: relative;
+    }
+    #car-zoom-section .road-line {
+      position: absolute;
+      bottom: 44px;
+      left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #FF007F44 20%, #FF007F44 80%, transparent 100%);
+    }
+    #car-zoom-section .road-glow {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 60px;
+      background: linear-gradient(to top, #FF007F0a 0%, transparent 100%);
+    }
+    #car-svg-wrap {
+      position: absolute;
+      bottom: 38px;
+      left: -680px;
+      width: 600px;
+    }
     /* ── Prices Section ── */
     #prices-section {
       background: #fff;
@@ -799,6 +825,207 @@
   </div>
 </section>
 
+<!-- ── Car Zoom Section ──────────────────────────────────────────── -->
+<section id="car-zoom-section">
+  <div class="road-glow"></div>
+  <div class="road-line"></div>
+  <!-- Ferrari-style supercar SVG -->
+  <div id="car-svg-wrap">
+    <svg viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+      <defs>
+        <radialGradient id="wheelGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#2a2a2a"/>
+          <stop offset="60%" stop-color="#111"/>
+          <stop offset="100%" stop-color="#000"/>
+        </radialGradient>
+        <radialGradient id="rimGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#555"/>
+          <stop offset="40%" stop-color="#333"/>
+          <stop offset="100%" stop-color="#1a1a1a"/>
+        </radialGradient>
+        <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#2a2a2a"/>
+          <stop offset="40%" stop-color="#111"/>
+          <stop offset="100%" stop-color="#000"/>
+        </linearGradient>
+        <linearGradient id="roofGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#333"/>
+          <stop offset="100%" stop-color="#0a0a0a"/>
+        </linearGradient>
+        <linearGradient id="windGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1a2a3a" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#0d1a2a" stop-opacity="0.7"/>
+        </linearGradient>
+        <filter id="carGlow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="exhaustSmoke" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="4"/>
+        </filter>
+        <linearGradient id="magentaAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#FF007F"/>
+          <stop offset="100%" stop-color="#cc0066"/>
+        </linearGradient>
+        <linearGradient id="headlightGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#FF007F" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#FF007F" stop-opacity="0.6"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Motion blur / speed lines behind car -->
+      <g id="speed-lines" opacity="0.35">
+        <line x1="0" y1="70" x2="80" y2="70" stroke="#FF007F" stroke-width="1.2" opacity="0.7"/>
+        <line x1="0" y1="82" x2="60" y2="82" stroke="#FF007F" stroke-width="0.7" opacity="0.5"/>
+        <line x1="0" y1="90" x2="90" y2="90" stroke="#fff" stroke-width="0.5" opacity="0.3"/>
+        <line x1="0" y1="100" x2="50" y2="100" stroke="#FF007F" stroke-width="0.6" opacity="0.4"/>
+        <line x1="0" y1="110" x2="70" y2="110" stroke="#fff" stroke-width="0.4" opacity="0.25"/>
+        <line x1="0" y1="55" x2="40" y2="55" stroke="#FF007F" stroke-width="0.5" opacity="0.3"/>
+      </g>
+
+      <!-- Exhaust heat shimmer -->
+      <ellipse cx="58" cy="122" rx="18" ry="5" fill="#FF007F" opacity="0.08" filter="url(#exhaustSmoke)"/>
+      <ellipse cx="40" cy="120" rx="12" ry="4" fill="#888" opacity="0.12" filter="url(#exhaustSmoke)"/>
+
+      <!-- === BODY === -->
+      <!-- Main body sill / floor -->
+      <path d="M100,128 L520,128 L530,120 L90,120 Z" fill="url(#bodyGrad)"/>
+      <!-- Side skirt magenta accent strip -->
+      <path d="M105,124 L515,124 L522,120 L98,120 Z" fill="url(#magentaAccent)" opacity="0.85"/>
+
+      <!-- Rear diffuser / tail -->
+      <path d="M80,118 C72,115 65,110 60,105 L68,104 C74,108 80,112 88,115 Z" fill="#111"/>
+      <path d="M60,105 L68,104 L70,110 L62,111 Z" fill="#FF007F" opacity="0.6"/>
+
+      <!-- Main body shape — low slung supercar profile -->
+      <path d="M100,120
+               L88,118 C78,115 68,108 64,98
+               L70,75 C75,60 95,50 118,46
+               L175,40 C210,36 240,34 268,34
+               L330,33 C360,33 390,35 410,38
+               L455,43 C480,47 505,55 520,65
+               L535,78 L540,95 L538,112 L528,120 Z"
+            fill="url(#bodyGrad)" stroke="#222" stroke-width="0.5"/>
+
+      <!-- Body highlight crease -->
+      <path d="M118,82 C160,72 240,68 330,69 L440,74 L510,82"
+            fill="none" stroke="#2a2a2a" stroke-width="1.5" opacity="0.9"/>
+      <path d="M120,80 C162,70 242,66 332,67 L442,72 L512,80"
+            fill="none" stroke="#444" stroke-width="0.6" opacity="0.6"/>
+
+      <!-- Roof / cabin -->
+      <path d="M190,68 C210,52 250,40 290,37
+               L370,36 C405,36 435,42 455,52
+               L475,68 Z"
+            fill="url(#roofGrad)" stroke="#333" stroke-width="0.5"/>
+
+      <!-- Windscreen -->
+      <path d="M215,67 C228,53 258,42 295,39
+               L370,38 C400,38 428,45 448,56
+               L468,67 Z"
+            fill="url(#windGrad)" stroke="#1a3a5a" stroke-width="0.8" opacity="0.9"/>
+      <!-- Windscreen glare -->
+      <path d="M230,65 C242,53 268,44 300,41 L350,40 L260,66 Z"
+            fill="#fff" opacity="0.04"/>
+
+      <!-- A-pillar / B-pillar -->
+      <line x1="215" y1="67" x2="190" y2="68" stroke="#333" stroke-width="1.5"/>
+      <line x1="468" y1="67" x2="475" y2="68" stroke="#333" stroke-width="1.5"/>
+      <line x1="340" y1="37" x2="340" y2="68" stroke="#222" stroke-width="2"/>
+
+      <!-- Door handle magenta accent -->
+      <rect x="320" y="90" width="40" height="4" rx="2" fill="#FF007F" opacity="0.9"/>
+      <rect x="220" y="90" width="35" height="4" rx="2" fill="#FF007F" opacity="0.7"/>
+
+      <!-- Hood / bonnet vents -->
+      <rect x="420" y="58" width="30" height="4" rx="1" fill="#FF007F" opacity="0.5"/>
+      <rect x="420" y="65" width="25" height="3" rx="1" fill="#FF007F" opacity="0.35"/>
+      <rect x="420" y="71" width="20" height="2.5" rx="1" fill="#FF007F" opacity="0.25"/>
+
+      <!-- Front splitter -->
+      <path d="M522,110 L545,108 L548,115 L528,118 Z" fill="#111" stroke="#FF007F" stroke-width="0.8" opacity="0.8"/>
+      <path d="M535,109 L548,108 L549,112 L536,113 Z" fill="#FF007F" opacity="0.4"/>
+
+      <!-- Rear wing / spoiler -->
+      <rect x="78" y="68" width="55" height="5" rx="2" fill="#0a0a0a" stroke="#FF007F" stroke-width="0.8"/>
+      <rect x="95" y="60" width="4" height="12" rx="1" fill="#1a1a1a"/>
+      <rect x="113" y="60" width="4" height="12" rx="1" fill="#1a1a1a"/>
+      <!-- Wing magenta underside -->
+      <rect x="78" y="71" width="55" height="2" rx="1" fill="#FF007F" opacity="0.6"/>
+
+      <!-- Headlight (front, right side of SVG = front of car) -->
+      <path d="M524,72 L544,78 L544,92 L524,96 Z" fill="#0d1a0d" stroke="#FF007F" stroke-width="0.8" opacity="0.8"/>
+      <path d="M526,74 L542,79 L542,90 L526,94 Z" fill="#111820" opacity="0.9"/>
+      <!-- DRL strip -->
+      <path d="M527,76 L541,80" stroke="#FF007F" stroke-width="2.5" stroke-linecap="round" opacity="0.95" filter="url(#carGlow)"/>
+      <path d="M527,80 L541,84" stroke="#FF007F" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+      <!-- Headlight beam -->
+      <polygon points="544,80 600,55 600,100 544,90" fill="url(#headlightGrad)" opacity="0.3"/>
+
+      <!-- Tail light (left side of SVG = rear) -->
+      <path d="M64,88 L80,86 L80,102 L64,104 Z" fill="#1a0008" stroke="#FF007F" stroke-width="0.8"/>
+      <path d="M66,90 L78,88 L78,100 L66,102 Z" fill="#300010" opacity="0.9"/>
+      <!-- Tail light glow strip -->
+      <path d="M68,91 L76,90" stroke="#FF007F" stroke-width="3" stroke-linecap="round" opacity="1" filter="url(#carGlow)"/>
+      <path d="M68,95 L76,94" stroke="#FF007F" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+      <path d="M68,99 L76,98" stroke="#FF007F" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+
+      <!-- === WHEELS === -->
+      <!-- Rear wheel -->
+      <circle cx="168" cy="128" r="36" fill="#000" stroke="#1a1a1a" stroke-width="2"/>
+      <circle cx="168" cy="128" r="34" fill="url(#wheelGrad)"/>
+      <!-- Tire sidewall detail -->
+      <circle cx="168" cy="128" r="34" fill="none" stroke="#222" stroke-width="2"/>
+      <circle cx="168" cy="128" r="29" fill="url(#rimGrad)" stroke="#444" stroke-width="1"/>
+      <!-- Rim spokes -->
+      <g stroke="#555" stroke-width="2.5" stroke-linecap="round">
+        <line x1="168" y1="99" x2="168" y2="113"/>
+        <line x1="168" y1="143" x2="168" y2="157"/>
+        <line x1="139" y1="128" x2="153" y2="128"/>
+        <line x1="183" y1="128" x2="197" y2="128"/>
+        <line x1="147" y1="107" x2="156" y2="116"/>
+        <line x1="180" y1="140" x2="189" y2="149"/>
+        <line x1="189" y1="107" x2="180" y2="116"/>
+        <line x1="147" y1="149" x2="156" y2="140"/>
+      </g>
+      <!-- Center cap -->
+      <circle cx="168" cy="128" r="8" fill="#111" stroke="#FF007F" stroke-width="1.2"/>
+      <circle cx="168" cy="128" r="4" fill="#FF007F" opacity="0.7"/>
+      <!-- Brake caliper -->
+      <path d="M148,118 L158,114 L162,122 L152,126 Z" fill="#FF007F" opacity="0.8"/>
+
+      <!-- Front wheel -->
+      <circle cx="448" cy="128" r="36" fill="#000" stroke="#1a1a1a" stroke-width="2"/>
+      <circle cx="448" cy="128" r="34" fill="url(#wheelGrad)"/>
+      <circle cx="448" cy="128" r="34" fill="none" stroke="#222" stroke-width="2"/>
+      <circle cx="448" cy="128" r="29" fill="url(#rimGrad)" stroke="#444" stroke-width="1"/>
+      <!-- Rim spokes -->
+      <g stroke="#555" stroke-width="2.5" stroke-linecap="round">
+        <line x1="448" y1="99" x2="448" y2="113"/>
+        <line x1="448" y1="143" x2="448" y2="157"/>
+        <line x1="419" y1="128" x2="433" y2="128"/>
+        <line x1="463" y1="128" x2="477" y2="128"/>
+        <line x1="427" y1="107" x2="436" y2="116"/>
+        <line x1="460" y1="140" x2="469" y2="149"/>
+        <line x1="469" y1="107" x2="460" y2="116"/>
+        <line x1="427" y1="149" x2="436" y2="140"/>
+      </g>
+      <circle cx="448" cy="128" r="8" fill="#111" stroke="#FF007F" stroke-width="1.2"/>
+      <circle cx="448" cy="128" r="4" fill="#FF007F" opacity="0.7"/>
+      <!-- Brake caliper -->
+      <path d="M428,118 L438,114 L442,122 L432,126 Z" fill="#FF007F" opacity="0.8"/>
+
+      <!-- Wheel well arches -->
+      <path d="M112,120 C118,96 140,80 168,80 C196,80 218,96 224,120" fill="none" stroke="#1a1a1a" stroke-width="3"/>
+      <path d="M392,120 C398,96 420,80 448,80 C476,80 498,96 504,120" fill="none" stroke="#1a1a1a" stroke-width="3"/>
+
+      <!-- Ground shadow -->
+      <ellipse cx="168" cy="163" rx="52" ry="7" fill="#000" opacity="0.5"/>
+      <ellipse cx="448" cy="163" rx="52" ry="7" fill="#000" opacity="0.5"/>
+    </svg>
+  </div>
+</section>
+
 <!-- ── Prices Section ───────────────────────────────────────────── -->
 <section id="prices-section">
   <div class="prices-inner">
@@ -1270,6 +1497,52 @@
     gsap.set(deviceScene, { scale: computeInitialScale() });
     ScrollTrigger.refresh();
   });
+
+  // ── Car Zoom Animation ──────────────────────────────────────────
+  (function () {
+    var carWrap = document.getElementById('car-svg-wrap');
+    var carSection = document.getElementById('car-zoom-section');
+    var speedLines = carSection.querySelector('#speed-lines');
+
+    // Set initial position off-screen left
+    gsap.set(carWrap, { x: 0, opacity: 1 });
+
+    ScrollTrigger.create({
+      trigger: carSection,
+      start: 'top 85%',
+      once: true,
+      onEnter: function () {
+        var sectionW = carSection.offsetWidth;
+        var tl = gsap.timeline();
+
+        // Car zooms from left edge to right edge and off screen
+        tl.fromTo(carWrap,
+          { x: 0, opacity: 1 },
+          {
+            x: sectionW + 700,
+            duration: 1.4,
+            ease: 'power3.in',
+          }
+        );
+
+        // Speed lines fade in then out with the car
+        gsap.fromTo(speedLines,
+          { opacity: 0 },
+          { opacity: 0.5, duration: 0.3, ease: 'power2.out',
+            onComplete: function () {
+              gsap.to(speedLines, { opacity: 0, duration: 0.6, delay: 0.5 });
+            }
+          }
+        );
+
+        // Headlight beam pulse
+        var beam = carSection.querySelector('polygon');
+        if (beam) {
+          gsap.fromTo(beam, { opacity: 0.1 }, { opacity: 0.45, duration: 0.4, yoyo: true, repeat: 2 });
+        }
+      }
+    });
+  })();
 </script>
 
 </body>
