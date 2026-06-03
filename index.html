@@ -1674,8 +1674,8 @@
       onEnter: function () {
         var sectionW = carSection.offsetWidth;
         var carW     = 580;
-        // Stop with car center at ~76% across — nose near right edge, rear clears text on left
-        var stopX    = sectionW * 0.76 - carW * 0.5;
+        // Stop with car center at ~88% across — car sits in rightmost quarter
+        var stopX    = sectionW * 0.88 - carW * 0.5;
 
         var tl = gsap.timeline();
 
