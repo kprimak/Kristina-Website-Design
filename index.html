@@ -1002,54 +1002,54 @@
       <line x1="224" y1="200" x2="278" y2="185" stroke="#888" stroke-width="1.5" stroke-dasharray="3,2"/>
 
       <!-- ═══════════════════════════
-           MAIN BODY — white
+           MAIN BODY — white, angular/sharp edges
            Rear x≈214, sidepod bulge peaks x≈300, cockpit narrows x≈420, nose starts x≈480
       ═══════════════════════════ -->
       <path d="
         M 214,106
-        C 232,98  256,90  282,84
-        C 308,78  332,74  356,72
-        C 374,70  392,70  408,74
-        C 420,77  430,84  436,94
-        L 444,108
-        C 448,116 450,130 451,145
-        C 450,160 448,172 444,180
-        L 436,194
-        C 430,204 420,211 408,214
-        C 392,218 374,218 356,216
-        C 332,214 308,210 282,204
-        C 256,198 232,190 214,182
-        C 206,176 202,162 202,145
-        C 202,128 206,112 214,106 Z
+        L 240,92
+        L 280,78
+        L 356,68
+        L 408,70
+        L 430,80
+        L 444,100
+        L 450,145
+        L 444,188
+        L 430,208
+        L 408,218
+        L 356,220
+        L 280,210
+        L 240,196
+        L 214,182
+        L 204,162
+        L 202,145
+        L 204,126
+        Z
       " fill="url(#wbody)" stroke="#c0c0c0" stroke-width="0.8" filter="url(#ds)"/>
 
-      <!-- Sidepod flares -->
-      <path d="M 260,76 C 290,68 328,64 354,62 L 354,70 C 330,72 292,76 262,84 Z"
+      <!-- Sidepod flares — angular -->
+      <path d="M 260,74 L 354,62 L 354,70 L 260,82 Z"
             fill="url(#wbody2)" stroke="#ccc" stroke-width="0.5"/>
-      <path d="M 260,212 C 290,220 328,224 354,226 L 354,218 C 330,216 292,212 262,204 Z"
+      <path d="M 260,214 L 354,226 L 354,218 L 260,206 Z"
             fill="url(#wbody2)" stroke="#ccc" stroke-width="0.5"/>
 
-      <!-- Floor undertray (wider) -->
-      <path d="M 214,114 C 250,106 296,102 340,100 L 400,102 L 436,112 L 443,145 L 436,176 L 400,186 L 340,188 C 296,186 250,182 214,174 Z"
+      <!-- Floor undertray (wider, angular) -->
+      <path d="M 214,114 L 280,102 L 400,100 L 436,110 L 444,145 L 436,178 L 400,188 L 280,186 L 214,174 Z"
             fill="#f8f8f8" stroke="#e0e0e0" stroke-width="0.5"/>
 
-      <!-- MAGENTA LIVERY STREAKS -->
-      <path d="
-        M 430,98 C 395,88 340,80 286,78 C 260,77 236,78 216,82
-        L 216,89 C 236,85 260,84 286,85 C 340,87 395,95 430,105 Z
-      " fill="#FF007F" opacity="0.88"/>
-      <path d="
-        M 430,190 C 395,200 340,208 286,210 C 260,211 236,210 216,206
-        L 216,199 C 236,203 260,204 286,203 C 340,201 395,193 430,183 Z
-      " fill="#FF007F" opacity="0.88"/>
+      <!-- MAGENTA LIVERY STREAKS — angular -->
+      <path d="M 430,96 L 356,78 L 280,76 L 216,82 L 216,89 L 280,83 L 356,85 L 430,105 Z"
+            fill="#FF007F" opacity="0.88"/>
+      <path d="M 430,192 L 356,210 L 280,212 L 216,206 L 216,199 L 280,205 L 356,203 L 430,183 Z"
+            fill="#FF007F" opacity="0.88"/>
 
       <!-- Teal accent lines (KIPODE) along flanks -->
-      <path d="M 222,84 C 268,76 330,72 386,72 L 420,76" fill="none" stroke="#1E8A85" stroke-width="2.2" opacity="0.7"/>
-      <path d="M 222,204 C 268,212 330,216 386,216 L 420,212" fill="none" stroke="#1E8A85" stroke-width="2.2" opacity="0.7"/>
+      <path d="M 222,82 L 280,72 L 386,70 L 420,74" fill="none" stroke="#1E8A85" stroke-width="2.2" opacity="0.7"/>
+      <path d="M 222,206 L 280,216 L 386,218 L 420,214" fill="none" stroke="#1E8A85" stroke-width="2.2" opacity="0.7"/>
 
       <!-- Panel lines -->
-      <path d="M218,114 C264,106 324,102 384,104 L444,112" fill="none" stroke="#d5d5d5" stroke-width="0.9"/>
-      <path d="M218,174 C264,182 324,186 384,184 L444,176" fill="none" stroke="#d5d5d5" stroke-width="0.9"/>
+      <path d="M218,114 L280,104 L384,102 L444,112" fill="none" stroke="#d5d5d5" stroke-width="0.9"/>
+      <path d="M218,174 L280,184 L384,186 L444,176" fill="none" stroke="#d5d5d5" stroke-width="0.9"/>
       <line x1="202" y1="145" x2="452" y2="145" stroke="#e8e8e8" stroke-width="0.7"/>
 
       <!-- ═══════════════════════════
@@ -1085,33 +1085,22 @@
       <rect x="295" y="159" width="44" height="5"  rx="3" fill="#5B2A8A" opacity="0.7"/>
 
       <!-- ═══════════════════════════
-           NOSE CONE — wide enough to look realistic
-           Starts at x=451, tapers to ~28px wide at tip x=636
+           NOSE CONE — angular wedge, sharp edges
+           Starts at x=440, straight tapered sides to tip x=640
       ═══════════════════════════ -->
-      <path d="
-        M 451,120
-        C 468,116 492,116 518,118
-        C 542,120 566,124 590,128
-        C 610,132 624,137 636,141
-        L 640,145
-        L 636,149
-        C 624,153 610,158 590,162
-        C 566,166 542,170 518,172
-        C 492,174 468,174 451,170
-        C 443,166 440,156 440,145
-        C 440,134 443,124 451,120 Z
-      " fill="url(#wbody)" stroke="#c0c0c0" stroke-width="0.7"/>
+      <!-- Nose — straight-sided sharp trapezoid -->
+      <path d="M 440,118 L 636,136 L 640,145 L 636,154 L 440,172 L 440,118 Z"
+            fill="url(#wbody)" stroke="#c0c0c0" stroke-width="0.7"/>
+      <!-- Nose top/bottom edge lines (crisp) -->
+      <line x1="440" y1="118" x2="636" y2="136" stroke="#c8c8c8" stroke-width="1"/>
+      <line x1="440" y1="172" x2="636" y2="154" stroke="#c8c8c8" stroke-width="1"/>
       <!-- Nose spine -->
-      <line x1="440" y1="145" x2="640" y2="145" stroke="#d8d8d8" stroke-width="1"/>
-      <!-- Nose magenta cap -->
-      <path d="M 618,136 L 640,143 L 640,147 L 618,154
-               C 625,150 628,147 628,145 C 628,143 625,140 618,136 Z"
-            fill="#FF007F"/>
-      <!-- Purple nose accent -->
-      <path d="M 453,122 C 478,118 510,118 535,121 L 535,125 C 510,122 478,122 453,126 Z"
-            fill="#5B2A8A" opacity="0.6"/>
-      <path d="M 453,168 C 478,172 510,172 535,169 L 535,165 C 510,168 478,168 453,164 Z"
-            fill="#5B2A8A" opacity="0.6"/>
+      <line x1="440" y1="145" x2="640" y2="145" stroke="#d8d8d8" stroke-width="0.8"/>
+      <!-- Nose magenta tip -->
+      <path d="M 636,136 L 640,145 L 636,154 L 626,149 L 626,141 Z" fill="#FF007F"/>
+      <!-- Purple nose accent lines -->
+      <line x1="450" y1="120" x2="535" y2="128" stroke="#5B2A8A" stroke-width="3" opacity="0.6" stroke-linecap="round"/>
+      <line x1="450" y1="170" x2="535" y2="162" stroke="#5B2A8A" stroke-width="3" opacity="0.6" stroke-linecap="round"/>
 
       <!-- ═══════════════════════════
            FRONT SUSPENSION WISHBONES
