@@ -266,27 +266,66 @@
     #car-zoom-section {
       background: #000;
       overflow: hidden;
-      height: 220px;
+      height: 300px;
       position: relative;
+    }
+    #car-zoom-section .road-surface {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 90px;
+      background: linear-gradient(to top, #0d0d0d 0%, #070707 60%, transparent 100%);
     }
     #car-zoom-section .road-line {
       position: absolute;
+      bottom: 52px;
+      left: 0; right: 0;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent 0%, #FF007F55 15%, #FF007F55 85%, transparent 100%);
+    }
+    #car-zoom-section .road-line-2 {
+      position: absolute;
       bottom: 44px;
       left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent 0%, #FF007F44 20%, #FF007F44 80%, transparent 100%);
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, #ffffff18 20%, #ffffff18 80%, transparent 100%);
     }
     #car-zoom-section .road-glow {
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      height: 60px;
-      background: linear-gradient(to top, #FF007F0a 0%, transparent 100%);
+      height: 80px;
+      background: linear-gradient(to top, #FF007F14 0%, transparent 100%);
     }
     #car-svg-wrap {
       position: absolute;
-      bottom: 38px;
-      left: -680px;
-      width: 600px;
+      bottom: 46px;
+      left: -650px;
+      width: 580px;
+    }
+    #car-road-text {
+      position: absolute;
+      bottom: 62px;
+      left: 5%;
+      right: 38%;
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    #car-road-text .road-kicker {
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #FF007F;
+      margin: 0 0 0.5rem;
+      display: block;
+    }
+    #car-road-text .road-headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.3rem, 2.8vw, 2rem);
+      color: #fff;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin: 0;
     }
     /* ── Prices Section ── */
     #prices-section {
@@ -827,8 +866,15 @@
 
 <!-- ── Car Zoom Section ──────────────────────────────────────────── -->
 <section id="car-zoom-section">
+  <div class="road-surface"></div>
   <div class="road-glow"></div>
   <div class="road-line"></div>
+  <div class="road-line-2"></div>
+  <!-- Text that appears after car passes -->
+  <div id="car-road-text">
+    <span class="road-kicker">Our Packages</span>
+    <h2 class="road-headline">Built for where you are.<br>Designed for where you're going.</h2>
+  </div>
   <!-- Ferrari-style supercar SVG -->
   <div id="car-svg-wrap">
     <svg viewBox="0 0 600 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
@@ -1029,8 +1075,6 @@
 <!-- ── Prices Section ───────────────────────────────────────────── -->
 <section id="prices-section">
   <div class="prices-inner">
-    <span class="prices-kicker">Our Packages</span>
-    <h2 class="prices-title">Built for where you are.<br>Designed for where you're going.</h2>
 
     <div class="prices-grid">
 
@@ -1500,46 +1544,69 @@
 
   // ── Car Zoom Animation ──────────────────────────────────────────
   (function () {
-    var carWrap = document.getElementById('car-svg-wrap');
+    var carWrap    = document.getElementById('car-svg-wrap');
     var carSection = document.getElementById('car-zoom-section');
+    var roadText   = document.getElementById('car-road-text');
     var speedLines = carSection.querySelector('#speed-lines');
 
-    // Set initial position off-screen left
-    gsap.set(carWrap, { x: 0, opacity: 1 });
+    gsap.set(carWrap, { x: 0 });
 
     ScrollTrigger.create({
       trigger: carSection,
-      start: 'top 85%',
+      start: 'top 80%',
       once: true,
       onEnter: function () {
         var sectionW = carSection.offsetWidth;
+        var carW     = 580;
+        // Stop position: right edge of car flush with right edge of viewport, minus a small margin
+        var stopX    = sectionW - carW + 20;
+
         var tl = gsap.timeline();
 
-        // Car zooms from left edge to right edge and off screen
-        tl.fromTo(carWrap,
-          { x: 0, opacity: 1 },
-          {
-            x: sectionW + 700,
-            duration: 1.4,
-            ease: 'power3.in',
-          }
-        );
+        // 1. Zoom in fast from off-screen left, overshoot slightly, settle at right edge
+        tl.to(carWrap, {
+          x: stopX + 60,
+          duration: 1.0,
+          ease: 'power3.in'
+        })
+        // 2. Brake — small bounce back to final stop position
+        .to(carWrap, {
+          x: stopX,
+          duration: 0.35,
+          ease: 'power2.out'
+        });
 
-        // Speed lines fade in then out with the car
+        // Speed lines: fade in during zoom, fade out as car brakes
         gsap.fromTo(speedLines,
           { opacity: 0 },
-          { opacity: 0.5, duration: 0.3, ease: 'power2.out',
+          { opacity: 0.5, duration: 0.5, ease: 'power1.out',
             onComplete: function () {
-              gsap.to(speedLines, { opacity: 0, duration: 0.6, delay: 0.5 });
+              gsap.to(speedLines, { opacity: 0, duration: 0.4 });
             }
           }
         );
 
-        // Headlight beam pulse
-        var beam = carSection.querySelector('polygon');
-        if (beam) {
-          gsap.fromTo(beam, { opacity: 0.1 }, { opacity: 0.45, duration: 0.4, yoyo: true, repeat: 2 });
-        }
+        // Text rises up after car passes the left half of screen
+        // Car takes ~0.6s to cross center, then text appears
+        gsap.to(roadText, {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power2.out',
+          delay: 0.65
+        });
+
+        // Tail light glow pulse as car brakes
+        var tailGlows = carSection.querySelectorAll('[stroke="#FF007F"][stroke-width="3"], [stroke="#FF007F"][stroke-width="2"]');
+        tailGlows.forEach(function (el) {
+          gsap.fromTo(el, { opacity: 0.6 }, {
+            opacity: 1,
+            duration: 0.15,
+            repeat: 3,
+            yoyo: true,
+            delay: 1.0
+          });
+        });
       }
     });
   })();
