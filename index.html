@@ -1241,19 +1241,92 @@
       <!-- STARTER / Launchpad -->
       <div class="price-card price-card--starter">
         <svg class="price-laptop" viewBox="0 0 480 318" xmlns="http://www.w3.org/2000/svg">
+          <!-- Laptop shell -->
           <rect x="0" y="0" width="480" height="280" rx="8" fill="#1c1c1e"/>
-          <rect x="13" y="13" width="454" height="254" rx="3" fill="#f5f5f5"/>
           <circle cx="240" cy="6.5" r="2" fill="#3c3c3e"/>
           <rect x="0" y="280" width="480" height="6" fill="#2a2a2c"/>
           <path d="M-18,286 L498,286 L480,312 L0,312 Z" fill="#1c1c1e"/>
           <rect x="193" y="291" width="94" height="9" rx="4" fill="#3a3a3c"/>
-          <!-- Minimal screen decoration — horizontal lines suggesting UI -->
-          <rect x="30" y="40" width="160" height="4" rx="2" fill="#e0e0e0"/>
-          <rect x="30" y="54" width="100" height="3" rx="1.5" fill="#e8e8e8"/>
-          <rect x="30" y="80" width="200" height="2" rx="1" fill="#ececec"/>
-          <rect x="30" y="90" width="180" height="2" rx="1" fill="#ececec"/>
-          <rect x="30" y="100" width="190" height="2" rx="1" fill="#ececec"/>
-          <rect x="30" y="40" width="4" height="70" rx="2" fill="#FF007F" opacity="0.5"/>
+          <!-- Screen bezel -->
+          <rect x="13" y="13" width="454" height="254" rx="3" fill="#0d0d0d"/>
+
+          <!-- ── Demo Website ── -->
+          <!-- Navbar -->
+          <rect x="13" y="13" width="454" height="28" fill="#0d0d0d"/>
+          <!-- Logo dot + wordmark -->
+          <circle cx="30" cy="27" r="5" fill="#FF007F"/>
+          <rect x="40" y="23" width="36" height="4" rx="2" fill="#ffffff" opacity="0.9"/>
+          <!-- Nav links -->
+          <rect x="340" y="24" width="24" height="3" rx="1.5" fill="#ffffff" opacity="0.4"/>
+          <rect x="372" y="24" width="20" height="3" rx="1.5" fill="#ffffff" opacity="0.4"/>
+          <!-- CTA button -->
+          <rect x="400" y="20" width="52" height="14" rx="3" fill="#FF007F"/>
+          <rect x="408" y="24" width="36" height="3" rx="1.5" fill="#ffffff" opacity="0.9"/>
+
+          <!-- Hero section — purple/teal gradient background -->
+          <defs>
+            <linearGradient id="lhero" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#3a1060"/>
+              <stop offset="55%" stop-color="#5B2A8A"/>
+              <stop offset="100%" stop-color="#1E8A85"/>
+            </linearGradient>
+            <linearGradient id="lwave" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#B07840" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#1E8A85" stop-opacity="0.35"/>
+            </linearGradient>
+          </defs>
+          <rect x="13" y="41" width="454" height="110" fill="url(#lhero)"/>
+          <!-- Wavy copper accent -->
+          <path d="M13,105 Q120,80 230,100 Q340,120 467,90 L467,120 L13,120 Z" fill="url(#lwave)" opacity="0.5"/>
+          <!-- Teal blob bottom-left -->
+          <ellipse cx="50" cy="130" rx="55" ry="32" fill="#1E8A85" opacity="0.3"/>
+          <!-- Hero text -->
+          <rect x="30" y="60" width="120" height="10" rx="2" fill="#ffffff" opacity="0.95"/>
+          <rect x="30" y="76" width="90" height="7" rx="2" fill="#ffffff" opacity="0.65"/>
+          <rect x="30" y="90" width="100" height="7" rx="2" fill="#ffffff" opacity="0.65"/>
+          <!-- Hero CTA -->
+          <rect x="30" y="106" width="60" height="16" rx="3" fill="#FF007F"/>
+          <rect x="38" y="111" width="44" height="3" rx="1.5" fill="#fff" opacity="0.9"/>
+          <!-- Hero illustration — abstract device shape -->
+          <rect x="340" y="52" width="110" height="72" rx="6" fill="#ffffff" opacity="0.06"/>
+          <rect x="348" y="60" width="94" height="56" rx="3" fill="#ffffff" opacity="0.07"/>
+          <rect x="356" y="68" width="50" height="4" rx="2" fill="#FF007F" opacity="0.7"/>
+          <rect x="356" y="76" width="38" height="3" rx="1.5" fill="#fff" opacity="0.35"/>
+          <rect x="356" y="83" width="44" height="3" rx="1.5" fill="#fff" opacity="0.25"/>
+
+          <!-- Services row -->
+          <rect x="13" y="151" width="454" height="56" fill="#ffffff"/>
+          <!-- Card 1 — teal -->
+          <rect x="22" y="159" width="132" height="38" rx="4" fill="#1E8A85" opacity="0.12"/>
+          <rect x="22" y="159" width="4" height="38" rx="2" fill="#1E8A85"/>
+          <rect x="32" y="166" width="60" height="4" rx="2" fill="#1a1a1a" opacity="0.7"/>
+          <rect x="32" y="175" width="80" height="3" rx="1.5" fill="#1a1a1a" opacity="0.3"/>
+          <rect x="32" y="182" width="70" height="3" rx="1.5" fill="#1a1a1a" opacity="0.3"/>
+          <!-- Card 2 — purple -->
+          <rect x="164" y="159" width="132" height="38" rx="4" fill="#5B2A8A" opacity="0.1"/>
+          <rect x="164" y="159" width="4" height="38" rx="2" fill="#5B2A8A"/>
+          <rect x="174" y="166" width="60" height="4" rx="2" fill="#1a1a1a" opacity="0.7"/>
+          <rect x="174" y="175" width="80" height="3" rx="1.5" fill="#1a1a1a" opacity="0.3"/>
+          <rect x="174" y="182" width="70" height="3" rx="1.5" fill="#1a1a1a" opacity="0.3"/>
+          <!-- Card 3 — magenta -->
+          <rect x="306" y="159" width="132" height="38" rx="4" fill="#FF007F" opacity="0.1"/>
+          <rect x="306" y="159" width="4" height="38" rx="2" fill="#FF007F"/>
+          <rect x="316" y="166" width="60" height="4" rx="2" fill="#1a1a1a" opacity="0.7"/>
+          <rect x="316" y="175" width="80" height="3" rx="1.5" fill="#1a1a1a" opacity="0.3"/>
+          <rect x="316" y="182" width="70" height="3" rx="1.5" fill="#1a1a1a" opacity="0.3"/>
+
+          <!-- Footer strip -->
+          <rect x="13" y="207" width="454" height="60" fill="#0d0d0d"/>
+          <!-- Copper divider line -->
+          <rect x="13" y="207" width="454" height="2" fill="#B07840" opacity="0.6"/>
+          <rect x="22" y="218" width="50" height="4" rx="2" fill="#FF007F" opacity="0.8"/>
+          <rect x="22" y="228" width="120" height="3" rx="1.5" fill="#ffffff" opacity="0.25"/>
+          <rect x="22" y="236" width="90" height="3" rx="1.5" fill="#ffffff" opacity="0.18"/>
+          <rect x="340" y="218" width="40" height="3" rx="1.5" fill="#ffffff" opacity="0.25"/>
+          <rect x="340" y="228" width="30" height="3" rx="1.5" fill="#ffffff" opacity="0.18"/>
+          <rect x="390" y="218" width="40" height="3" rx="1.5" fill="#ffffff" opacity="0.25"/>
+          <rect x="390" y="228" width="30" height="3" rx="1.5" fill="#ffffff" opacity="0.18"/>
+          <rect x="22" y="253" width="200" height="2" rx="1" fill="#ffffff" opacity="0.1"/>
         </svg>
         <div class="price-info">
           <p class="price-tier">Starter</p>
