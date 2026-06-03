@@ -870,311 +870,235 @@
     <span class="road-kicker">Our Packages</span>
     <h2 class="road-headline">Built for where you are.<br>Designed for where you're going.</h2>
   </div>
-  <!-- Top-down Ferrari F1 car SVG -->
+  <!-- Top-down F1 car SVG -->
   <div id="car-svg-wrap">
-    <svg viewBox="0 0 660 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+    <svg viewBox="0 0 700 295" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
       <!--
-        TOP-DOWN Ferrari F1 car. Nose points RIGHT. Center y=150.
-        Left = rear, Right = front/nose.
+        TOP-DOWN F1 car. Nose RIGHT, tail LEFT. Centre y=148.
+        WHITE body, MAGENTA livery, silver rims, black tires/wings.
       -->
       <defs>
-        <radialGradient id="tireTopGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#252525"/>
-          <stop offset="70%" stop-color="#0e0e0e"/>
+        <linearGradient id="wbody" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#d8d8d8"/>
+          <stop offset="28%"  stop-color="#f2f2f2"/>
+          <stop offset="50%"  stop-color="#ffffff"/>
+          <stop offset="72%"  stop-color="#eeeeee"/>
+          <stop offset="100%" stop-color="#cccccc"/>
+        </linearGradient>
+        <radialGradient id="rimSilver" cx="50%" cy="40%" r="60%">
+          <stop offset="0%"   stop-color="#e8e8e8"/>
+          <stop offset="45%"  stop-color="#b0b0b0"/>
+          <stop offset="100%" stop-color="#606060"/>
+        </radialGradient>
+        <radialGradient id="tireBlack" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="#2a2a2a"/>
+          <stop offset="65%"  stop-color="#111"/>
           <stop offset="100%" stop-color="#000"/>
         </radialGradient>
-        <radialGradient id="rimTopGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#686868"/>
-          <stop offset="55%" stop-color="#3a3a3a"/>
-          <stop offset="100%" stop-color="#1a1a1a"/>
-        </radialGradient>
-        <linearGradient id="bodyTopGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#181818"/>
-          <stop offset="40%" stop-color="#232323"/>
-          <stop offset="100%" stop-color="#141414"/>
+        <linearGradient id="mg" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#ff4da6"/>
+          <stop offset="50%"  stop-color="#FF007F"/>
+          <stop offset="100%" stop-color="#c40062"/>
         </linearGradient>
-        <linearGradient id="bodySheen" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#fff" stop-opacity="0.07"/>
-          <stop offset="50%" stop-color="#fff" stop-opacity="0.02"/>
-          <stop offset="100%" stop-color="#fff" stop-opacity="0.06"/>
+        <linearGradient id="carbon" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#242424"/>
+          <stop offset="100%" stop-color="#0c0c0c"/>
         </linearGradient>
-        <linearGradient id="mgStripe" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#FF007F"/>
-          <stop offset="100%" stop-color="#cc0060"/>
-        </linearGradient>
-        <linearGradient id="beamTopGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#FF007F" stop-opacity="0.55"/>
+        <linearGradient id="beam" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#FF007F" stop-opacity="0.45"/>
           <stop offset="100%" stop-color="#FF007F" stop-opacity="0"/>
         </linearGradient>
-        <filter id="glowTop" x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="3" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        <filter id="ds" x="-15%" y="-15%" width="130%" height="130%">
+          <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity="0.65"/>
         </filter>
-        <filter id="shadowTop" x="-10%" y="-10%" width="120%" height="120%">
-          <feGaussianBlur stdDeviation="8" result="b"/>
-          <feComposite in="SourceGraphic" in2="b"/>
+        <filter id="gl" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="3.5" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
 
-      <!-- ── Speed streaks (trailing behind = left side) ── -->
+      <!-- Speed streaks -->
       <g id="speed-lines" opacity="0">
-        <line x1="0" y1="110" x2="90"  y2="110" stroke="#FF007F" stroke-width="1.6" opacity="0.85"/>
-        <line x1="0" y1="128" x2="65"  y2="128" stroke="#FF007F" stroke-width="0.9" opacity="0.55"/>
-        <line x1="0" y1="150" x2="100" y2="150" stroke="#fff"    stroke-width="0.5" opacity="0.3"/>
-        <line x1="0" y1="172" x2="55"  y2="172" stroke="#FF007F" stroke-width="0.8" opacity="0.5"/>
-        <line x1="0" y1="190" x2="80"  y2="190" stroke="#fff"    stroke-width="0.4" opacity="0.22"/>
-        <line x1="0" y1="96"  x2="45"  y2="96"  stroke="#FF007F" stroke-width="0.6" opacity="0.38"/>
-        <line x1="0" y1="204" x2="60"  y2="204" stroke="#FF007F" stroke-width="0.5" opacity="0.3"/>
+        <line x1="0" y1="108" x2="88"  y2="108" stroke="#FF007F" stroke-width="2"   opacity="0.9"/>
+        <line x1="0" y1="126" x2="62"  y2="126" stroke="#FF007F" stroke-width="1"   opacity="0.6"/>
+        <line x1="0" y1="148" x2="96"  y2="148" stroke="#fff"    stroke-width="0.6" opacity="0.35"/>
+        <line x1="0" y1="170" x2="52"  y2="170" stroke="#FF007F" stroke-width="0.9" opacity="0.55"/>
+        <line x1="0" y1="188" x2="74"  y2="188" stroke="#fff"    stroke-width="0.5" opacity="0.22"/>
+        <line x1="0" y1="94"  x2="40"  y2="94"  stroke="#FF007F" stroke-width="0.6" opacity="0.38"/>
+        <line x1="0" y1="202" x2="56"  y2="202" stroke="#FF007F" stroke-width="0.5" opacity="0.32"/>
       </g>
 
-      <!-- ── Car shadow ── -->
-      <ellipse cx="330" cy="158" rx="290" ry="115" fill="#000" opacity="0.55"/>
+      <!-- Ground shadow -->
+      <ellipse cx="370" cy="155" rx="310" ry="105" fill="#000" opacity="0.45"/>
 
-      <!-- ══════════════════════════
-           REAR WING (left, x≈55–110)
-           Seen from top: wide horizontal span
-      ══════════════════════════ -->
-      <!-- Secondary DRS element -->
-      <path d="M55,42 L112,42 L112,50 L55,50 Z" fill="#0c0c0c" stroke="#222" stroke-width="0.4"/>
-      <!-- Main plane -->
-      <path d="M58,50 L110,50 L110,250 L58,250 Z" fill="#111" stroke="#1e1e1e" stroke-width="0.5"/>
-      <!-- Magenta trim on leading edge -->
-      <rect x="58" y="50"  width="52" height="4" fill="#FF007F" opacity="0.9"/>
-      <rect x="58" y="246" width="52" height="4" fill="#FF007F" opacity="0.9"/>
-      <!-- Center stripe -->
-      <rect x="58" y="146" width="52" height="8" fill="#FF007F" opacity="0.4"/>
-      <!-- End plates (thick vertical edges seen from top = flat rectangles) -->
-      <rect x="53"  y="38" width="10" height="222" rx="3" fill="#0d0d0d" stroke="#1a1a1a" stroke-width="0.4"/>
-      <rect x="107" y="38" width="10" height="222" rx="3" fill="#0d0d0d" stroke="#1a1a1a" stroke-width="0.4"/>
+      <!-- REAR WING -->
+      <rect x="54"  y="32" width="12" height="234" rx="4" fill="url(#carbon)" stroke="#333" stroke-width="0.5"/>
+      <rect x="108" y="32" width="12" height="234" rx="4" fill="url(#carbon)" stroke="#333" stroke-width="0.5"/>
+      <rect x="56" y="37" width="54" height="14" rx="2" fill="#151515" stroke="#2a2a2a" stroke-width="0.4"/>
+      <rect x="56" y="51" width="54" height="198" rx="2" fill="url(#mg)"/>
+      <rect x="60" y="53" width="6"  height="194" rx="1" fill="#fff" opacity="0.14"/>
+      <line x1="56" y1="148" x2="110" y2="148" stroke="#fff" stroke-width="1.2" opacity="0.3"/>
 
-      <!-- ══════════════════════════
-           REAR SUSPENSION WISHBONES
-      ══════════════════════════ -->
-      <!-- Upper wishbone rear-left tire -->
-      <path d="M148,80 L200,102 L200,108 L148,88 Z" fill="#1e1e1e"/>
-      <path d="M148,212 L200,192 L200,198 L148,220 Z" fill="#1e1e1e"/>
-      <!-- Push/pull rods -->
-      <line x1="170" y1="84" x2="200" y2="100" stroke="#282828" stroke-width="2"/>
-      <line x1="170" y1="216" x2="200" y2="200" stroke="#282828" stroke-width="2"/>
+      <!-- REAR SUSPENSION -->
+      <path d="M148,84  L198,106 L198,112 L148,92  Z" fill="#ccc" opacity="0.7"/>
+      <path d="M148,92  L198,112 L198,118 L148,100 Z" fill="#aaa" opacity="0.5"/>
+      <path d="M148,212 L198,190 L198,196 L148,220 Z" fill="#ccc" opacity="0.7"/>
+      <path d="M148,204 L198,184 L198,190 L148,212 Z" fill="#aaa" opacity="0.5"/>
 
-      <!-- ══════════════════════════
-           REAR TIRES (viewed from top = wide rectangles)
-      ══════════════════════════ -->
-      <!-- Rear left tire (upper) -->
-      <rect x="122" y="48" width="54" height="80" rx="10" fill="#111"/>
-      <rect x="128" y="54" width="42" height="68" rx="7" fill="url(#tireTopGrad)"/>
-      <!-- Rim -->
-      <rect x="133" y="62" width="32" height="52" rx="5" fill="url(#rimTopGrad)" stroke="#505050" stroke-width="0.8"/>
-      <!-- Spokes -->
-      <g stroke="#606060" stroke-width="2" stroke-linecap="round">
-        <line x1="149" y1="66" x2="149" y2="110"/>
-        <line x1="133" y1="88" x2="165" y2="88"/>
-        <line x1="137" y1="70" x2="161" y2="106"/>
-        <line x1="137" y1="106" x2="161" y2="70"/>
+      <!-- REAR TIRES -->
+      <rect x="122" y="50"  width="54" height="88" rx="11" fill="#0d0d0d"/>
+      <rect x="126" y="54"  width="46" height="80" rx="9"  fill="url(#tireBlack)"/>
+      <rect x="131" y="62"  width="36" height="64" rx="7"  fill="#111" stroke="#303030" stroke-width="1.8"/>
+      <rect x="136" y="69"  width="26" height="50" rx="5"  fill="url(#rimSilver)" stroke="#999" stroke-width="0.8"/>
+      <g stroke="#999" stroke-width="2.5" stroke-linecap="round">
+        <line x1="149" y1="72"  x2="149" y2="116"/>
+        <line x1="136" y1="94"  x2="162" y2="94"/>
+        <line x1="140" y1="75"  x2="158" y2="113"/>
+        <line x1="140" y1="113" x2="158" y2="75"/>
       </g>
-      <circle cx="149" cy="88" r="7"  fill="#111" stroke="#FF007F" stroke-width="1.5"/>
-      <circle cx="149" cy="88" r="3.5" fill="#FF007F" opacity="0.85"/>
-      <!-- Brake caliper magenta -->
-      <rect x="133" y="76" width="8" height="14" rx="2" fill="#FF007F" opacity="0.85"/>
-
-      <!-- Rear right tire (lower) -->
-      <rect x="122" y="172" width="54" height="80" rx="10" fill="#111"/>
-      <rect x="128" y="178" width="42" height="68" rx="7" fill="url(#tireTopGrad)"/>
-      <rect x="133" y="186" width="32" height="52" rx="5" fill="url(#rimTopGrad)" stroke="#505050" stroke-width="0.8"/>
-      <g stroke="#606060" stroke-width="2" stroke-linecap="round">
-        <line x1="149" y1="190" x2="149" y2="234"/>
-        <line x1="133" y1="212" x2="165" y2="212"/>
-        <line x1="137" y1="194" x2="161" y2="230"/>
-        <line x1="137" y1="230" x2="161" y2="194"/>
+      <circle cx="149" cy="94"  r="8"   fill="#ddd" stroke="#888" stroke-width="0.8"/>
+      <circle cx="149" cy="94"  r="4.5" fill="#FF007F"/>
+      <rect   x="136" y="80"   width="7" height="16" rx="2" fill="#FF007F"/>
+      <rect x="122" y="158" width="54" height="88" rx="11" fill="#0d0d0d"/>
+      <rect x="126" y="162" width="46" height="80" rx="9"  fill="url(#tireBlack)"/>
+      <rect x="131" y="170" width="36" height="64" rx="7"  fill="#111" stroke="#303030" stroke-width="1.8"/>
+      <rect x="136" y="177" width="26" height="50" rx="5"  fill="url(#rimSilver)" stroke="#999" stroke-width="0.8"/>
+      <g stroke="#999" stroke-width="2.5" stroke-linecap="round">
+        <line x1="149" y1="180" x2="149" y2="224"/>
+        <line x1="136" y1="202" x2="162" y2="202"/>
+        <line x1="140" y1="183" x2="158" y2="221"/>
+        <line x1="140" y1="221" x2="158" y2="183"/>
       </g>
-      <circle cx="149" cy="212" r="7"  fill="#111" stroke="#FF007F" stroke-width="1.5"/>
-      <circle cx="149" cy="212" r="3.5" fill="#FF007F" opacity="0.85"/>
-      <rect x="133" y="200" width="8" height="14" rx="2" fill="#FF007F" opacity="0.85"/>
+      <circle cx="149" cy="202" r="8"   fill="#ddd" stroke="#888" stroke-width="0.8"/>
+      <circle cx="149" cy="202" r="4.5" fill="#FF007F"/>
+      <rect   x="136" y="188" width="7" height="16" rx="2" fill="#FF007F"/>
 
-      <!-- ══════════════════════════
-           MAIN BODY (top-down silhouette)
-           Narrow at rear, widens at sidepods, narrows to knife-point nose
-      ══════════════════════════ -->
+      <!-- MAIN BODY — white -->
       <path d="
-        M 175, 100
-        C 195, 92  225, 85  260, 80
-        C 295, 75  325, 72  360, 70
-        C 390, 68  418, 68  440, 70
-        C 460, 72  478, 76  495, 82
-        L 520, 90
-        C 540, 98  558,108  572,120
-        L 590,135
-        L 604,148
-        L 608,150
-        L 604,152
-        L 590,165
-        C 572,177  558,188  540,195
-        L 520,202
-        L 495,210
-        C 478,216  460,220  440,222
-        C 418,224  390,224  360,222
-        C 325,220  295,217  260,212
-        C 225,207  195,200  175,192
-        C 164,187  160,177  160,150
-        C 160,123  164,105  175,100
-        Z
-      " fill="url(#bodyTopGrad)" stroke="#222" stroke-width="0.6"/>
+        M 174,100
+        C 195,92  228,84  265,79
+        C 298,74  330,71  360,70
+        C 388,69  414,69  437,72
+        C 458,75  476,80  492,88
+        L 518,100
+        C 538,110 555,122 568,134
+        L 585,146 L 592,148
+        L 585,150
+        L 568,162
+        C 555,174 538,186 518,196
+        L 492,208
+        C 476,216 458,221 437,224
+        C 414,227 388,227 360,226
+        C 330,225 298,222 265,217
+        C 228,212 195,204 174,196
+        C 162,190 157,172 157,148
+        C 157,124 162,106 174,100 Z
+      " fill="url(#wbody)" stroke="#c8c8c8" stroke-width="0.6" filter="url(#ds)"/>
 
-      <!-- Body sheen overlay -->
+      <!-- MAGENTA LIVERY STREAKS -->
       <path d="
-        M 175,100 C 225,85 360,70 495,82 L 572,120 L 608,150
-        L 572,180 L 495,210 C 360,222 225,207 175,192
-        C 164,187 160,177 160,150 C 160,123 164,105 175,100 Z
-      " fill="url(#bodySheen)"/>
-
-      <!-- ── Magenta livery stripes along body ── -->
-      <!-- Top stripe -->
-      <path d="M200,86 C250,80 340,74 430,73 L510,78 L565,92 L580,105 L570,102 L510,74 L430,69 C340,70 250,76 200,82 Z"
-            fill="#FF007F" opacity="0.75"/>
-      <!-- Bottom stripe -->
-      <path d="M200,206 C250,212 340,218 430,219 L510,214 L565,200 L580,188 L570,191 L510,218 L430,223 C340,222 250,216 200,210 Z"
-            fill="#FF007F" opacity="0.75"/>
-      <!-- Center spine stripe -->
-      <line x1="165" y1="150" x2="608" y2="150" stroke="#FF007F" stroke-width="1.5" opacity="0.22"/>
-
-      <!-- ── Carbon-fibre panel lines ── -->
-      <path d="M200,110 C260,104 360,100 460,102 L545,108" fill="none" stroke="#2a2a2a" stroke-width="1.2"/>
-      <path d="M200,190 C260,196 360,200 460,198 L545,192" fill="none" stroke="#2a2a2a" stroke-width="1.2"/>
-      <!-- Centreline crease -->
-      <line x1="165" y1="150" x2="600" y2="150" stroke="#2e2e2e" stroke-width="1.8"/>
-
-      <!-- ══════════════════════════
-           SIDEPODS — air intakes visible from top
-      ══════════════════════════ -->
-      <!-- Upper sidepod intake -->
-      <path d="M310,72 L360,70 L360,82 L310,84 Z" fill="#080808" stroke="#333" stroke-width="0.4"/>
-      <path d="M312,73 L355,71 L355,74 L312,76 Z" fill="#FF007F" opacity="0.3"/>
-      <!-- Lower sidepod intake -->
-      <path d="M310,218 L360,222 L360,210 L310,208 Z" fill="#080808" stroke="#333" stroke-width="0.4"/>
-      <path d="M312,217 L355,221 L355,218 L312,215 Z" fill="#FF007F" opacity="0.3"/>
-
-      <!-- ══════════════════════════
-           COCKPIT OPENING
-      ══════════════════════════ -->
+        M 490,85 C 455,80 395,75 340,73 C 305,72 272,73 240,77
+        L 240,84 C 272,80 305,79 340,80 C 395,82 455,87 490,92 Z
+      " fill="#FF007F" opacity="0.9"/>
       <path d="
-        M 360,112
-        C 374,106 398,103 420,103
-        C 450,103 478,106 496,112
-        L 500,120 L 500,150 L 500,180
-        L 496,188
-        C 478,194 450,197 420,197
-        C 398,197 374,194 360,188
-        L 356,180 L 356,150 L 356,120 Z
-      " fill="#060c14" stroke="#1c3050" stroke-width="1.2"/>
+        M 490,211 C 455,216 395,221 340,223 C 305,224 272,223 240,219
+        L 240,212 C 272,216 305,217 340,216 C 395,214 455,209 490,204 Z
+      " fill="#FF007F" opacity="0.9"/>
+      <path d="M 578,138 C 586,142 590,146 592,148 C 590,150 586,154 578,158
+               C 582,154 584,151 584,148 C 584,145 582,142 578,138 Z"
+            fill="#FF007F"/>
 
-      <!-- Cockpit surround highlight -->
-      <path d="M362,118 C376,108 400,104 422,104 C450,104 476,108 494,116"
-            fill="none" stroke="#2a4a6a" stroke-width="2" opacity="0.8"/>
-      <path d="M362,182 C376,192 400,196 422,196 C450,196 476,192 494,184"
-            fill="none" stroke="#2a4a6a" stroke-width="2" opacity="0.8"/>
+      <!-- Panel lines -->
+      <path d="M198,108 C258,102 348,98 438,101 L528,108" fill="none" stroke="#d0d0d0" stroke-width="0.9"/>
+      <path d="M198,188 C258,194 348,198 438,195 L528,188" fill="none" stroke="#d0d0d0" stroke-width="0.9"/>
+      <line x1="157" y1="148" x2="592" y2="148" stroke="#e0e0e0" stroke-width="0.7" opacity="0.5"/>
 
-      <!-- Steering wheel -->
-      <ellipse cx="465" cy="150" rx="20" ry="14" fill="none" stroke="#2e2e2e" stroke-width="3"/>
-      <line x1="445" y1="150" x2="485" y2="150" stroke="#2e2e2e" stroke-width="2"/>
-      <line x1="465" y1="136" x2="465" y2="164" stroke="#2e2e2e" stroke-width="2"/>
-      <circle cx="465" cy="150" r="5" fill="#1a1a1a"/>
+      <!-- SIDEPOD AIR INTAKES -->
+      <path d="M312,72 L356,70 L356,80 L312,82 Z" fill="#111" stroke="#222" stroke-width="0.3"/>
+      <path d="M314,73 L352,71 L352,74 L314,76 Z" fill="#FF007F" opacity="0.35"/>
+      <path d="M312,224 L356,226 L356,216 L312,214 Z" fill="#111" stroke="#222" stroke-width="0.3"/>
+      <path d="M314,223 L352,225 L352,222 L314,220 Z" fill="#FF007F" opacity="0.35"/>
 
-      <!-- ── Engine airbox / roll hoop ── -->
-      <!-- Roll hoop arch behind cockpit -->
-      <path d="M310,118 C320,110 340,106 360,106 L360,114 C342,114 325,118 316,124 Z" fill="#111"/>
-      <path d="M310,182 C320,190 340,194 360,194 L360,186 C342,186 325,182 316,176 Z" fill="#111"/>
-      <!-- Airbox scoop -->
-      <rect x="318" y="130" width="38" height="40" rx="5" fill="#0a0a0a" stroke="#1e1e1e" stroke-width="0.6"/>
-      <rect x="322" y="134" width="30" height="32" rx="3" fill="#060606"/>
-      <!-- T-cam (small orange/red camera pod — on Ferrari cars) -->
-      <rect x="334" y="140" width="14" height="20" rx="3" fill="#FF007F" opacity="0.6"/>
-
-      <!-- ══════════════════════════
-           NOSE CONE — very narrow knife
-      ══════════════════════════ -->
+      <!-- COCKPIT -->
       <path d="
-        M 540,106
-        C 558,106 576,112 590,122
-        L 608,144
-        L 608,150
-        L 608,156
-        L 590,178
-        C 576,188 558,194 540,194
-        L 540,182
-        C 555,182 568,178 578,170
-        L 596,155 L 596,150 L 596,145
-        L 578,130
-        C 568,122 555,118 540,118 Z
-      " fill="#0e0e0e" stroke="#1c1c1c" stroke-width="0.5"/>
-      <!-- Nose tip highlight -->
-      <path d="M 596,138 L 608,148 L 608,152 L 596,162 L 594,150 Z" fill="#FF007F" opacity="0.5"/>
-      <!-- Nose split line -->
-      <line x1="540" y1="150" x2="606" y2="150" stroke="#222" stroke-width="1"/>
+        M 362,111 C 377,104 402,100 424,100
+        C 452,100 478,104 495,112
+        L 500,120 L 500,148 L 500,176
+        L 495,184 C 478,192 452,196 424,196
+        C 402,196 377,192 362,185
+        L 357,177 L 357,148 L 357,119 Z
+      " fill="#101418" stroke="#202830" stroke-width="1.2"/>
+      <path d="M364,118 C378,108 403,104 424,104" fill="none" stroke="#1a1a1a" stroke-width="6" stroke-linecap="round"/>
+      <path d="M364,178 C378,188 403,192 424,192" fill="none" stroke="#1a1a1a" stroke-width="6" stroke-linecap="round"/>
+      <rect x="422" y="104" width="10" height="88" rx="3" fill="#151515"/>
+      <path d="M365,118 C379,108 403,104 424,104" fill="none" stroke="#3a3a3a" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="466" cy="148" rx="19" ry="13" fill="none" stroke="#282828" stroke-width="3"/>
+      <line x1="447" y1="148" x2="485" y2="148" stroke="#282828" stroke-width="2"/>
+      <line x1="466" y1="135" x2="466" y2="161" stroke="#282828" stroke-width="2"/>
+      <circle cx="466" cy="148" r="4.5" fill="#111"/>
+      <rect x="320" y="128" width="38" height="40" rx="5" fill="#0c0c0c" stroke="#1e1e1e" stroke-width="0.6"/>
+      <rect x="324" y="132" width="30" height="32" rx="3" fill="#080808"/>
+      <rect x="335" y="138" width="12" height="22" rx="3" fill="#FF007F" opacity="0.85"/>
+      <path d="M312,118 C322,110 342,106 362,106 L362,114 C344,114 326,118 318,125 Z" fill="#111"/>
+      <path d="M312,178 C322,186 342,192 362,192 L362,184 C344,184 326,180 318,171 Z" fill="#111"/>
 
-      <!-- ══════════════════════════
-           FRONT WING (wide, multi-element)
-           Rightmost = leading edge facing forward
-      ══════════════════════════ -->
-      <!-- Endplate upper -->
-      <rect x="568" y="16" width="14" height="108" rx="4" fill="#0d0d0d" stroke="#1a1a1a" stroke-width="0.5"/>
-      <!-- Endplate lower -->
-      <rect x="568" y="176" width="14" height="108" rx="4" fill="#0d0d0d" stroke="#1a1a1a" stroke-width="0.5"/>
-      <!-- Main wing span upper -->
-      <path d="M 536,26 L 568,18 L 582,20 L 582,126 L 568,128 L 536,124 Z" fill="#0c0c0c" stroke="#1a1a1a" stroke-width="0.5"/>
-      <!-- Main wing span lower -->
-      <path d="M 536,176 L 568,172 L 582,174 L 582,280 L 568,282 L 536,274 Z" fill="#0c0c0c" stroke="#1a1a1a" stroke-width="0.5"/>
-      <!-- Wing leading edge magenta stripe -->
-      <path d="M 537,26 L 568,18 L 582,20 L 582,26 L 568,24 L 537,32 Z" fill="#FF007F" opacity="0.85"/>
-      <path d="M 537,274 L 568,282 L 582,280 L 582,274 L 568,276 L 537,268 Z" fill="#FF007F" opacity="0.85"/>
-      <!-- Secondary flap element -->
-      <path d="M 540,48 L 568,40 L 578,42 L 578,108 L 568,110 L 540,106 Z" fill="#111" stroke="#222" stroke-width="0.3"/>
-      <path d="M 540,194 L 568,190 L 578,192 L 578,258 L 568,260 L 540,252 Z" fill="#111" stroke="#222" stroke-width="0.3"/>
-      <!-- Centre section bridge across nose -->
-      <rect x="568" y="124" width="14" height="52" rx="2" fill="#0a0a0a"/>
-      <!-- Magenta DRS indicator on centre -->
-      <rect x="570" y="144" width="10" height="12" rx="2" fill="#FF007F" opacity="0.6"/>
+      <!-- NOSE CONE -->
+      <path d="
+        M 540,109 C 558,108 576,115 588,126
+        L 606,144 L 608,148 L 606,152
+        L 588,170 C 576,181 558,188 540,187
+        L 540,178 C 554,178 568,173 577,164
+        L 594,152 L 595,148 L 594,144
+        L 577,132 C 568,123 554,118 540,118 Z
+      " fill="url(#wbody)" stroke="#c8c8c8" stroke-width="0.5"/>
 
-      <!-- Light beam (front) -->
-      <polygon points="582,128 660,85 660,215 582,172" fill="url(#beamTopGrad)" opacity="0.3"/>
+      <!-- FRONT WING -->
+      <rect x="574" y="18"  width="13" height="108" rx="4" fill="url(#carbon)" stroke="#2a2a2a" stroke-width="0.5"/>
+      <rect x="574" y="172" width="13" height="108" rx="4" fill="url(#carbon)" stroke="#2a2a2a" stroke-width="0.5"/>
+      <path d="M 544,28 L 574,20 L 588,22 L 588,128 L 574,130 L 544,126 Z" fill="url(#wbody)" stroke="#c0c0c0" stroke-width="0.5"/>
+      <path d="M 544,172 L 574,168 L 588,170 L 588,278 L 574,280 L 544,272 Z" fill="url(#wbody)" stroke="#c0c0c0" stroke-width="0.5"/>
+      <path d="M 545,28 L 574,20 L 588,22 L 588,30 L 574,28 L 545,36 Z" fill="#FF007F"/>
+      <path d="M 545,117 L 574,120 L 588,122 L 588,128 L 574,130 L 545,126 Z" fill="#FF007F" opacity="0.7"/>
+      <path d="M 545,272 L 574,280 L 588,278 L 588,270 L 574,272 L 545,264 Z" fill="#FF007F"/>
+      <path d="M 545,172 L 574,168 L 588,170 L 588,178 L 574,176 L 545,180 Z" fill="#FF007F" opacity="0.7"/>
+      <path d="M 548,50 L 574,42 L 584,44 L 584,110 L 574,112 L 548,108 Z" fill="#111" stroke="#1e1e1e" stroke-width="0.3"/>
+      <path d="M 548,190 L 574,186 L 584,188 L 584,256 L 574,258 L 548,250 Z" fill="#111" stroke="#1e1e1e" stroke-width="0.3"/>
+      <rect x="574" y="126" width="14" height="46" rx="2" fill="#0c0c0c"/>
+      <rect x="578" y="142" width="6"  height="14" rx="2" fill="#FF007F" opacity="0.7"/>
+      <polygon points="588,130 680,88 680,210 588,170" fill="url(#beam)" opacity="0.28"/>
+      <polygon points="588,142 680,122 680,176 588,156" fill="url(#beam)" opacity="0.18" filter="url(#gl)"/>
 
-      <!-- ══════════════════════════
-           FRONT SUSPENSION
-      ══════════════════════════ -->
-      <path d="M 500,118 L 520,96 L 520,102 L 500,126 Z" fill="#1e1e1e"/>
-      <path d="M 500,182 L 520,204 L 520,198 L 500,174 Z" fill="#1e1e1e"/>
-      <line x1="510" y1="120" x2="528" y2="100" stroke="#282828" stroke-width="2"/>
-      <line x1="510" y1="180" x2="528" y2="200" stroke="#282828" stroke-width="2"/>
+      <!-- FRONT SUSPENSION -->
+      <path d="M496,112 L520,93  L523,99  L499,118 Z" fill="#bbb" opacity="0.75"/>
+      <path d="M496,184 L520,203 L523,197 L499,178 Z" fill="#bbb" opacity="0.75"/>
 
-      <!-- ══════════════════════════
-           FRONT TIRES
-      ══════════════════════════ -->
-      <!-- Front left (upper) -->
-      <rect x="516" y="46" width="50" height="74" rx="9" fill="#111"/>
-      <rect x="521" y="51" width="40" height="64" rx="7" fill="url(#tireTopGrad)"/>
-      <rect x="526" y="59" width="30" height="48" rx="5" fill="url(#rimTopGrad)" stroke="#505050" stroke-width="0.8"/>
-      <g stroke="#606060" stroke-width="2" stroke-linecap="round">
-        <line x1="541" y1="63" x2="541" y2="103"/>
-        <line x1="526" y1="83" x2="556" y2="83"/>
-        <line x1="530" y1="66" x2="552" y2="100"/>
-        <line x1="530" y1="100" x2="552" y2="66"/>
+      <!-- FRONT TIRES -->
+      <rect x="512" y="50"  width="48" height="76" rx="10" fill="#0d0d0d"/>
+      <rect x="516" y="54"  width="40" height="68" rx="8"  fill="url(#tireBlack)"/>
+      <rect x="521" y="61"  width="30" height="54" rx="6"  fill="#111" stroke="#2e2e2e" stroke-width="1.6"/>
+      <rect x="526" y="68"  width="20" height="40" rx="4"  fill="url(#rimSilver)" stroke="#999" stroke-width="0.8"/>
+      <g stroke="#999" stroke-width="2.4" stroke-linecap="round">
+        <line x1="536" y1="71"  x2="536" y2="105"/>
+        <line x1="526" y1="88"  x2="546" y2="88"/>
+        <line x1="529" y1="73"  x2="543" y2="103"/>
+        <line x1="529" y1="103" x2="543" y2="73"/>
       </g>
-      <circle cx="541" cy="83" r="7"  fill="#111" stroke="#FF007F" stroke-width="1.5"/>
-      <circle cx="541" cy="83" r="3.5" fill="#FF007F" opacity="0.85"/>
-      <rect x="526" y="68" width="8" height="14" rx="2" fill="#FF007F" opacity="0.85"/>
-
-      <!-- Front right (lower) -->
-      <rect x="516" y="180" width="50" height="74" rx="9" fill="#111"/>
-      <rect x="521" y="185" width="40" height="64" rx="7" fill="url(#tireTopGrad)"/>
-      <rect x="526" y="193" width="30" height="48" rx="5" fill="url(#rimTopGrad)" stroke="#505050" stroke-width="0.8"/>
-      <g stroke="#606060" stroke-width="2" stroke-linecap="round">
-        <line x1="541" y1="197" x2="541" y2="237"/>
-        <line x1="526" y1="217" x2="556" y2="217"/>
-        <line x1="530" y1="200" x2="552" y2="234"/>
-        <line x1="530" y1="234" x2="552" y2="200"/>
+      <circle cx="536" cy="88"  r="7"   fill="#ddd" stroke="#888" stroke-width="0.8"/>
+      <circle cx="536" cy="88"  r="4"   fill="#FF007F"/>
+      <rect   x="526" y="76"   width="6" height="14" rx="2" fill="#FF007F"/>
+      <rect x="512" y="170" width="48" height="76" rx="10" fill="#0d0d0d"/>
+      <rect x="516" y="174" width="40" height="68" rx="8"  fill="url(#tireBlack)"/>
+      <rect x="521" y="181" width="30" height="54" rx="6"  fill="#111" stroke="#2e2e2e" stroke-width="1.6"/>
+      <rect x="526" y="188" width="20" height="40" rx="4"  fill="url(#rimSilver)" stroke="#999" stroke-width="0.8"/>
+      <g stroke="#999" stroke-width="2.4" stroke-linecap="round">
+        <line x1="536" y1="191" x2="536" y2="225"/>
+        <line x1="526" y1="208" x2="546" y2="208"/>
+        <line x1="529" y1="193" x2="543" y2="223"/>
+        <line x1="529" y1="223" x2="543" y2="193"/>
       </g>
-      <circle cx="541" cy="217" r="7"  fill="#111" stroke="#FF007F" stroke-width="1.5"/>
-      <circle cx="541" cy="217" r="3.5" fill="#FF007F" opacity="0.85"/>
-      <rect x="526" y="202" width="8" height="14" rx="2" fill="#FF007F" opacity="0.85"/>
+      <circle cx="536" cy="208" r="7"   fill="#ddd" stroke="#888" stroke-width="0.8"/>
+      <circle cx="536" cy="208" r="4"   fill="#FF007F"/>
+      <rect   x="526" y="196" width="6" height="14" rx="2" fill="#FF007F"/>
     </svg>
   </div>
 </section>
