@@ -1744,13 +1744,18 @@
 
         activeTl = gsap.timeline();
 
-        // Phase 1: flyby car races across and disappears
+        // Phase 1: flyby car travels full road length then exits
         activeTl.to(flybyWrap, {
-          x: flybyEnd,
-          duration: 0.55,
-          ease: 'power3.in'
+          x: sectionW - 300,       // travels to near the right edge visibly
+          duration: 1.1,
+          ease: 'power1.inOut'     // smooth acceleration — clearly visible crossing
         })
-        .to(flybyWrap, { opacity: 0, duration: 0.12, ease: 'none' }, '-=0.12')
+        .to(flybyWrap, {
+          x: flybyEnd,             // then shoots off screen
+          opacity: 0,
+          duration: 0.3,
+          ease: 'power2.in'
+        })
 
         // Phase 2: brief pause, then main car enters
         .add(function () {}, '+=0.15')
@@ -1780,7 +1785,7 @@
         // Text fades in after main car passes
         gsap.fromTo(roadText,
           { opacity: 0, y: 12 },
-          { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', delay: 2.6 }
+          { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', delay: 3.5 }
         );
 
         // Tail light glow pulse as car brakes
