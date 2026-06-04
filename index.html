@@ -231,45 +231,43 @@
       display: block;
     }
     /* ── Car Zoom Section ── */
-    #car-zoom-section {
+    /* ── Race Track Zone ── */
+    #track-zone {
       background: #050505;
+      margin: 0 3vw;
+      border-radius: 80px;
+      border: 3px solid rgba(255,255,255,0.5);
+      position: relative;
       overflow: hidden;
-      height: 200px;
+      padding-bottom: 80px;
+    }
+    /* Inner track edge line — frames the central infield below the car straight */
+    #track-zone::before {
+      content: '';
+      position: absolute;
+      inset: 130px 55px;
+      border: 2px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    #car-zoom-section {
+      background: transparent;
+      overflow: visible;
+      height: 140px;
       position: relative;
       display: flex;
       align-items: center;
+      z-index: 1;
     }
     #car-zoom-section .track-surface {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 50%, #0e0e0e 0%, #050505 100%);
+      display: none;
     }
-    /* White road edge strips — top and bottom */
-    #car-zoom-section .road-stripe-top {
-      position: absolute;
-      top: 8px; left: 0; right: 0;
-      height: 6px;
-      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 8%, rgba(255,255,255,0.55) 92%, transparent 100%);
-    }
-    #car-zoom-section .road-stripe-bottom {
-      position: absolute;
-      bottom: 8px; left: 0; right: 0;
-      height: 6px;
-      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 8%, rgba(255,255,255,0.55) 92%, transparent 100%);
-    }
-    #car-zoom-section .track-line {
-      position: absolute;
-      top: 50%; left: 0; right: 0;
-      height: 1px;
-      transform: translateY(90px);
-      background: linear-gradient(90deg, transparent 0%, #FF007F33 20%, #FF007F33 80%, transparent 100%);
-    }
+    #car-zoom-section .road-stripe-top,
+    #car-zoom-section .road-stripe-bottom,
+    #car-zoom-section .track-line,
     #car-zoom-section .track-line-2 {
-      position: absolute;
-      top: 50%; left: 0; right: 0;
-      height: 1px;
-      transform: translateY(-90px);
-      background: linear-gradient(90deg, transparent 0%, #FF007F33 20%, #FF007F33 80%, transparent 100%);
+      display: none;
     }
     #car-flyby-wrap {
       position: absolute;
@@ -333,49 +331,17 @@
     }
     /* ── Testimonial Section ── */
     #testimonial-section {
-      background: #050505;
-      padding: 0;
+      background: transparent;
       position: relative;
-      overflow: hidden;
-    }
-    /* Race track: top and bottom horizontal straights that connect to the road above */
-    #testimonial-section::before,
-    #testimonial-section::after {
-      content: '';
-      position: absolute;
-      left: 0; right: 0;
-      height: 52px;
-      background: #050505;
       z-index: 1;
     }
-    #testimonial-section::before {
-      top: 0;
-      border-top: 3px solid rgba(255,255,255,0.18);
-      border-bottom: 3px solid rgba(255,255,255,0.18);
-    }
-    #testimonial-section::after {
-      bottom: 0;
-      border-top: 3px solid rgba(255,255,255,0.18);
-      border-bottom: 3px solid rgba(255,255,255,0.18);
-    }
-    /* Left and right curved corners connecting top/bottom straights */
-    .track-corner-left,
-    .track-corner-right {
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 80px;
-      z-index: 2;
-      pointer-events: none;
-    }
-    .track-corner-left { left: 0; }
-    .track-corner-right { right: 0; }
     .testimonial-inner {
-      max-width: 780px;
+      max-width: 680px;
       width: 100%;
       position: relative;
       z-index: 3;
       margin: 0 auto;
-      padding: 5rem 2rem;
+      padding: 4rem 2rem;
     }
     .testimonial-rule {
       width: 100%;
@@ -988,6 +954,9 @@
   </div>
 </section>
 
+<!-- ── Race Track Zone (car road + testimonial circuit) ─────────── -->
+<div id="track-zone">
+
 <!-- ── Car Zoom Section ──────────────────────────────────────────── -->
 <section id="car-zoom-section">
   <div class="track-surface"></div>
@@ -1321,19 +1290,6 @@
 
 <!-- ── Testimonial Section ─────────────────────────────────────── -->
 <section id="testimonial-section">
-  <!-- Track corners — SVG curved straights connecting top/bottom road edges -->
-  <svg class="track-corner-left" viewBox="0 0 80 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- outer border -->
-    <path d="M80,3 Q6,3 6,50 L6,350 Q6,397 80,397" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>
-    <!-- inner border -->
-    <path d="M80,55 Q58,55 58,80 L58,320 Q58,345 80,345" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>
-  </svg>
-  <svg class="track-corner-right" viewBox="0 0 80 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- outer border -->
-    <path d="M0,3 Q74,3 74,50 L74,350 Q74,397 0,397" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>
-    <!-- inner border -->
-    <path d="M0,55 Q22,55 22,80 L22,320 Q22,345 0,345" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="3"/>
-  </svg>
   <div class="testimonial-inner">
     <div class="testimonial-rule"></div>
     <div class="testimonial-body">
@@ -1344,6 +1300,8 @@
     <div class="testimonial-rule"></div>
   </div>
 </section>
+
+</div><!-- /#track-zone -->
 
 <!-- ── Packages Label ───────────────────────────────────────────── -->
 <div id="packages-label">Our Packages</div>
