@@ -1663,7 +1663,7 @@
     <h2 class="quote-title">Get your free<br>personalized quote today.</h2>
     <p class="quote-sub">Tell us about your project and we'll get back to you within 24 hours with a tailored proposal.</p>
     <div class="quote-divider"></div>
-    <form class="quote-form" action="https://formspree.io/f/xeewqgdo" method="POST">
+    <form class="quote-form" id="quote-form">
       <input type="hidden" name="_replyto" value="kr.primak@gmail.com"/>
       <input type="hidden" name="_subject" value="New Quote Request — Kristina Website Design"/>
       <div class="quote-row">
@@ -1692,6 +1692,29 @@
       </div>
       <button type="submit" class="quote-submit">Send My Quote Request →</button>
     </form>
+    <div id="quote-success" style="display:none; padding: 2rem 0;">
+      <p style="font-family:'Space Grotesk',sans-serif; font-size:1.1rem; color:#ffffff; font-weight:600;">Form submitted — we'll be in touch within 24 hours!</p>
+    </div>
+    <script>
+      document.getElementById('quote-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var form = this;
+        var btn = form.querySelector('.quote-submit');
+        btn.textContent = 'Sending…';
+        btn.disabled = true;
+        fetch('https://formspree.io/f/xeewqgdo', {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        }).then(function(res) {
+          form.style.display = 'none';
+          document.getElementById('quote-success').style.display = 'block';
+        }).catch(function() {
+          btn.textContent = 'Send My Quote Request →';
+          btn.disabled = false;
+        });
+      });
+    </script>
   </div>
 </section>
 
