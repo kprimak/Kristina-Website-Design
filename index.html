@@ -21,7 +21,29 @@
       background: #ffffff;
     }
 
-    #main-section { height: 670vh; }
+    #site-logo {
+      position: absolute;
+      top: 2rem;
+      left: 2.5rem;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+      gap: 0;
+      pointer-events: none;
+    }
+    #site-logo span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.18em;
+      color: #000000;
+      display: block;
+    }
+    #site-logo span.mirrored {
+      transform: scaleY(-1);
+      opacity: 0.18;
+    }
     #ls-fo { opacity: 0; }
 
     #main-viewport {
@@ -730,6 +752,10 @@
 
 <section id="main-section">
   <div id="main-viewport">
+    <div id="site-logo">
+      <span>KIPODE</span>
+      <span class="mirrored">KIPODE</span>
+    </div>
 
     <div id="device-scene">
       <div id="lateral-wrap">
