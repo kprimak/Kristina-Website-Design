@@ -493,12 +493,17 @@
     /* ── Quote Section ── */
     #quote-section {
       background: #0a0a0a;
-      padding: 7rem 2rem 8rem 5%;
+      padding: 7rem 5%;
     }
     .quote-inner {
-      max-width: 680px;
+      max-width: 1100px;
       margin: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
     }
+    .quote-left {}
     .quote-kicker {
       display: block;
       font-family: 'Archivo', sans-serif;
@@ -515,24 +520,90 @@
       color: #ffffff;
       letter-spacing: -0.03em;
       line-height: 1.1;
-      margin: 0 0 0.75rem;
+      margin: 0 0 1.2rem;
     }
     .quote-sub {
       font-family: 'Archivo', sans-serif;
       font-size: 0.95rem;
       color: rgba(255,255,255,0.45);
-      margin: 0 0 3rem;
-      line-height: 1.6;
+      margin: 0 0 2.5rem;
+      line-height: 1.7;
+    }
+    .quote-contact-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+    .quote-contact-list li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .quote-contact-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(255,0,127,0.12);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .quote-contact-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: #FF007F;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .quote-contact-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .quote-contact-label {
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 0.15rem;
+    }
+    .quote-contact-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #ffffff;
+      text-decoration: none;
+    }
+    .quote-contact-value:hover { color: #FF007F; }
+    /* Right: form card */
+    .quote-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 2.5rem;
+    }
+    .quote-card-title {
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #000000;
+      margin-bottom: 1.8rem;
     }
     .quote-form {
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
+      gap: 1.1rem;
     }
     .quote-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1.2rem;
+      gap: 1rem;
     }
     .quote-field {
       display: flex;
@@ -541,36 +612,37 @@
     }
     .quote-field label {
       font-family: 'Archivo', sans-serif;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
+      color: rgba(0,0,0,0.5);
     }
     .quote-field input,
     .quote-field textarea {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 0.95rem;
-      color: #ffffff;
-      background: #141414;
-      border: 1.5px solid #2a2a2a;
-      border-radius: 6px;
+      color: #000000;
+      background: #f5f5f5;
+      border: 1.5px solid #e8e8e8;
+      border-radius: 8px;
       padding: 0.75rem 1rem;
       outline: none;
       transition: border-color 0.2s;
       resize: none;
     }
     .quote-field input::placeholder,
-    .quote-field textarea::placeholder { color: rgba(255,255,255,0.2); }
+    .quote-field textarea::placeholder { color: rgba(0,0,0,0.25); }
     .quote-field input:focus,
     .quote-field textarea:focus {
       border-color: #FF007F;
-      background: #1a1a1a;
+      background: #fff;
     }
     .quote-field textarea {
       min-height: 130px;
     }
     .quote-submit {
+      width: 100%;
       font-family: 'Archivo', sans-serif;
       font-size: 0.8rem;
       font-weight: 800;
@@ -1693,43 +1765,69 @@
 <!-- ── Quote Section ───────────────────────────────────────────── -->
 <section id="quote-section">
   <div class="quote-inner">
-    <span class="quote-kicker">Free Consultation</span>
-    <p style="font-family:'Space Grotesk',sans-serif;font-size:clamp(1rem,2vw,1.3rem);color:rgba(255,255,255,0.3);font-weight:700;margin:0 0 0.5rem;letter-spacing:0.05em;">— or —</p>
-    <h2 class="quote-title">Get your free<br>personalized quote today.</h2>
-    <p class="quote-sub">Tell us about your project and we'll get back to you within 24 hours with a tailored proposal.</p>
-    <div class="quote-divider"></div>
-    <form class="quote-form" id="quote-form">
-      <input type="hidden" name="_replyto" value="kr.primak@gmail.com"/>
-      <input type="hidden" name="_subject" value="New Quote Request — Kristina Website Design"/>
-      <div class="quote-row">
-        <div class="quote-field">
-          <label for="q-first">First Name</label>
-          <input type="text" id="q-first" name="first_name" placeholder="Jane" required/>
-        </div>
-        <div class="quote-field">
-          <label for="q-last">Last Name</label>
-          <input type="text" id="q-last" name="last_name" placeholder="Smith" required/>
-        </div>
-      </div>
-      <div class="quote-row">
-        <div class="quote-field">
-          <label for="q-email">Email</label>
-          <input type="email" id="q-email" name="email" placeholder="jane@example.com" required/>
-        </div>
-        <div class="quote-field">
-          <label for="q-phone">Phone Number</label>
-          <input type="tel" id="q-phone" name="phone" placeholder="+1 (555) 000-0000"/>
-        </div>
-      </div>
-      <div class="quote-field">
-        <label for="q-details">Give us some details</label>
-        <textarea id="q-details" name="details" placeholder="Tell us about your business, what you're looking for, your timeline, and any inspiration you have in mind…" required></textarea>
-      </div>
-      <button type="submit" class="quote-submit">Send My Quote Request →</button>
-    </form>
-    <div id="quote-success" style="display:none; padding: 2rem 0;">
-      <p style="font-family:'Space Grotesk',sans-serif; font-size:1.1rem; color:#ffffff; font-weight:600;">Form submitted — we'll be in touch within 24 hours!</p>
+
+    <!-- Left: headline + contact info -->
+    <div class="quote-left">
+      <span class="quote-kicker">Free Consultation</span>
+      <h2 class="quote-title">Get your free<br>personalized quote today.</h2>
+      <p class="quote-sub">Tell us about your project and we'll get back to you within 24 hours with a tailored proposal.</p>
+      <ul class="quote-contact-list">
+        <li>
+          <div class="quote-contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.22 2.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <div class="quote-contact-text">
+            <span class="quote-contact-label">Call Us</span>
+            <a href="tel:+14387739211" class="quote-contact-value">+1 (438) 773-9211</a>
+          </div>
+        </li>
+        <li>
+          <div class="quote-contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="quote-contact-text">
+            <span class="quote-contact-label">Email Us</span>
+            <a href="mailto:kr.primak@gmail.com" class="quote-contact-value">kr.primak@gmail.com</a>
+          </div>
+        </li>
+      </ul>
     </div>
+
+    <!-- Right: form card -->
+    <div class="quote-card">
+      <p class="quote-card-title">Send a Message</p>
+      <form class="quote-form" id="quote-form">
+        <input type="hidden" name="_replyto" value="kr.primak@gmail.com"/>
+        <input type="hidden" name="_subject" value="New Quote Request — Kristina Website Design"/>
+        <div class="quote-row">
+          <div class="quote-field">
+            <label for="q-first">First Name</label>
+            <input type="text" id="q-first" name="first_name" placeholder="Jane" required/>
+          </div>
+          <div class="quote-field">
+            <label for="q-last">Last Name</label>
+            <input type="text" id="q-last" name="last_name" placeholder="Smith" required/>
+          </div>
+        </div>
+        <div class="quote-row">
+          <div class="quote-field">
+            <label for="q-email">Email</label>
+            <input type="email" id="q-email" name="email" placeholder="jane@example.com" required/>
+          </div>
+          <div class="quote-field">
+            <label for="q-phone">Phone Number</label>
+            <input type="tel" id="q-phone" name="phone" placeholder="+1 (438) 000-0000"/>
+          </div>
+        </div>
+        <div class="quote-field">
+          <label for="q-details">Tell us about your project</label>
+          <textarea id="q-details" name="details" placeholder="Your business, what you're looking for, timeline, any inspiration…" required></textarea>
+        </div>
+        <button type="submit" class="quote-submit">Send My Quote Request →</button>
+      </form>
+      <div id="quote-success" style="display:none; padding: 2rem 0;">
+        <p style="font-family:'Space Grotesk',sans-serif; font-size:1.1rem; color:#000; font-weight:600;">Form submitted — we'll be in touch within 24 hours!</p>
+      </div>
     <script>
       document.getElementById('quote-form').addEventListener('submit', function(e) {
         e.preventDefault();
