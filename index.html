@@ -323,13 +323,22 @@
     #packages-label {
       background: #fff;
       text-align: left;
-      padding: 2rem 2rem 0.5rem 5%;
+      padding: 0.5rem 2rem 0 5%;
       font-family: 'Space Grotesk', sans-serif;
       font-size: clamp(2.2rem, 5vw, 4rem);
       font-weight: 900;
       letter-spacing: -0.04em;
       line-height: 1.12;
       color: #000000;
+    }
+    #packages-label::after {
+      content: '';
+      display: block;
+      margin-top: 0.6rem;
+      width: 56px;
+      height: 3px;
+      background: #FF007F;
+      border-radius: 2px;
     }
     /* ── Testimonial Section ── */
     #testimonial-section {
