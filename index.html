@@ -597,24 +597,49 @@
     }
     #after-section {
       background: #0a0a0a;
-      text-align: center;
-      padding: 9rem 2rem 10rem;
+      padding: 7rem 2rem 8rem 5%;
+    }
+    #after-section .contact-label {
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #FF007F;
+      display: block;
+      margin-bottom: 1.8rem;
     }
     #after-section h2 {
       font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 900;
+      font-size: clamp(2.2rem, 5vw, 4rem);
       color: #ffffff;
       letter-spacing: -0.04em;
-      margin-bottom: 1.4rem;
+      line-height: 1.12;
+      margin-bottom: 2.5rem;
     }
-    #after-section p {
-      max-width: 480px;
-      margin: 0 auto 2.4rem;
-      color: rgba(255,255,255,0.45);
-      line-height: 1.8;
+    .contact-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+    .contact-list li {
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 1rem;
+      color: rgba(255,255,255,0.55);
     }
+    .contact-list li strong {
+      color: #ffffff;
+      font-weight: 700;
+      margin-right: 0.4rem;
+    }
+    .contact-list a {
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .contact-list a:hover { color: #FF007F; }
     .cta-btn {
       display: inline-block;
       background: #FF007F;
@@ -1729,9 +1754,12 @@
 </section>
 
 <section id="after-section">
-  <h2>Your story, beautifully crafted.</h2>
-  <p>From the first wireframe to the final pixel — every element designed with intention, every interaction built for impact.</p>
-  <a href="contact.html" class="cta-btn">Start your project</a>
+  <span class="contact-label">Contact Us</span>
+  <h2>Kristina Primak</h2>
+  <ul class="contact-list">
+    <li><strong>Email</strong><a href="mailto:kr.primak@gmail.com">kr.primak@gmail.com</a></li>
+    <li><strong>Phone</strong><a href="tel:+14387739211">+1 (438) 773-9211</a></li>
+  </ul>
 </section>
 
 <script>
