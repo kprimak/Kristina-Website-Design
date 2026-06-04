@@ -370,6 +370,14 @@
       letter-spacing: -0.01em;
       margin: 0 0 2rem;
     }
+    #parked-car-wrap {
+      position: absolute;
+      bottom: 18px;
+      right: -200px; /* starts off-screen right */
+      width: 90px;
+      opacity: 0;
+      transform-origin: center center;
+    }
     .testimonial-author {
       font-family: 'Archivo', sans-serif;
       font-size: 0.68rem;
@@ -1287,7 +1295,21 @@
 </section>
 
 <!-- ── Testimonial Section ─────────────────────────────────────── -->
-<section id="testimonial-section">
+<section id="testimonial-section" style="position:relative;overflow:hidden;">
+  <!-- Parking car — drives in from right and parks by author line -->
+  <div id="parked-car-wrap">
+    <svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;overflow:visible;">
+      <path d="M 390,100 L 360,90 L 300,82 L 220,78 L 160,76 L 110,78 L 70,82 L 44,88 L 32,92 L 28,100 L 32,108 L 44,112 L 70,118 L 110,122 L 160,124 L 220,122 L 300,118 L 360,110 Z" fill="none" stroke="#FF007F" stroke-width="2" stroke-linejoin="round"/>
+      <ellipse cx="330" cy="100" rx="18" ry="7" fill="none" stroke="#FF007F" stroke-width="1.2" opacity="0.7"/>
+      <path d="M 220,78 L 160,76 L 80,18 L 60,22 L 100,78" fill="none" stroke="#FF007F" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M 220,122 L 160,124 L 80,182 L 60,178 L 100,122" fill="none" stroke="#FF007F" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M 300,82 L 282,58 L 268,78" fill="none" stroke="#FF007F" stroke-width="1.3"/>
+      <path d="M 300,118 L 282,142 L 268,122" fill="none" stroke="#FF007F" stroke-width="1.3"/>
+      <rect x="26" y="83" width="16" height="10" rx="3" fill="none" stroke="#FF007F" stroke-width="1.3"/>
+      <rect x="26" y="107" width="16" height="10" rx="3" fill="none" stroke="#FF007F" stroke-width="1.3"/>
+      <line x1="60" y1="22" x2="80" y2="18" stroke="#FF007F" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+  </div>
   <div class="testimonial-inner">
     <div class="testimonial-rule"></div>
     <div class="testimonial-body">
@@ -1785,9 +1807,11 @@
     function resetCars() {
       if (activeTl) { activeTl.kill(); activeTl = null; }
       gsap.set(carWrap,   { x: 0 });
-      gsap.set(flybyWrap, { x: 0, opacity: 0.85 });
+      gsap.set(flybyWrap, { x: 0, opacity: 0.85, rotation: 0, scale: 1 });
       gsap.set(roadText,  { opacity: 0, y: 0 });
       gsap.set(speedLines, { opacity: 0 });
+      var parkedCar = document.getElementById('parked-car-wrap');
+      if (parkedCar) gsap.set(parkedCar, { x: 0, opacity: 0 });
     }
 
     resetCars();
@@ -1798,20 +1822,48 @@
       onLeaveBack: resetCars,
       onEnter: function () {
         resetCars();
-        var sectionW = carSection.offsetWidth;
-        var carW     = 366;
-        var stopX    = sectionW * 1.32 - carW * 0.5;
-        var flybyEnd = sectionW + 500;
+        var sectionW  = carSection.offsetWidth;
+        var carW      = 366;
+        var stopX     = sectionW * 1.32 - carW * 0.5;
+        var turnPoint = sectionW * 0.72; // where it starts banking
 
         activeTl = gsap.timeline();
 
-        // Phase 1: flyby car blasts across full road and off screen in one motion
+        // Phase 1a: flyby blasts across road to turn point
         activeTl.to(flybyWrap, {
-          x: flybyEnd,
-          duration: 1.0,
+          x: turnPoint,
+          duration: 0.75,
           ease: 'power2.in'
         })
-        .to(flybyWrap, { opacity: 0, duration: 0.1, ease: 'none' }, '-=0.1')
+        // Phase 1b: bank right — rotate, shrink, shoot off bottom-right corner
+        .to(flybyWrap, {
+          x: sectionW + 200,
+          y: 180,
+          rotation: 85,
+          scale: 0.15,
+          opacity: 0,
+          duration: 0.55,
+          ease: 'power3.in',
+          transformOrigin: '50% 50%'
+        })
+        // Phase 1c: parking car slides in from right side of testimonial
+        .call(function () {
+          var parkedCar = document.getElementById('parked-car-wrap');
+          if (!parkedCar) return;
+          var testimonial = document.getElementById('testimonial-section');
+          var tWidth = testimonial ? testimonial.offsetWidth : sectionW;
+          gsap.set(parkedCar, { opacity: 1, x: 0, rotation: 0, scale: 1 });
+          // Drive from right edge across to parked position (left side)
+          gsap.fromTo(parkedCar,
+            { x: tWidth + 100 },
+            { x: -tWidth * 0.1, duration: 1.1, ease: 'power2.out',
+              onComplete: function () {
+                // gentle stop wiggle
+                gsap.to(parkedCar, { x: '-=' + 8, duration: 0.12, yoyo: true, repeat: 1, ease: 'power1.inOut' });
+              }
+            }
+          );
+        }, null, null, '+=0.1')
 
         // Phase 2: brief pause, then main car enters
         .add(function () {}, '+=0.15')
