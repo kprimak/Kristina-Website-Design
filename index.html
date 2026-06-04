@@ -231,43 +231,45 @@
       display: block;
     }
     /* ── Car Zoom Section ── */
-    /* ── Race Track Zone ── */
-    #track-zone {
-      background: #050505;
-      margin: 0 8vw;
-      border-radius: 200px;
-      border: 3px solid rgba(255,255,255,0.5);
-      position: relative;
-      overflow: hidden;
-      padding-bottom: 80px;
-    }
-    /* White infield — road itself stays black, interior is white */
-    #track-zone::before {
-      content: '';
-      position: absolute;
-      inset: 105px 120px;
-      background: #ffffff;
-      border-radius: 120px;
-      pointer-events: none;
-      z-index: 0;
-    }
     #car-zoom-section {
-      background: transparent;
-      overflow: visible;
-      height: 140px;
+      background: #050505;
+      overflow: hidden;
+      height: 200px;
       position: relative;
       display: flex;
       align-items: center;
-      z-index: 1;
     }
     #car-zoom-section .track-surface {
-      display: none;
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, #0e0e0e 0%, #050505 100%);
     }
-    #car-zoom-section .road-stripe-top,
-    #car-zoom-section .road-stripe-bottom,
-    #car-zoom-section .track-line,
+    /* White road edge strips — top and bottom */
+    #car-zoom-section .road-stripe-top {
+      position: absolute;
+      top: 8px; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 8%, rgba(255,255,255,0.55) 92%, transparent 100%);
+    }
+    #car-zoom-section .road-stripe-bottom {
+      position: absolute;
+      bottom: 8px; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 8%, rgba(255,255,255,0.55) 92%, transparent 100%);
+    }
+    #car-zoom-section .track-line {
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 1px;
+      transform: translateY(90px);
+      background: linear-gradient(90deg, transparent 0%, #FF007F33 20%, #FF007F33 80%, transparent 100%);
+    }
     #car-zoom-section .track-line-2 {
-      display: none;
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 1px;
+      transform: translateY(-90px);
+      background: linear-gradient(90deg, transparent 0%, #FF007F33 20%, #FF007F33 80%, transparent 100%);
     }
     #car-flyby-wrap {
       position: absolute;
@@ -331,17 +333,16 @@
     }
     /* ── Testimonial Section ── */
     #testimonial-section {
-      background: transparent;
-      position: relative;
-      z-index: 1;
+      background: #ffffff;
+      padding: 6rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
     .testimonial-inner {
-      max-width: 680px;
+      max-width: 780px;
       width: 100%;
-      position: relative;
-      z-index: 3;
-      margin: 0 auto;
-      padding: 4rem 2rem;
     }
     .testimonial-rule {
       width: 100%;
@@ -954,9 +955,6 @@
   </div>
 </section>
 
-<!-- ── Race Track Zone (car road + testimonial circuit) ─────────── -->
-<div id="track-zone">
-
 <!-- ── Car Zoom Section ──────────────────────────────────────────── -->
 <section id="car-zoom-section">
   <div class="track-surface"></div>
@@ -1291,15 +1289,15 @@
 <!-- ── Testimonial Section ─────────────────────────────────────── -->
 <section id="testimonial-section">
   <div class="testimonial-inner">
+    <div class="testimonial-rule"></div>
     <div class="testimonial-body">
       <span class="testimonial-mark">"</span>
       <p class="testimonial-quote">Working with KIPODE was a massive win for us. They took our website and completely transformed the design, giving everything this high-end, luxury aesthetic that perfectly fits our style. Between the new site layouts and the custom animations blowing up our social feeds, our views jumped by over 110%. If you want your branding to be as crisp as a flawless wrap, just give them a call.</p>
       <span class="testimonial-author">— A1 Wrap, Car Wrapping</span>
     </div>
+    <div class="testimonial-rule"></div>
   </div>
 </section>
-
-</div><!-- /#track-zone -->
 
 <!-- ── Packages Label ───────────────────────────────────────────── -->
 <div id="packages-label">Our Packages</div>
