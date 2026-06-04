@@ -1805,18 +1805,13 @@
 
         activeTl = gsap.timeline();
 
-        // Phase 1: flyby car travels full road length then exits
+        // Phase 1: flyby car blasts across full road and off screen in one motion
         activeTl.to(flybyWrap, {
-          x: sectionW - 300,       // travels to near the right edge visibly
-          duration: 1.1,
-          ease: 'power1.inOut'     // smooth acceleration — clearly visible crossing
-        })
-        .to(flybyWrap, {
-          x: flybyEnd,             // then shoots off screen
-          opacity: 0,
-          duration: 0.3,
+          x: flybyEnd,
+          duration: 1.0,
           ease: 'power2.in'
         })
+        .to(flybyWrap, { opacity: 0, duration: 0.1, ease: 'none' }, '-=0.1')
 
         // Phase 2: brief pause, then main car enters
         .add(function () {}, '+=0.15')
