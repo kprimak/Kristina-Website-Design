@@ -241,12 +241,12 @@
       overflow: hidden;
       padding-bottom: 80px;
     }
-    /* Inner track edge line — frames the central infield below the car straight */
+    /* White infield — road itself stays black, interior is white */
     #track-zone::before {
       content: '';
       position: absolute;
       inset: 130px 55px;
-      border: 2px solid rgba(255,255,255,0.18);
+      background: #ffffff;
       border-radius: 20px;
       pointer-events: none;
       z-index: 0;
@@ -346,7 +346,7 @@
     .testimonial-rule {
       width: 100%;
       height: 1px;
-      background: rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.1);
     }
     .testimonial-body {
       padding: 3rem 0;
@@ -355,7 +355,7 @@
       font-family: Georgia, 'Times New Roman', serif;
       font-size: 6rem;
       line-height: 0.5;
-      color: rgba(255,255,255,0.12);
+      color: rgba(0,0,0,0.12);
       display: block;
       margin-bottom: 1.8rem;
     }
@@ -364,7 +364,7 @@
       font-style: normal;
       font-weight: 400;
       font-size: clamp(1rem, 1.8vw, 1.25rem);
-      color: #ffffff;
+      color: #000000;
       line-height: 1.7;
       letter-spacing: -0.01em;
       margin: 0 0 2rem;
@@ -375,7 +375,7 @@
       font-weight: 800;
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
+      color: rgba(0,0,0,0.4);
     }
     /* ── Prices Section ── */
     #prices-section {
@@ -1291,13 +1291,11 @@
 <!-- ── Testimonial Section ─────────────────────────────────────── -->
 <section id="testimonial-section">
   <div class="testimonial-inner">
-    <div class="testimonial-rule"></div>
     <div class="testimonial-body">
       <span class="testimonial-mark">"</span>
       <p class="testimonial-quote">Working with KIPODE was a massive win for us. They took our website and completely transformed the design, giving everything this high-end, luxury aesthetic that perfectly fits our style. Between the new site layouts and the custom animations blowing up our social feeds, our views jumped by over 110%. If you want your branding to be as crisp as a flawless wrap, just give them a call.</p>
       <span class="testimonial-author">— A1 Wrap, Car Wrapping</span>
     </div>
-    <div class="testimonial-rule"></div>
   </div>
 </section>
 
