@@ -1772,7 +1772,13 @@
           x: stopX,
           duration: 0.5,
           ease: 'power2.out'
-        });
+        })
+        // Text fades in only after main car fully stops
+        .fromTo(roadText,
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' },
+          '+=0.15'
+        );
 
         // Speed lines during flyby
         gsap.fromTo(speedLines,
@@ -1782,12 +1788,6 @@
               gsap.to(speedLines, { opacity: 0, duration: 0.3 });
             }
           }
-        );
-
-        // Text fades in after main car passes
-        gsap.fromTo(roadText,
-          { opacity: 0, y: 12 },
-          { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', delay: 3.5 }
         );
 
         // Tail light glow pulse as car brakes
