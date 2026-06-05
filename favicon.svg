@@ -1,20 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- K upright (top half) -->
-  <g transform="translate(18, 4) scale(0.64)">
-    <!-- vertical stem -->
-    <rect x="0" y="0" width="14" height="64" fill="#111111"/>
-    <!-- upper arm -->
-    <polygon points="14,0 100,0 100,14 28,32 14,32" fill="#111111"/>
-    <!-- lower arm -->
-    <polygon points="14,32 28,32 100,64 100,50 14,64" fill="#111111"/>
-  </g>
-  <!-- K inverted (bottom half) — flip vertically around y=50 -->
-  <g transform="translate(18, 96) scale(0.64, -0.64)">
-    <!-- vertical stem -->
-    <rect x="0" y="0" width="14" height="64" fill="#111111"/>
-    <!-- upper arm -->
-    <polygon points="14,0 100,0 100,14 28,32 14,32" fill="#111111"/>
-    <!-- lower arm -->
-    <polygon points="14,32 28,32 100,64 100,50 14,64" fill="#111111"/>
-  </g>
+  <!-- Top K: y 4–46 -->
+  <rect x="18" y="4"  width="12" height="42" fill="#111"/>
+  <polygon points="30,4  66,4  66,17 30,24" fill="#111"/>
+  <polygon points="30,24 66,31 66,46 30,46" fill="#111"/>
+
+  <!-- Bottom K (mirrored vertically): y 54–96 -->
+  <rect x="18" y="54" width="12" height="42" fill="#111"/>
+  <polygon points="30,96 66,96 66,83 30,76" fill="#111"/>
+  <polygon points="30,76 66,69 66,54 30,54" fill="#111"/>
 </svg>
