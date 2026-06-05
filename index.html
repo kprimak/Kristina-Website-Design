@@ -61,12 +61,13 @@
       z-index: 999;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: 3rem 2.5rem;
+      justify-content: space-between;
+      padding: 5rem 2.5rem 3rem;
       transform: translateX(100%);
       transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
     }
     #nav-drawer.open { transform: translateX(0); }
+    #nav-links { display: flex; flex-direction: column; text-align: right; }
     .nav-drawer-link {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
@@ -78,6 +79,7 @@
       display: block;
       border-bottom: 1px solid rgba(0,0,0,0.06);
       transition: color 0.2s;
+      text-align: right;
     }
     .nav-drawer-link:last-child { border-bottom: none; }
     .nav-drawer-link:hover { color: #FF007F; }
@@ -88,13 +90,34 @@
       color: rgba(0,0,0,0.45);
       text-decoration: none;
       letter-spacing: 0.04em;
-      padding: 0.45rem 0 0.45rem 1rem;
+      padding: 0.45rem 0;
       display: block;
-      border-left: 2px solid #FF007F;
-      margin: 0.2rem 0 0.2rem 0.3rem;
+      border-right: 2px solid #FF007F;
+      margin: 0.2rem 0;
       transition: color 0.2s;
+      text-align: right;
     }
     .nav-drawer-sub-link:hover { color: #FF007F; }
+    #nav-drawer-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1;
+      gap: 0;
+    }
+    #nav-drawer-logo span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: 0.18em;
+      color: #000000;
+      display: block;
+      transform-origin: center center;
+    }
+    #nav-drawer-logo span.ndl-mirror {
+      transform: scaleX(-1);
+      opacity: 0.25;
+    }
     #nav-overlay {
       position: fixed;
       inset: 0;
@@ -916,13 +939,19 @@
 </button>
 <div id="nav-overlay"></div>
 <nav id="nav-drawer">
-  <a class="nav-drawer-link" href="#main-section">Home</a>
-  <a class="nav-drawer-link" href="#about-section">About Us</a>
-  <a class="nav-drawer-sub-link" href="#our-why">Our Why</a>
-  <a class="nav-drawer-sub-link" href="#what-we-do">What We Do</a>
-  <a class="nav-drawer-sub-link" href="#why-us">Why Us</a>
-  <a class="nav-drawer-link" href="#testimonial-section">Testimonials</a>
-  <a class="nav-drawer-link" href="#quote-section">Contact Us</a>
+  <div id="nav-links">
+    <a class="nav-drawer-link" href="#main-section">Home</a>
+    <a class="nav-drawer-link" href="#about-section">About Us</a>
+    <a class="nav-drawer-sub-link" href="#our-why">Our Why</a>
+    <a class="nav-drawer-sub-link" href="#what-we-do">What We Do</a>
+    <a class="nav-drawer-sub-link" href="#why-us">Why Us</a>
+    <a class="nav-drawer-link" href="#testimonial-section">Testimonials</a>
+    <a class="nav-drawer-link" href="#quote-section">Contact Us</a>
+  </div>
+  <div id="nav-drawer-logo">
+    <span>KIPODE</span>
+    <span class="ndl-mirror">KIPODE</span>
+  </div>
 </nav>
 <script>
   (function() {
