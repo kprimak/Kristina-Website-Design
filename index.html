@@ -21,6 +21,10 @@
       background: #ffffff;
       overflow-x: hidden;
     }
+    body.scroll-locked {
+      overflow: hidden;
+      touch-action: none;
+    }
 
     #main-section { height: 420vh; }
 
@@ -661,7 +665,7 @@
     @media (max-width: 768px) {
 
       /* Hero — full scroll animation, laptop only (tablet+phone hidden) */
-      #main-section { height: 220vh; }
+      #main-section { height: 100vh; position: relative; }
       .headline { font-size: clamp(1.6rem, 7vw, 2.4rem); }
       .sub { font-size: 0.65rem; }
       /* Hide side devices — laptop fills screen solo */
@@ -1885,10 +1889,63 @@
   gsap.set([tablet, phone], { autoAlpha: 0, immediateRender: true });
   gsap.set(lsFo, { opacity: 0, immediateRender: true });
 
-    // Scroll DOWN advances progress 0 → 1:
-    //  0.00–0.35  grey → magenta colour wash
-    //  0.20–0.50  zoom out: laptop chassis emerges, headline fades
-    //  0.60–0.75  tablet + phone + screen content
+  if (isMobile) {
+    // ── Mobile: 3-swipe state machine ──────────────────────────────────
+    var mState = 0; // 0=initial 1=laptop visible 2=screen lit 3=done
+    var mainSection = document.getElementById('main-section');
+    document.body.classList.add('scroll-locked');
+
+    function goToState1() {
+      if (mState !== 0) return;
+      mState = 1;
+      var tl1 = gsap.timeline();
+      tl1.fromTo(viewport, { backgroundColor: '#ffffff' }, { backgroundColor: '#FF007F', duration: 0.5, ease: 'none' }, 0);
+      tl1.to(headlineWrap, { autoAlpha: 0, duration: 0.3, ease: 'power1.in' }, 0);
+      tl1.to(whiteCover,   { autoAlpha: 0, duration: 0.4, ease: 'power1.in' }, 0.1);
+      tl1.to(deviceScene,  { scale: 0.82, duration: 0.7, ease: 'power3.inOut' }, 0.1);
+    }
+
+    function goToState2() {
+      if (mState !== 1) return;
+      mState = 2;
+      gsap.to(lsFo, { opacity: 1, duration: 0.6, ease: 'power2.out' });
+    }
+
+    function goToState3() {
+      if (mState !== 2) return;
+      mState = 3;
+      gsap.to(mainSection, { yPercent: -100, duration: 0.6, ease: 'power2.inOut', onComplete: function() {
+        mainSection.style.display = 'none';
+        document.body.classList.remove('scroll-locked');
+        window.scrollTo(0, 0);
+      }});
+    }
+
+    var touchStartY = 0;
+    window.addEventListener('touchstart', function(e) {
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', function(e) {
+      var dy = touchStartY - e.changedTouches[0].clientY;
+      if (dy > 30) { // swipe up
+        if (mState === 0) goToState1();
+        else if (mState === 1) goToState2();
+        else if (mState === 2) goToState3();
+      }
+    }, { passive: true });
+
+    // Wheel fallback (e.g. tablet with trackpad)
+    window.addEventListener('wheel', function(e) {
+      if (e.deltaY > 0) {
+        if (mState === 0) goToState1();
+        else if (mState === 1) goToState2();
+        else if (mState === 2) goToState3();
+      }
+    }, { passive: true });
+
+  } else {
+    // ── Desktop: GSAP scrub timeline ───────────────────────────────────
     var tl = gsap.timeline({
       scrollTrigger: {
         trigger:         '#main-section',
@@ -1917,10 +1974,11 @@
     tl.to(phoneCover,  { opacity: 0, duration: 0, ease: 'none' }, 0.75);
     tl.to(lsFo,        { opacity: 1, duration: 0, ease: 'none' }, 0.75);
 
-  window.addEventListener('resize', function () {
-    gsap.set(deviceScene, { scale: computeInitialScale() });
-    ScrollTrigger.refresh();
-  });
+    window.addEventListener('resize', function () {
+      gsap.set(deviceScene, { scale: computeInitialScale() });
+      ScrollTrigger.refresh();
+    });
+  }
 
   // ── Section Fade-in (IntersectionObserver — works on all devices) ──
   var fadeObserver = new IntersectionObserver(function(entries) {
