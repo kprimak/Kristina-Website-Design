@@ -186,8 +186,8 @@
       transform-origin: center center;
       will-change: transform;
       z-index: 1;
-      /* Hidden until GSAP sets the correct scale — prevents grey chassis flash */
-      visibility: hidden;
+      /* opacity:0 hides flash before JS sets scale; white-cover hides on mobile */
+      opacity: 0;
     }
 
     #lateral-wrap {
@@ -1922,10 +1922,10 @@
     var mBusy  = false;
     document.body.classList.add('scroll-locked');
 
-    // Laptop: always visible, scale fixed at 0.82, no transition needed
-    deviceScene.style.cssText = 'visibility:visible;opacity:1;'
-      + '-webkit-transform:scale(0.82);transform:scale(0.82);'
-      + 'transform-origin:center center;-webkit-transform-origin:center center;';
+    // Laptop: make it fully opaque at final scale — white cover hides it initially
+    deviceScene.style.opacity = '1';
+    deviceScene.style.webkitTransform = 'scale(0.82)';
+    deviceScene.style.transform = 'scale(0.82)';
 
     // White cover sits on top hiding the laptop — will fade out on swipe 1
     whiteCover.style.cssText = 'opacity:1;visibility:visible;pointer-events:none;'
@@ -2007,7 +2007,7 @@
 
   } else {
     // ── Desktop: GSAP scrub timeline ───────────────────────────────────
-    gsap.set(deviceScene, { scale: initialScale, transformOrigin: 'center center', visibility: 'visible', immediateRender: true });
+    gsap.set(deviceScene, { scale: initialScale, transformOrigin: 'center center', opacity: 1, immediateRender: true });
     gsap.set([tablet, phone], { autoAlpha: 0, immediateRender: true });
     gsap.set(lsFo, { opacity: 0, immediateRender: true });
     var tl = gsap.timeline({
