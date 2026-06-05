@@ -670,28 +670,30 @@
       #ls-fo { opacity: 1 !important; }
       #tablet-cover, #phone-cover { opacity: 0 !important; }
 
-      /* Grid: laptop top row spans both cols, tablet+phone in second row */
+      /* Grid: laptop top row, tablet+phone second row, all within 82vw container */
       #lateral-wrap {
         display: grid !important;
         grid-template-columns: 36vw 17vw !important;
         gap: 12px 10px !important;
         justify-content: center !important;
         align-items: end !important;
+        width: 82vw !important;
+        margin: 0 auto !important;
       }
       .device.laptop {
         grid-column: 1 / 3 !important; grid-row: 1 !important;
-        width: 82vw !important; position: relative !important;
+        width: 100% !important; position: relative !important;
       }
       .device.tablet {
         grid-column: 1 !important; grid-row: 2 !important;
         position: relative !important; right: auto !important; top: auto !important;
-        transform: none !important; width: 36vw !important; min-width: unset !important;
+        transform: none !important; width: 100% !important; min-width: unset !important;
         opacity: 1 !important; visibility: visible !important;
       }
       .device.phone  {
         grid-column: 2 !important; grid-row: 2 !important;
         position: relative !important; left: auto !important; top: auto !important;
-        transform: none !important; width: 17vw !important; min-width: unset !important;
+        transform: none !important; width: 100% !important; min-width: unset !important;
         opacity: 1 !important; visibility: visible !important;
       }
 
