@@ -643,14 +643,21 @@
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
 
-      /* Hero — static display on mobile, no scroll animation */
-      #main-section { height: 100vh; }
-      #main-viewport { position: relative; }
+      /* Hero — pure CSS static display, no GSAP needed */
+      #main-section   { height: 100vh; }
+      #main-viewport  { position: relative; background: #FF007F !important; }
+      /* Force device scene visible and scaled to fit all 3 devices (142% of laptop width → 0.68 scale) */
+      #device-scene   { visibility: visible !important; transform: scale(0.68) !important; transform-origin: center center !important; }
+      /* White cover and headline hidden on mobile */
+      #white-cover    { display: none !important; }
+      #headline-wrap  { display: none !important; }
+      /* All 3 devices shown */
+      .device.tablet, .device.phone { opacity: 1 !important; visibility: visible !important; }
+      #tablet-cover, #phone-cover   { opacity: 0 !important; }
+      #ls-fo          { opacity: 1 !important; }
       #site-logo { top: 1.2rem; left: 1.2rem; }
       #site-logo span { font-size: 0.85rem; }
       #nav-toggle { top: 1.2rem; right: 1.2rem; }
-      /* Show all 3 devices — GSAP scales the scene to fit */
-      .device.tablet, .device.phone { display: block; }
 
       /* About */
       #about-section { padding: 4rem 1.5rem 2rem; }
@@ -1856,21 +1863,7 @@
 
   var isMobile = window.innerWidth <= 768;
 
-  if (isMobile) {
-    // Static display: all 3 devices visible, scaled to fit the phone screen.
-    // Laptop is min(960, 90vw) wide; tablet adds ~30% left, phone ~12% right.
-    // Total group ≈ 142% of laptop width. Scale so that fits within 90vw.
-    var W = Math.min(960, window.innerWidth * 0.9);
-    var groupWidth = W * 1.42;
-    var mobileScale = (window.innerWidth * 0.88) / groupWidth;
-    gsap.set(deviceScene,  { scale: mobileScale, transformOrigin: 'center center', visibility: 'visible', immediateRender: true });
-    gsap.set([tablet, phone], { autoAlpha: 1, immediateRender: true });
-    gsap.set([tabletCover, phoneCover], { opacity: 0, immediateRender: true });
-    gsap.set(lsFo,         { opacity: 1, immediateRender: true });
-    gsap.set(whiteCover,   { autoAlpha: 0, immediateRender: true });
-    gsap.set(headlineWrap, { autoAlpha: 0, immediateRender: true });
-    gsap.set(viewport,     { backgroundColor: '#FF007F', immediateRender: true });
-  } else {
+  if (!isMobile) {
     var initialScale = computeInitialScale();
 
     // Apply scale then make visible — chassis never renders at natural size
