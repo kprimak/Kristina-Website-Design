@@ -670,31 +670,26 @@
       #ls-fo { opacity: 1 !important; }
       #tablet-cover, #phone-cover { opacity: 0 !important; }
 
-      /* Grid: laptop top row, tablet+phone second row, all within 82vw container */
+      /* Grid: just tablet + phone side by side, filling the screen */
       #lateral-wrap {
-        display: grid !important;
-        grid-template-columns: 36vw 17vw !important;
-        gap: 12px 10px !important;
+        display: flex !important;
+        flex-direction: row !important;
         justify-content: center !important;
-        align-items: end !important;
-        width: 82vw !important;
-        margin: 0 auto !important;
+        align-items: flex-end !important;
+        gap: 16px !important;
+        width: 100% !important;
+        padding: 0 20px !important;
       }
-      .device.laptop {
-        grid-column: 1 / 3 !important; grid-row: 1 !important;
-        width: 100% !important; position: relative !important;
-      }
+      .device.laptop { display: none !important; }
       .device.tablet {
-        grid-column: 1 !important; grid-row: 2 !important;
         position: relative !important; right: auto !important; top: auto !important;
-        transform: none !important; width: 100% !important; min-width: unset !important;
-        opacity: 1 !important; visibility: visible !important;
+        transform: none !important; width: 52vw !important; min-width: unset !important;
+        opacity: 1 !important; visibility: visible !important; flex-shrink: 0 !important;
       }
       .device.phone  {
-        grid-column: 2 !important; grid-row: 2 !important;
         position: relative !important; left: auto !important; top: auto !important;
-        transform: none !important; width: 100% !important; min-width: unset !important;
-        opacity: 1 !important; visibility: visible !important;
+        transform: none !important; width: 26vw !important; min-width: unset !important;
+        opacity: 1 !important; visibility: visible !important; flex-shrink: 0 !important;
       }
 
       #site-logo { top: 1.2rem; left: 1.2rem; }
