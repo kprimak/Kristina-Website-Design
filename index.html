@@ -640,39 +640,40 @@
     }
 
     /* ── Mobile Responsive ── */
-    /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
 
-      /* Hero — two stacked parts: white slogan intro, then magenta devices */
+      /* Hero — column flex: slogan first (order:-1), then devices */
       #main-section  { height: auto !important; }
       #main-viewport { position: relative !important; height: auto !important;
-                       overflow: visible !important; background: #ffffff !important; }
+                       overflow: visible !important; background: #ffffff !important;
+                       display: flex !important; flex-direction: column !important; }
 
-      /* 1. Slogan on white — full screen height */
-      #headline-wrap { position: relative !important; inset: unset !important;
-                       height: 100svh !important; width: 100% !important;
+      /* 1. Slogan on white — full viewport height, first visually */
+      #headline-wrap { order: -1 !important;
+                       position: relative !important; inset: unset !important;
+                       height: 100vh !important; width: 100% !important;
                        display: flex !important; flex-direction: column !important;
                        align-items: center !important; justify-content: center !important;
-                       pointer-events: auto !important; }
+                       pointer-events: auto !important; background: #ffffff !important; }
       .headline { font-size: clamp(1.6rem, 7vw, 2.4rem); }
       .sub { font-size: 0.65rem; }
       #white-cover { display: none !important; }
 
-      /* 2. Device scene on magenta — below the slogan */
-      #device-scene  { position: relative !important; inset: unset !important;
+      /* 2. Device scene on magenta — scrolled to below slogan */
+      #device-scene  { order: 1 !important;
+                       position: relative !important; inset: unset !important;
                        visibility: visible !important; transform: none !important;
-                       width: 100% !important; height: auto !important;
+                       width: 100% !important; height: auto !important; min-height: 320px !important;
                        background: #FF007F !important; padding: 3rem 1rem 3.5rem !important;
                        display: flex !important; flex-direction: column !important;
                        align-items: center !important; justify-content: center !important; }
       #ls-fo { opacity: 1 !important; }
       #tablet-cover, #phone-cover { opacity: 0 !important; }
 
-      /* Grid: laptop top row, tablet+phone second row */
+      /* Grid: laptop top row spans both cols, tablet+phone in second row */
       #lateral-wrap {
         display: grid !important;
         grid-template-columns: 36vw 17vw !important;
-        grid-template-rows: auto auto !important;
         gap: 12px 10px !important;
         justify-content: center !important;
         align-items: end !important;
