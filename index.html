@@ -662,6 +662,30 @@
       }
     }
 
+    /* ── Mobile hero CSS-transition state classes ── */
+    /* State 0 defaults — viewport white, headline visible, laptop hidden */
+    #main-viewport {
+      transition: background-color 0.5s ease;
+    }
+    #main-viewport.m-magenta { background-color: #FF007F; }
+
+    #headline-wrap {
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+    #headline-wrap.m-hidden { opacity: 0; visibility: hidden; }
+
+    /* Laptop starts hidden; scale set to 82% via inline style below */
+    #device-scene {
+      transition: opacity 0.65s ease, transform 0.75s cubic-bezier(0.87,0,0.13,1);
+    }
+    /* State 0: invisible at initial (zoomed) scale — set inline by JS */
+    #device-scene.m-visible { opacity: 1 !important; transform: scale(0.82) !important; }
+
+    #ls-fo {
+      transition: opacity 0.6s ease;
+    }
+    #ls-fo.m-lit { opacity: 1 !important; }
+
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
 
@@ -1882,44 +1906,61 @@
   }
 
   var isMobile = window.innerWidth <= 768;
-
   var initialScale = computeInitialScale();
 
-  // Apply scale then make visible — chassis never renders at natural size
-  gsap.set(deviceScene, { scale: initialScale, transformOrigin: 'center center', visibility: 'visible', immediateRender: true });
-  gsap.set([tablet, phone], { autoAlpha: 0, immediateRender: true });
-  gsap.set(lsFo, { opacity: 0, immediateRender: true });
-
   if (isMobile) {
-    // ── Mobile: 3-swipe state machine ──────────────────────────────────
-    var mState = 0; // 0=initial 1=laptop visible 2=screen lit 3=unlocked
-    var mAnimating = false;
+    // ── Mobile: 3-swipe state machine (CSS transitions — no GSAP) ──────
+    // CSS classes drive everything; GSAP is skipped on mobile for reliability.
+    var mState = 0;
+    var mBusy  = false;
     document.body.classList.add('scroll-locked');
 
-    // On mobile skip whiteCover entirely — start deviceScene invisible
-    gsap.set(whiteCover,  { opacity: 0, visibility: 'hidden', immediateRender: true });
-    gsap.set(deviceScene, { opacity: 0, scale: initialScale, immediateRender: true });
+    // Clear GSAP inline styles, then set our CSS-transition starting state
+    whiteCover.style.cssText   = 'opacity:0;visibility:hidden;';
+    headlineWrap.style.cssText = '';
+    lsFo.style.cssText         = 'opacity:0;';
+    viewport.style.cssText     = '';
+    // Start laptop invisible at initial scale; CSS transitions will animate from here
+    deviceScene.style.cssText  = 'visibility:visible;opacity:0;transform:scale(' + initialScale + ');transform-origin:center center;';
 
-    function goToState1() {
-      if (mState !== 0 || mAnimating) return;
-      mState = 1; mAnimating = true;
-      var tl1 = gsap.timeline({ onComplete: function() { mAnimating = false; } });
-      tl1.to(viewport,     { backgroundColor: '#FF007F', duration: 0.5, ease: 'none' }, 0);
-      tl1.to(headlineWrap, { autoAlpha: 0, duration: 0.35, ease: 'power1.in' }, 0);
-      tl1.to(deviceScene,  { opacity: 1, scale: 0.82, duration: 0.7, ease: 'power3.inOut' }, 0.1);
+    function advanceMobile() {
+      if (mBusy) return;
+      mBusy = true;
+      if (mState === 0) {
+        mState = 1;
+        viewport.classList.add('m-magenta');       // viewport = #main-viewport element
+        headlineWrap.classList.add('m-hidden');
+        deviceScene.classList.add('m-visible');
+        setTimeout(function() { mBusy = false; }, 750);
+      } else if (mState === 1) {
+        mState = 2;
+        lsFo.classList.add('m-lit');
+        setTimeout(function() { mBusy = false; }, 650);
+      } else if (mState === 2) {
+        mState = 3;
+        document.body.classList.remove('scroll-locked');
+        mBusy = false;
+      } else {
+        mBusy = false;
+      }
     }
 
-    function goToState2() {
-      if (mState !== 1 || mAnimating) return;
-      mState = 2; mAnimating = true;
-      gsap.to(lsFo, { opacity: 1, duration: 0.6, ease: 'power2.out', onComplete: function() { mAnimating = false; } });
-    }
-
-    function goToState3() {
-      if (mState !== 2 || mAnimating) return;
-      mState = 3;
-      // Simply unlock scroll — hero stays visible when user scrolls back up
-      document.body.classList.remove('scroll-locked');
+    function reverseMobile() {
+      if (mBusy) return;
+      mBusy = true;
+      if (mState === 2) {
+        mState = 1;
+        lsFo.classList.remove('m-lit');
+        setTimeout(function() { mBusy = false; }, 650);
+      } else if (mState === 1) {
+        mState = 0;
+        viewport.classList.remove('m-magenta');
+        headlineWrap.classList.remove('m-hidden');
+        deviceScene.classList.remove('m-visible');
+        setTimeout(function() { mBusy = false; }, 750);
+      } else {
+        mBusy = false;
+      }
     }
 
     var touchStartY = 0;
@@ -1928,38 +1969,22 @@
     }, { passive: true });
 
     window.addEventListener('touchend', function(e) {
-      if (mState === 3) return; // unlocked — let browser scroll normally
+      if (mState === 3) return;
       var dy = touchStartY - e.changedTouches[0].clientY;
-      if (dy > 30) { // swipe up → advance
-        if (mState === 0) goToState1();
-        else if (mState === 1) goToState2();
-        else if (mState === 2) goToState3();
-      } else if (dy < -30) { // swipe down → reverse
-        if (mState === 1 && !mAnimating) {
-          mState = 0; mAnimating = true;
-          var tlr = gsap.timeline({ onComplete: function() { mAnimating = false; } });
-          tlr.to(viewport,     { backgroundColor: '#ffffff', duration: 0.4, ease: 'none' }, 0);
-          tlr.to(headlineWrap, { autoAlpha: 1, duration: 0.35, ease: 'power1.out' }, 0);
-          tlr.to(deviceScene,  { opacity: 0, scale: initialScale, duration: 0.5, ease: 'power2.inOut' }, 0);
-        } else if (mState === 2 && !mAnimating) {
-          mState = 1; mAnimating = true;
-          gsap.to(lsFo, { opacity: 0, duration: 0.4, ease: 'power2.in', onComplete: function() { mAnimating = false; } });
-        }
-      }
+      if      (dy >  30) advanceMobile();
+      else if (dy < -30) reverseMobile();
     }, { passive: true });
 
-    // Wheel fallback (trackpad / desktop emulation)
     window.addEventListener('wheel', function(e) {
       if (mState === 3) return;
-      if (e.deltaY > 0) {
-        if (mState === 0) goToState1();
-        else if (mState === 1) goToState2();
-        else if (mState === 2) goToState3();
-      }
+      if (e.deltaY > 0) advanceMobile();
     }, { passive: true });
 
   } else {
     // ── Desktop: GSAP scrub timeline ───────────────────────────────────
+    gsap.set(deviceScene, { scale: initialScale, transformOrigin: 'center center', visibility: 'visible', immediateRender: true });
+    gsap.set([tablet, phone], { autoAlpha: 0, immediateRender: true });
+    gsap.set(lsFo, { opacity: 0, immediateRender: true });
     var tl = gsap.timeline({
       scrollTrigger: {
         trigger:         '#main-section',
