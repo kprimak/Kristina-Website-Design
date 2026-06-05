@@ -1,11 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- Top K: y 4–46 -->
-  <rect x="18" y="4"  width="12" height="42" fill="#111"/>
-  <polygon points="30,4  66,4  66,17 30,24" fill="#111"/>
-  <polygon points="30,24 66,31 66,46 30,46" fill="#111"/>
-
-  <!-- Bottom K (mirrored vertically): y 54–96 -->
-  <rect x="18" y="54" width="12" height="42" fill="#111"/>
-  <polygon points="30,96 66,96 66,83 30,76" fill="#111"/>
-  <polygon points="30,76 66,69 66,54 30,54" fill="#111"/>
+  <!-- Top K: single polygon — stem + two diagonal arms with V-notch -->
+  <polygon points="22,4 68,4 68,18 38,26 68,34 68,48 22,48" fill="#111"/>
+  <!-- Bottom K: top K mirrored around y=50 -->
+  <polygon points="22,96 68,96 68,82 38,74 68,66 68,52 22,52" fill="#111"/>
 </svg>
