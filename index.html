@@ -1953,10 +1953,11 @@
         var sectionW  = carSection.offsetWidth;
         var isMob     = window.innerWidth <= 768;
         var carW      = isMob ? 280 : 366;
-        // On mobile, car CSS left is -320px; on desktop -720px.
-        // stopX positions car so left edge lands ~8% into the section.
-        var carCSSLeft = isMob ? -320 : -720;
-        var stopX = sectionW * 0.08 - carCSSLeft;
+        // Desktop: original formula — car stops right of the text block
+        // Mobile: account for shorter CSS left offset (-320px vs -720px)
+        var stopX = isMob
+          ? sectionW * 0.08 + 320   // screen pos = -320 + stopX = 8% of section
+          : sectionW * 1.32 - carW * 0.5;
         activeTl = gsap.timeline();
 
         // Phase 1: flyby blasts full road and exits right
