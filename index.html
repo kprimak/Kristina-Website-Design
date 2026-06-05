@@ -643,16 +643,14 @@
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
 
-      /* Hero — scroll animation still runs, but shorter scroll distance */
-      #main-section { height: 250vh; }
+      /* Hero — static display on mobile, no scroll animation */
+      #main-section { height: 100vh; }
+      #main-viewport { position: relative; }
       #site-logo { top: 1.2rem; left: 1.2rem; }
       #site-logo span { font-size: 0.85rem; }
       #nav-toggle { top: 1.2rem; right: 1.2rem; }
-      .headline { font-size: clamp(1.6rem, 7vw, 2.4rem); }
-      .sub { font-size: 0.65rem; }
-
-      /* Hide side devices — too wide for phone screens */
-      .device.tablet, .device.phone { display: none; }
+      /* Show all 3 devices — GSAP scales the scene to fit */
+      .device.tablet, .device.phone { display: block; }
 
       /* About */
       #about-section { padding: 4rem 1.5rem 2rem; }
@@ -1856,49 +1854,67 @@
     return Math.max(scaleW, scaleH) * 1.02;
   }
 
-  var initialScale = computeInitialScale();
+  var isMobile = window.innerWidth <= 768;
 
-  // Apply scale then make visible — chassis never renders at natural size
-  gsap.set(deviceScene, { scale: initialScale, transformOrigin: 'center center', visibility: 'visible', immediateRender: true });
-  gsap.set([tablet, phone], { autoAlpha: 0, immediateRender: true });
-  gsap.set(lsFo, { opacity: 0, immediateRender: true });
+  if (isMobile) {
+    // Static display: all 3 devices visible, scaled to fit the phone screen.
+    // Laptop is min(960, 90vw) wide; tablet adds ~30% left, phone ~12% right.
+    // Total group ≈ 142% of laptop width. Scale so that fits within 90vw.
+    var W = Math.min(960, window.innerWidth * 0.9);
+    var groupWidth = W * 1.42;
+    var mobileScale = (window.innerWidth * 0.88) / groupWidth;
+    gsap.set(deviceScene,  { scale: mobileScale, transformOrigin: 'center center', visibility: 'visible', immediateRender: true });
+    gsap.set([tablet, phone], { autoAlpha: 1, immediateRender: true });
+    gsap.set([tabletCover, phoneCover], { opacity: 0, immediateRender: true });
+    gsap.set(lsFo,         { opacity: 1, immediateRender: true });
+    gsap.set(whiteCover,   { autoAlpha: 0, immediateRender: true });
+    gsap.set(headlineWrap, { autoAlpha: 0, immediateRender: true });
+    gsap.set(viewport,     { backgroundColor: '#FF007F', immediateRender: true });
+  } else {
+    var initialScale = computeInitialScale();
 
-  // Scroll DOWN advances progress 0 → 1:
-  //  0.00–0.35  grey → magenta colour wash
-  //  0.20–0.50  zoom out: laptop chassis emerges, headline fades
-  //  0.60–0.75  tablet + phone + screen content
-  var tl = gsap.timeline({
-    scrollTrigger: {
-      trigger:         '#main-section',
-      start:           'top top',
-      end:             'bottom bottom',
-      scrub:           true,
-      fastScrollEnd:   true,
-      preventOverlaps: 'main'
-    }
-  });
+    // Apply scale then make visible — chassis never renders at natural size
+    gsap.set(deviceScene, { scale: initialScale, transformOrigin: 'center center', visibility: 'visible', immediateRender: true });
+    gsap.set([tablet, phone], { autoAlpha: 0, immediateRender: true });
+    gsap.set(lsFo, { opacity: 0, immediateRender: true });
 
-  // Phase 1 — colour: white → magenta
-  tl.fromTo(viewport, { backgroundColor: '#ffffff' }, { backgroundColor: '#FF007F', duration: 0.35, ease: 'none' }, 0);
+    // Scroll DOWN advances progress 0 → 1:
+    //  0.00–0.35  grey → magenta colour wash
+    //  0.20–0.50  zoom out: laptop chassis emerges, headline fades
+    //  0.60–0.75  tablet + phone + screen content
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger:         '#main-section',
+        start:           'top top',
+        end:             'bottom bottom',
+        scrub:           true,
+        fastScrollEnd:   true,
+        preventOverlaps: 'main'
+      }
+    });
 
-  // Phase 2 — zoom out + headline fade + white cover lifts
-  tl.to(headlineWrap, { autoAlpha: 0, duration: 0.20, ease: 'power1.in' }, 0.20);
-  tl.to(whiteCover,   { autoAlpha: 0, duration: 0.30, ease: 'power1.in' }, 0.20);
-  tl.to(deviceScene,  { scale: 0.82, duration: 0.60, ease: 'power3.inOut' }, 0.22);
+    // Phase 1 — colour: white → magenta
+    tl.fromTo(viewport, { backgroundColor: '#ffffff' }, { backgroundColor: '#FF007F', duration: 0.35, ease: 'none' }, 0);
 
-  // Phase 3a — tablet + phone snap in with blank white screens (0.60)
-  tl.to(tablet, { autoAlpha: 1, duration: 0, ease: 'none' }, 0.60);
-  tl.to(phone,  { autoAlpha: 1, duration: 0, ease: 'none' }, 0.60);
+    // Phase 2 — zoom out + headline fade + white cover lifts
+    tl.to(headlineWrap, { autoAlpha: 0, duration: 0.20, ease: 'power1.in' }, 0.20);
+    tl.to(whiteCover,   { autoAlpha: 0, duration: 0.30, ease: 'power1.in' }, 0.20);
+    tl.to(deviceScene,  { scale: 0.82, duration: 0.60, ease: 'power3.inOut' }, 0.22);
 
-  // Phase 3b — all three screens snap in (0.75)
-  tl.to(tabletCover, { opacity: 0, duration: 0, ease: 'none' }, 0.75);
-  tl.to(phoneCover,  { opacity: 0, duration: 0, ease: 'none' }, 0.75);
-  tl.to(lsFo,        { opacity: 1, duration: 0, ease: 'none' }, 0.75);
+    // Phase 3a — tablet + phone snap in with blank white screens (0.60)
+    tl.to(tablet, { autoAlpha: 1, duration: 0, ease: 'none' }, 0.60);
+    tl.to(phone,  { autoAlpha: 1, duration: 0, ease: 'none' }, 0.60);
 
-  window.addEventListener('resize', function () {
-    gsap.set(deviceScene, { scale: computeInitialScale() });
-    ScrollTrigger.refresh();
-  });
+    // Phase 3b — all three screens snap in (0.75)
+    tl.to(tabletCover, { opacity: 0, duration: 0, ease: 'none' }, 0.75);
+    tl.to(phoneCover,  { opacity: 0, duration: 0, ease: 'none' }, 0.75);
+    tl.to(lsFo,        { opacity: 1, duration: 0, ease: 'none' }, 0.75);
+
+    window.addEventListener('resize', function () {
+      gsap.set(deviceScene, { scale: computeInitialScale() });
+      ScrollTrigger.refresh();
+    });
+  }
 
   // ── About Icons Jiggle ─────────────────────────────────────────
   document.querySelectorAll('.about-graphic').forEach(function(graphic) {
