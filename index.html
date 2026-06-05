@@ -715,9 +715,9 @@
 
       /* Car road */
       /* Car — static display on mobile, no JS animation */
-      #car-zoom-section { height: 220px; overflow: hidden; }
-      #car-svg-wrap   { width: 180px; }
-      #car-flyby-wrap { width: 180px; }
+      #car-zoom-section { height: 160px; overflow: hidden; }
+      #car-flyby-wrap { display: none; }
+      #car-svg-wrap   { left: 50%; width: 200px; transform: translateX(-50%) translateY(-50%); }
       #car-road-text  { display: none; }
 
       /* Testimonial */
@@ -2094,7 +2094,8 @@
     var carSection = document.getElementById('car-zoom-section');
     var roadText   = document.getElementById('car-road-text');
 
-    // Road text hidden on mobile via CSS; animation runs on all devices
+    // On mobile: skip animation — CSS shows static car centered
+    if (isMobile) return;
     var speedLines = carSection.querySelector('#speed-lines');
 
     // Clone the main car SVG into the flyby wrapper
