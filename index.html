@@ -23,6 +23,75 @@
 
     #main-section { height: 420vh; }
 
+    /* ── Hamburger Menu ── */
+    #nav-toggle {
+      position: fixed;
+      top: 1.8rem;
+      right: 2rem;
+      z-index: 1000;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    #nav-toggle span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: #000000;
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    #nav-toggle.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    #nav-toggle.open span:nth-child(2) { opacity: 0; }
+    #nav-toggle.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+    #nav-drawer {
+      position: fixed;
+      top: 0; right: 0;
+      width: 260px;
+      height: 100vh;
+      background: #ffffff;
+      box-shadow: -4px 0 30px rgba(0,0,0,0.1);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 2.5rem;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    #nav-drawer.open { transform: translateX(0); }
+    .nav-drawer-link {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: #000000;
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      padding: 0.8rem 0;
+      display: block;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      transition: color 0.2s;
+    }
+    .nav-drawer-link:last-child { border-bottom: none; }
+    .nav-drawer-link:hover { color: #FF007F; }
+    #nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      z-index: 998;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    #nav-overlay.open { opacity: 1; pointer-events: all; }
+
     #site-logo {
       position: absolute;
       top: 2rem;
@@ -825,6 +894,29 @@
   </style>
 </head>
 <body>
+
+<!-- ── Hamburger Nav ─────────────────────────────────────────────── -->
+<button id="nav-toggle" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<div id="nav-overlay"></div>
+<nav id="nav-drawer">
+  <a class="nav-drawer-link" href="#about-section">About Us</a>
+  <a class="nav-drawer-link" href="#testimonial-section">Testimonials</a>
+  <a class="nav-drawer-link" href="#quote-section">Contact Us</a>
+</nav>
+<script>
+  (function() {
+    var toggle  = document.getElementById('nav-toggle');
+    var drawer  = document.getElementById('nav-drawer');
+    var overlay = document.getElementById('nav-overlay');
+    function openMenu()  { toggle.classList.add('open'); drawer.classList.add('open'); overlay.classList.add('open'); }
+    function closeMenu() { toggle.classList.remove('open'); drawer.classList.remove('open'); overlay.classList.remove('open'); }
+    toggle.addEventListener('click', function() { drawer.classList.contains('open') ? closeMenu() : openMenu(); });
+    overlay.addEventListener('click', closeMenu);
+    drawer.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeMenu); });
+  })();
+</script>
 
 <section id="main-section">
   <div id="main-viewport">
