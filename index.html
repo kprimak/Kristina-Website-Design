@@ -660,55 +660,12 @@
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
 
-      /* Hero — column flex: slogan first (order:-1), then devices */
-      #main-section  { height: auto !important; }
-      #main-viewport { position: relative !important; height: auto !important;
-                       overflow: visible !important; background: #ffffff !important;
-                       display: flex !important; flex-direction: column !important; }
-
-      /* 1. Slogan on white — full viewport height, first visually */
-      #headline-wrap { order: -1 !important;
-                       position: relative !important; inset: unset !important;
-                       height: 100vh !important; width: 100% !important;
-                       display: flex !important; flex-direction: column !important;
-                       align-items: center !important; justify-content: center !important;
-                       pointer-events: auto !important; background: #ffffff !important; }
+      /* Hero — full scroll animation, laptop only (tablet+phone hidden) */
+      #main-section { height: 220vh; }
       .headline { font-size: clamp(1.6rem, 7vw, 2.4rem); }
       .sub { font-size: 0.65rem; }
-      #white-cover { display: none !important; }
-
-      /* 2. Device scene on magenta — scrolled to below slogan */
-      #device-scene  { order: 1 !important;
-                       position: relative !important; inset: unset !important;
-                       visibility: visible !important; transform: none !important;
-                       width: 100% !important; height: auto !important; min-height: 320px !important;
-                       background: #FF007F !important; padding: 3rem 1rem 3.5rem !important;
-                       display: flex !important; flex-direction: column !important;
-                       align-items: center !important; justify-content: center !important; }
-      #ls-fo { opacity: 1 !important; }
-      #tablet-cover, #phone-cover { opacity: 0 !important; }
-
-      /* Grid: just tablet + phone side by side, filling the screen */
-      #lateral-wrap {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: center !important;
-        align-items: flex-end !important;
-        gap: 16px !important;
-        width: 100% !important;
-        padding: 0 20px !important;
-      }
-      .device.laptop { display: none !important; }
-      .device.tablet {
-        position: relative !important; right: auto !important; top: auto !important;
-        transform: none !important; width: 52vw !important; min-width: unset !important;
-        opacity: 1 !important; visibility: visible !important; flex-shrink: 0 !important;
-      }
-      .device.phone  {
-        position: relative !important; left: auto !important; top: auto !important;
-        transform: none !important; width: 26vw !important; min-width: unset !important;
-        opacity: 1 !important; visibility: visible !important; flex-shrink: 0 !important;
-      }
+      /* Hide side devices — laptop fills screen solo */
+      .device.tablet, .device.phone { display: none !important; }
 
       #site-logo { top: 1.2rem; left: 1.2rem; z-index: 50; }
       #site-logo span { font-size: 0.85rem; }
@@ -1268,8 +1225,7 @@
       <p class="eyebrow">Blueprint to Reality</p>
       <h1 class="headline">Not just a website —<br>a story.</h1>
       <hr class="rule" />
-      <p class="sub sub-desktop">1 big scroll to watch it come alive</p>
-      <p class="sub sub-mobile">Animations available on laptop version</p>
+      <p class="sub">1 big scroll to watch it come alive</p>
     </div>
 
   </div>
@@ -1922,13 +1878,12 @@
 
   var isMobile = window.innerWidth <= 768;
 
-  if (!isMobile) {
-    var initialScale = computeInitialScale();
+  var initialScale = computeInitialScale();
 
-    // Apply scale then make visible — chassis never renders at natural size
-    gsap.set(deviceScene, { scale: initialScale, transformOrigin: 'center center', visibility: 'visible', immediateRender: true });
-    gsap.set([tablet, phone], { autoAlpha: 0, immediateRender: true });
-    gsap.set(lsFo, { opacity: 0, immediateRender: true });
+  // Apply scale then make visible — chassis never renders at natural size
+  gsap.set(deviceScene, { scale: initialScale, transformOrigin: 'center center', visibility: 'visible', immediateRender: true });
+  gsap.set([tablet, phone], { autoAlpha: 0, immediateRender: true });
+  gsap.set(lsFo, { opacity: 0, immediateRender: true });
 
     // Scroll DOWN advances progress 0 → 1:
     //  0.00–0.35  grey → magenta colour wash
@@ -1962,11 +1917,10 @@
     tl.to(phoneCover,  { opacity: 0, duration: 0, ease: 'none' }, 0.75);
     tl.to(lsFo,        { opacity: 1, duration: 0, ease: 'none' }, 0.75);
 
-    window.addEventListener('resize', function () {
-      gsap.set(deviceScene, { scale: computeInitialScale() });
-      ScrollTrigger.refresh();
-    });
-  }
+  window.addEventListener('resize', function () {
+    gsap.set(deviceScene, { scale: computeInitialScale() });
+    ScrollTrigger.refresh();
+  });
 
   // ── Section Fade-in (IntersectionObserver — works on all devices) ──
   var fadeObserver = new IntersectionObserver(function(entries) {
