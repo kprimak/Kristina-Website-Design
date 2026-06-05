@@ -1965,6 +1965,9 @@
         document.body.classList.remove('scroll-locked');
         viewport.style.position = 'absolute';
         viewport.style.zIndex   = '';
+        // Refresh ScrollTrigger so it recalculates all trigger positions
+        // after the scroll lock is lifted (iOS doesn't update positions while locked)
+        setTimeout(function() { ScrollTrigger.refresh(); }, 50);
         mBusy = false;
       } else {
         mBusy = false;
@@ -2049,6 +2052,11 @@
       ScrollTrigger.refresh();
     });
   }
+
+  // Refresh ScrollTrigger on orientation change (affects car section on mobile)
+  window.addEventListener('orientationchange', function() {
+    setTimeout(function() { ScrollTrigger.refresh(); }, 200);
+  });
 
   // ── Section Fade-in (IntersectionObserver — works on all devices) ──
   var fadeObserver = new IntersectionObserver(function(entries) {
