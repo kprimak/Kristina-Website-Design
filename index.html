@@ -643,18 +643,29 @@
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
 
-      /* Hero — pure CSS static display, no GSAP needed */
-      #main-section   { height: 100vh; }
-      #main-viewport  { position: relative; background: #FF007F !important; }
-      /* Force device scene visible and scaled to fit all 3 devices (142% of laptop width → 0.68 scale) */
-      #device-scene   { visibility: visible !important; transform: scale(0.68) !important; transform-origin: center center !important; }
-      /* White cover and headline hidden on mobile */
-      #white-cover    { display: none !important; }
-      #headline-wrap  { display: none !important; }
-      /* All 3 devices shown */
-      .device.tablet, .device.phone { opacity: 1 !important; visibility: visible !important; }
-      #tablet-cover, #phone-cover   { opacity: 0 !important; }
-      #ls-fo          { opacity: 1 !important; }
+      /* Hero — static display: devices in a flex row, no scroll animation */
+      #main-section  { height: 100vh; }
+      #main-viewport { position: relative !important; overflow: visible !important; background: #FF007F !important; }
+      #device-scene  { visibility: visible !important; transform: none !important; position: relative !important;
+                       inset: unset !important; width: 100% !important; height: 100vh !important;
+                       display: flex !important; flex-direction: column !important;
+                       align-items: center !important; justify-content: center !important; }
+      #white-cover   { display: none !important; }
+      #headline-wrap { display: none !important; }
+      #ls-fo         { opacity: 1 !important; }
+
+      /* Put devices in a flex row so they stay inside viewport bounds */
+      #lateral-wrap  { display: flex !important; flex-direction: row !important;
+                       align-items: flex-end !important; justify-content: center !important;
+                       gap: 8px !important; width: 100% !important; padding: 0 10px !important; }
+      .device.laptop { width: 54vw !important; }
+      .device.tablet { position: relative !important; right: auto !important; top: auto !important;
+                       transform: none !important; width: 21vw !important; min-width: unset !important;
+                       opacity: 1 !important; visibility: visible !important; }
+      .device.phone  { position: relative !important; left: auto !important; top: auto !important;
+                       transform: none !important; width: 10vw !important; min-width: unset !important;
+                       opacity: 1 !important; visibility: visible !important; }
+      #tablet-cover, #phone-cover { opacity: 0 !important; }
       #site-logo { top: 1.2rem; left: 1.2rem; }
       #site-logo span { font-size: 0.85rem; }
       #nav-toggle { top: 1.2rem; right: 1.2rem; }
