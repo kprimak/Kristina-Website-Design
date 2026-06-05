@@ -662,13 +662,6 @@
       }
     }
 
-    /* ── Mobile hero: transition rules (mobile only — must not affect desktop GSAP) ── */
-    @media (max-width: 768px) {
-      #main-viewport { transition: background-color 0.5s ease; }
-      #headline-wrap { transition: opacity 0.35s ease; }
-      #device-scene  { transition: opacity 0.65s ease, transform 0.75s cubic-bezier(0.87,0,0.13,1); }
-      #ls-fo         { transition: opacity 0.6s ease; }
-    }
 
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
@@ -1899,30 +1892,28 @@
     var mBusy  = false;
     document.body.classList.add('scroll-locked');
 
-    // Clear GSAP inline styles, then set our CSS-transition starting state
-    whiteCover.style.cssText   = 'opacity:0;visibility:hidden;';
-    headlineWrap.style.cssText = '';
-    lsFo.style.cssText         = 'opacity:0;';
-    viewport.style.cssText     = '';
-    // ── Set initial state via inline styles ──────────────────────────────
-    whiteCover.style.opacity         = '0';
-    whiteCover.style.visibility      = 'hidden';
-    lsFo.style.opacity               = '0';
-    deviceScene.style.visibility     = 'visible';
-    deviceScene.style.opacity        = '0';
-    deviceScene.style.transform      = 'scale(' + initialScale + ')';
-    deviceScene.style.transformOrigin = 'center center';
+    // ── Set initial state + transitions as inline styles (iOS Safari safe) ──
+    whiteCover.style.cssText = 'opacity:0;visibility:hidden;pointer-events:none;';
+    lsFo.style.cssText       = 'opacity:0;-webkit-transition:opacity 0.6s ease;transition:opacity 0.6s ease;';
+    viewport.style.cssText   = '-webkit-transition:background-color 0.5s ease;transition:background-color 0.5s ease;';
+    headlineWrap.style.cssText = '-webkit-transition:opacity 0.35s ease;transition:opacity 0.35s ease;';
+
+    // deviceScene: must start visible (override CSS visibility:hidden) but transparent
+    var dsTransition = '-webkit-transition:opacity 0.65s ease,-webkit-transform 0.75s ease;transition:opacity 0.65s ease,transform 0.75s ease;';
+    var dsScale      = '-webkit-transform:scale(' + initialScale + ');transform:scale(' + initialScale + ');';
+    deviceScene.style.cssText = 'visibility:visible;opacity:0;transform-origin:center center;-webkit-transform-origin:center center;' + dsScale + dsTransition;
 
     function advanceMobile() {
       if (mBusy) return;
       mBusy = true;
       if (mState === 0) {
         mState = 1;
-        viewport.style.backgroundColor  = '#FF007F';
-        headlineWrap.style.opacity      = '0';
-        headlineWrap.style.visibility   = 'hidden';
-        deviceScene.style.opacity       = '1';
-        deviceScene.style.transform     = 'scale(0.82)';
+        viewport.style.backgroundColor       = '#FF007F';
+        headlineWrap.style.opacity           = '0';
+        headlineWrap.style.visibility        = 'hidden';
+        deviceScene.style.opacity            = '1';
+        deviceScene.style.transform          = 'scale(0.82)';
+        deviceScene.style.webkitTransform    = 'scale(0.82)';
         setTimeout(function() { mBusy = false; }, 800);
       } else if (mState === 1) {
         mState = 2;
@@ -1949,8 +1940,9 @@
         viewport.style.backgroundColor  = '#ffffff';
         headlineWrap.style.opacity      = '1';
         headlineWrap.style.visibility   = 'visible';
-        deviceScene.style.opacity       = '0';
-        deviceScene.style.transform     = 'scale(' + initialScale + ')';
+        deviceScene.style.opacity            = '0';
+        deviceScene.style.transform          = 'scale(' + initialScale + ')';
+        deviceScene.style.webkitTransform    = 'scale(' + initialScale + ')';
         setTimeout(function() { mBusy = false; }, 800);
       } else {
         mBusy = false;
