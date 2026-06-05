@@ -1905,40 +1905,52 @@
   var initialScale = computeInitialScale();
 
   if (isMobile) {
-    // ── Mobile: 3-swipe state machine (CSS transitions — no GSAP) ──────
-    // CSS classes drive everything; GSAP is skipped on mobile for reliability.
+    // ── Mobile: 3-swipe state machine ────────────────────────────────────
+    // Strategy: laptop is ALWAYS rendered at final size (no opacity/transform
+    // tricks on deviceScene). White cover sits on top and fades out on swipe 1.
+    // This avoids every iOS Safari rendering bug with transitions on hidden elements.
     var mState = 0;
     var mBusy  = false;
     document.body.classList.add('scroll-locked');
 
-    // ── Set initial state + transitions as inline styles (iOS Safari safe) ──
-    whiteCover.style.cssText = 'opacity:0;visibility:hidden;pointer-events:none;';
-    lsFo.style.cssText       = 'opacity:0;-webkit-transition:opacity 0.6s ease;transition:opacity 0.6s ease;';
-    viewport.style.cssText   = '-webkit-transition:background-color 0.5s ease;transition:background-color 0.5s ease;';
+    // Laptop: always visible, scale fixed at 0.82, no transition needed
+    deviceScene.style.cssText = 'visibility:visible;opacity:1;'
+      + '-webkit-transform:scale(0.82);transform:scale(0.82);'
+      + 'transform-origin:center center;-webkit-transform-origin:center center;';
+
+    // White cover sits on top hiding the laptop — will fade out on swipe 1
+    whiteCover.style.cssText = 'opacity:1;visibility:visible;pointer-events:none;'
+      + '-webkit-transition:opacity 0.55s ease;transition:opacity 0.55s ease;';
+
+    // Headline fades out on swipe 1
     headlineWrap.style.cssText = '-webkit-transition:opacity 0.35s ease;transition:opacity 0.35s ease;';
 
-    // deviceScene: must start visible (override CSS visibility:hidden) but transparent
-    var dsTransition = '-webkit-transition:opacity 0.65s ease,-webkit-transform 0.75s ease;transition:opacity 0.65s ease,transform 0.75s ease;';
-    var dsScale      = '-webkit-transform:scale(' + initialScale + ');transform:scale(' + initialScale + ');';
-    deviceScene.style.cssText = 'visibility:visible;opacity:0;transform-origin:center center;-webkit-transform-origin:center center;' + dsScale + dsTransition;
+    // Viewport bg changes on swipe 1
+    viewport.style.cssText = '-webkit-transition:background-color 0.5s ease;transition:background-color 0.5s ease;';
+
+    // Screen content fades in on swipe 2
+    lsFo.style.cssText = 'opacity:0;-webkit-transition:opacity 0.6s ease;transition:opacity 0.6s ease;';
 
     function advanceMobile() {
       if (mBusy) return;
       mBusy = true;
       if (mState === 0) {
+        // Swipe 1: bg → magenta, headline out, white cover lifts → laptop revealed
         mState = 1;
-        viewport.style.backgroundColor       = '#FF007F';
-        headlineWrap.style.opacity           = '0';
-        headlineWrap.style.visibility        = 'hidden';
-        deviceScene.style.opacity            = '1';
-        deviceScene.style.transform          = 'scale(0.82)';
-        deviceScene.style.webkitTransform    = 'scale(0.82)';
-        setTimeout(function() { mBusy = false; }, 800);
+        viewport.style.backgroundColor = '#FF007F';
+        headlineWrap.style.opacity     = '0';
+        whiteCover.style.opacity       = '0';
+        setTimeout(function() {
+          whiteCover.style.visibility = 'hidden';
+          mBusy = false;
+        }, 600);
       } else if (mState === 1) {
+        // Swipe 2: screen content lights up
         mState = 2;
         lsFo.style.opacity = '1';
         setTimeout(function() { mBusy = false; }, 650);
       } else if (mState === 2) {
+        // Swipe 3: unlock normal scroll
         mState = 3;
         document.body.classList.remove('scroll-locked');
         mBusy = false;
@@ -1956,13 +1968,11 @@
         setTimeout(function() { mBusy = false; }, 650);
       } else if (mState === 1) {
         mState = 0;
-        viewport.style.backgroundColor  = '#ffffff';
-        headlineWrap.style.opacity      = '1';
-        headlineWrap.style.visibility   = 'visible';
-        deviceScene.style.opacity            = '0';
-        deviceScene.style.transform          = 'scale(' + initialScale + ')';
-        deviceScene.style.webkitTransform    = 'scale(' + initialScale + ')';
-        setTimeout(function() { mBusy = false; }, 800);
+        viewport.style.backgroundColor = '#ffffff';
+        headlineWrap.style.opacity     = '1';
+        whiteCover.style.visibility    = 'visible';
+        whiteCover.style.opacity       = '1';
+        setTimeout(function() { mBusy = false; }, 600);
       } else {
         mBusy = false;
       }
