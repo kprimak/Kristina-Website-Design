@@ -687,9 +687,18 @@
       #about-section { padding: 4rem 1.5rem 2rem 1rem; }
       .about-inner { margin: 0; }
       .about-title { font-size: clamp(1.6rem, 7vw, 2.4rem); }
-      .about-block { grid-template-columns: 1fr; gap: 1rem; }
-      .about-meta { flex-direction: row; align-items: center; gap: 1rem; flex-wrap: wrap; }
-      .about-graphic { margin-top: 0; }
+      /* About: label stacks left, graphic sits right */
+      .about-block { grid-template-columns: 1fr; gap: 0.8rem; }
+      .about-meta {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto auto;
+        align-items: start;
+        gap: 0.3rem 1rem;
+      }
+      .about-num     { grid-column: 1; grid-row: 1; }
+      .about-label   { grid-column: 1; grid-row: 2; }
+      .about-graphic { grid-column: 2; grid-row: 1 / 3; align-self: center; margin-top: 0; }
       .about-graphic svg { width: 120px; height: auto; }
 
       /* Car road */
