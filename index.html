@@ -360,6 +360,17 @@
       letter-spacing: -0.01em;
       max-width: 640px;
     }
+    /* ── Scroll Fade-in ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     .about-graphic {
       margin-top: 2rem;
       display: flex;
@@ -1258,7 +1269,7 @@
   </div>
 </section>
 
-<section id="about-section">
+<section id="about-section" class="fade-up">
   <div class="about-inner">
 
     <div class="about-header">
@@ -1268,7 +1279,7 @@
 
     <div class="about-divider" id="our-why"></div>
 
-    <div class="about-block">
+    <div class="about-block fade-up">
       <div class="about-meta">
         <span class="about-num">01</span>
         <span class="about-label">Our Why</span>
@@ -1746,7 +1757,7 @@
 </section>
 
 <!-- ── Testimonial Section ─────────────────────────────────────── -->
-<section id="testimonial-section">
+<section id="testimonial-section" class="fade-up">
   <div class="testimonial-inner">
     <div class="testimonial-rule"></div>
     <div class="testimonial-body">
@@ -1759,7 +1770,7 @@
 </section>
 
 <!-- ── Quote Section ───────────────────────────────────────────── -->
-<section id="quote-section">
+<section id="quote-section" class="fade-up">
   <div class="quote-inner">
 
     <!-- Left: headline + contact info -->
@@ -1847,7 +1858,7 @@
   </div>
 </section>
 
-<section id="after-section">
+<section id="after-section" class="fade-up">
   <div class="footer-grid">
 
     <!-- Left: brand -->
@@ -1951,22 +1962,32 @@
     });
   }
 
-  // ── About Icons Jiggle ─────────────────────────────────────────
-  document.querySelectorAll('.about-graphic').forEach(function(graphic) {
-    ScrollTrigger.create({
-      trigger: graphic,
-      start: 'top 80%',
-      onEnter: function() {
-        graphic.classList.remove('jiggle');
-        void graphic.offsetWidth; // reflow to restart animation
-        graphic.classList.add('jiggle');
-      },
-      onEnterBack: function() {
-        graphic.classList.remove('jiggle');
-        void graphic.offsetWidth;
-        graphic.classList.add('jiggle');
+  // ── Section Fade-in (IntersectionObserver — works on all devices) ──
+  var fadeObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        fadeObserver.unobserve(entry.target);
       }
     });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up').forEach(function(el) {
+    fadeObserver.observe(el);
+  });
+
+  // ── About Icons Jiggle (IntersectionObserver — reliable on mobile) ──
+  var jiggleObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var g = entry.target;
+        g.classList.remove('jiggle');
+        void g.offsetWidth;
+        g.classList.add('jiggle');
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.about-graphic').forEach(function(g) {
+    jiggleObserver.observe(g);
   });
 
   // ── Car Zoom Animation ──────────────────────────────────────────
