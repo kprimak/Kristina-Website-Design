@@ -1961,9 +1961,10 @@
       } else if (mState === 2) {
         // Swipe 3: unlock scroll, return viewport to normal flow so it scrolls away
         mState = 3;
+        window.removeEventListener('touchmove', blockScroll);
+        document.body.classList.remove('scroll-locked');
         viewport.style.position = 'absolute';
         viewport.style.zIndex   = '';
-        document.body.classList.remove('scroll-locked');
         mBusy = false;
       } else {
         mBusy = false;
@@ -1988,6 +1989,10 @@
         mBusy = false;
       }
     }
+
+    // iOS Safari ignores overflow:hidden on body — block touchmove explicitly
+    function blockScroll(e) { e.preventDefault(); }
+    window.addEventListener('touchmove', blockScroll, { passive: false });
 
     var touchStartY = 0;
     window.addEventListener('touchstart', function(e) {
