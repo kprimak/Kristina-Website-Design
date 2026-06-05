@@ -662,29 +662,11 @@
       }
     }
 
-    /* ── Mobile hero CSS-transition state classes ── */
-    /* State 0 defaults — viewport white, headline visible, laptop hidden */
-    #main-viewport {
-      transition: background-color 0.5s ease;
-    }
-    #main-viewport.m-magenta { background-color: #FF007F; }
-
-    #headline-wrap {
-      transition: opacity 0.35s ease, visibility 0.35s ease;
-    }
-    #headline-wrap.m-hidden { opacity: 0; visibility: hidden; }
-
-    /* Laptop starts hidden; scale set to 82% via inline style below */
-    #device-scene {
-      transition: opacity 0.65s ease, transform 0.75s cubic-bezier(0.87,0,0.13,1);
-    }
-    /* State 0: invisible at initial (zoomed) scale — set inline by JS */
-    #device-scene.m-visible { opacity: 1 !important; transform: scale(0.82) !important; }
-
-    #ls-fo {
-      transition: opacity 0.6s ease;
-    }
-    #ls-fo.m-lit { opacity: 1 !important; }
+    /* ── Mobile hero: transition rules (inline style changes trigger these) ── */
+    #main-viewport   { transition: background-color 0.5s ease; }
+    #headline-wrap   { transition: opacity 0.35s ease; }
+    #device-scene    { transition: opacity 0.65s ease, transform 0.75s cubic-bezier(0.87,0,0.13,1); }
+    #ls-fo           { transition: opacity 0.6s ease; }
 
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
@@ -1920,21 +1902,29 @@
     headlineWrap.style.cssText = '';
     lsFo.style.cssText         = 'opacity:0;';
     viewport.style.cssText     = '';
-    // Start laptop invisible at initial scale; CSS transitions will animate from here
-    deviceScene.style.cssText  = 'visibility:visible;opacity:0;transform:scale(' + initialScale + ');transform-origin:center center;';
+    // ── Set initial state via inline styles ──────────────────────────────
+    whiteCover.style.opacity         = '0';
+    whiteCover.style.visibility      = 'hidden';
+    lsFo.style.opacity               = '0';
+    deviceScene.style.visibility     = 'visible';
+    deviceScene.style.opacity        = '0';
+    deviceScene.style.transform      = 'scale(' + initialScale + ')';
+    deviceScene.style.transformOrigin = 'center center';
 
     function advanceMobile() {
       if (mBusy) return;
       mBusy = true;
       if (mState === 0) {
         mState = 1;
-        viewport.classList.add('m-magenta');       // viewport = #main-viewport element
-        headlineWrap.classList.add('m-hidden');
-        deviceScene.classList.add('m-visible');
-        setTimeout(function() { mBusy = false; }, 750);
+        viewport.style.backgroundColor  = '#FF007F';
+        headlineWrap.style.opacity      = '0';
+        headlineWrap.style.visibility   = 'hidden';
+        deviceScene.style.opacity       = '1';
+        deviceScene.style.transform     = 'scale(0.82)';
+        setTimeout(function() { mBusy = false; }, 800);
       } else if (mState === 1) {
         mState = 2;
-        lsFo.classList.add('m-lit');
+        lsFo.style.opacity = '1';
         setTimeout(function() { mBusy = false; }, 650);
       } else if (mState === 2) {
         mState = 3;
@@ -1950,14 +1940,16 @@
       mBusy = true;
       if (mState === 2) {
         mState = 1;
-        lsFo.classList.remove('m-lit');
+        lsFo.style.opacity = '0';
         setTimeout(function() { mBusy = false; }, 650);
       } else if (mState === 1) {
         mState = 0;
-        viewport.classList.remove('m-magenta');
-        headlineWrap.classList.remove('m-hidden');
-        deviceScene.classList.remove('m-visible');
-        setTimeout(function() { mBusy = false; }, 750);
+        viewport.style.backgroundColor  = '#ffffff';
+        headlineWrap.style.opacity      = '1';
+        headlineWrap.style.visibility   = 'visible';
+        deviceScene.style.opacity       = '0';
+        deviceScene.style.transform     = 'scale(' + initialScale + ')';
+        setTimeout(function() { mBusy = false; }, 800);
       } else {
         mBusy = false;
       }
