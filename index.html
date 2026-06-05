@@ -19,6 +19,7 @@
       width: 100%;
       height: 100%;
       background: #ffffff;
+      overflow-x: hidden;
     }
 
     #main-section { height: 420vh; }
@@ -642,12 +643,15 @@
     @media (max-width: 768px) {
 
       /* Hero */
-      #main-section { height: 300vh; }
+      #main-section { height: 250vh; }
       #site-logo { top: 1.2rem; left: 1.2rem; }
       #site-logo span { font-size: 0.85rem; }
       #nav-toggle { top: 1.2rem; right: 1.2rem; }
       .headline { font-size: clamp(1.6rem, 7vw, 2.4rem); }
       .sub { font-size: 0.65rem; }
+
+      /* Hide side devices — they'd be off-screen on narrow phones */
+      .device.tablet, .device.phone { display: none; }
 
       /* About */
       #about-section { padding: 4rem 1.5rem 2rem; }
@@ -669,22 +673,27 @@
 
       /* Quote section */
       #quote-section { padding: 4rem 1.5rem; }
-      .quote-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .quote-inner { grid-template-columns: 1fr !important; gap: 2.5rem; width: 100%; }
       .quote-title { font-size: clamp(1.6rem, 7vw, 2.4rem); }
-      .quote-row { grid-template-columns: 1fr; }
-      .quote-card { padding: 1.8rem 1.4rem; }
+      .quote-row { grid-template-columns: 1fr !important; }
+      .quote-card { padding: 1.8rem 1.4rem; width: 100%; box-sizing: border-box; }
+      .quote-card input, .quote-card textarea, .quote-card button { width: 100%; box-sizing: border-box; }
 
       /* Footer */
-      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-grid { grid-template-columns: 1fr !important; gap: 2rem; }
       #after-section { padding: 2.5rem 1.5rem 1.5rem; }
 
       /* Nav drawer */
       #nav-drawer { width: 100%; }
+
+      /* Prevent any element from breaking viewport width */
+      section, div { max-width: 100vw; }
     }
 
     @media (max-width: 480px) {
       .quote-contact-list { gap: 1rem; }
       .footer-contact-btn { font-size: 0.85rem; padding: 0.75rem 1.1rem; }
+      .quote-contact-list li { flex-wrap: wrap; }
     }
 
     /* ── Quote Section ── */
@@ -1839,10 +1848,11 @@
   var whiteCover   = document.getElementById('white-cover');
   function computeInitialScale() {
     var W = Math.min(960, window.innerWidth * 0.9);
-    return Math.max(
-      window.innerWidth  / (W * 0.82),
-      window.innerHeight / (W * 0.51)
-    ) * 1.02;
+    var scaleW = window.innerWidth  / (W * 0.82);
+    var scaleH = window.innerHeight / (W * 0.51);
+    // On narrow screens the height ratio causes extreme zoom — use width only
+    if (window.innerWidth <= 768) return scaleW * 1.02;
+    return Math.max(scaleW, scaleH) * 1.02;
   }
 
   var initialScale = computeInitialScale();
