@@ -680,7 +680,7 @@
         z-index: 100;
       }
       /* Spacer so page content starts after the hero */
-      #main-section { height: 100vh; }
+      #main-section { height: 100vh; position: relative; }
 
       /* Hero */
       .headline { font-size: clamp(1.6rem, 7vw, 2.4rem); }
@@ -1959,9 +1959,10 @@
         lsFo.style.opacity = '1';
         setTimeout(function() { mBusy = false; }, 650);
       } else if (mState === 2) {
-        // Swipe 3: unlock scroll, drop hero behind page content
+        // Swipe 3: unlock scroll, return viewport to normal flow so it scrolls away
         mState = 3;
-        viewport.style.zIndex = '0';
+        viewport.style.position = 'absolute';
+        viewport.style.zIndex   = '';
         document.body.classList.remove('scroll-locked');
         mBusy = false;
       } else {
