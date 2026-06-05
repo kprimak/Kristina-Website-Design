@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- Top K: single polygon — stem + two diagonal arms with V-notch -->
-  <polygon points="22,4 68,4 68,18 38,26 68,34 68,48 22,48" fill="#111"/>
-  <!-- Bottom K: top K mirrored around y=50 -->
-  <polygon points="22,96 68,96 68,82 38,74 68,66 68,52 22,52" fill="#111"/>
+  <!-- Top K: solid shape with deep V-notch on right -->
+  <polygon points="22,3 58,3 58,18 34,25 58,32 58,46 22,46" fill="#111"/>
+  <!-- Bottom K: exact vertical mirror -->
+  <polygon points="22,97 58,97 58,82 34,75 58,68 58,54 22,54" fill="#111"/>
 </svg>
