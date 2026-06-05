@@ -705,11 +705,12 @@
       .about-graphic svg { width: 120px; height: auto; }
 
       /* Car road */
-      #car-zoom-section { height: 160px; overflow: visible; }
-      #car-flyby-wrap { left: 0; width: 150px; }
-      #car-svg-wrap   { left: 0; width: 160px; }
-      #car-road-text { left: 4%; right: 2%; }
-      #car-road-text .road-headline { font-size: clamp(0.7rem, 3.5vw, 1rem); white-space: normal; line-height: 1.3; }
+      /* Car — static display on mobile, no JS animation */
+      #car-zoom-section { height: 160px; overflow: hidden; }
+      #car-flyby-wrap { display: none; }
+      #car-svg-wrap   { left: 10px; width: 160px; transform: translateY(-50%); }
+      #car-road-text  { left: 195px; right: 1rem; opacity: 1; }
+      #car-road-text .road-headline { font-size: clamp(0.65rem, 3vw, 0.9rem); white-space: normal; line-height: 1.4; }
 
       /* Testimonial */
       #testimonial-section { padding: 3rem 1.5rem; }
@@ -1969,6 +1970,9 @@
     var flybyWrap  = document.getElementById('car-flyby-wrap');
     var carSection = document.getElementById('car-zoom-section');
     var roadText   = document.getElementById('car-road-text');
+
+    // On mobile: skip animation entirely — CSS shows car statically
+    if (isMobile) return;
     var speedLines = carSection.querySelector('#speed-lines');
 
     // Clone the main car SVG into the flyby wrapper
