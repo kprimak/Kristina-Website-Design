@@ -716,8 +716,9 @@
       /* Car road */
       /* Car — static display on mobile, no JS animation */
       #car-zoom-section { height: 220px; overflow: hidden; }
-      #car-svg-wrap { width: 180px; }
-      #car-road-text { display: none; }
+      #car-svg-wrap   { width: 180px; }
+      #car-flyby-wrap { width: 180px; }
+      #car-road-text  { display: none; }
 
       /* Testimonial */
       #testimonial-section { padding: 3rem 1.5rem; }
@@ -2116,15 +2117,17 @@
         var sectionW  = carSection.offsetWidth;
         var isMob     = window.innerWidth <= 768;
         var carW      = isMob ? 180 : 366;
-        // Mobile: center the car. Desktop: car stops right of text block.
+        // GSAP x stacks on top of CSS left:-720px (main car) / left:-500px (flyby).
+        // Visual pos = left_base + x, so: x = target_visual_pos - left_base
+        // Mobile: center car. Desktop: stop right of text block.
         var stopX = isMob
-          ? (sectionW - carW) / 2
+          ? (sectionW - carW) / 2 + 720
           : sectionW * 1.32 - carW * 0.5;
         activeTl = gsap.timeline();
 
         // Phase 1: flyby blasts full road and exits right
         activeTl.to(flybyWrap, {
-          x: sectionW + (isMob ? 160 : 500),
+          x: sectionW + 500,   // +500 clears right edge accounting for left:-500px base
           duration: 1.0,
           ease: 'power2.in'
         })
