@@ -683,7 +683,7 @@
         display: block;
         position: relative;
         width: 100%; height: 100vh;
-        overflow: hidden;
+        overflow: hidden; /* cleared by JS after unlock */
       }
 
       /* Panel 1: slogan */
@@ -2056,31 +2056,35 @@
     var mhIntro   = document.getElementById('mh-intro');
     var mhDevices = document.getElementById('mh-devices');
     var mhero     = document.getElementById('mobile-hero');
-    var mhState = 0; // 0=intro 1=devices 2=gone
+    var mhState = 0; // 0=intro  1=devices(locked)  2=free
     var mhBusy  = false;
 
-    // Prevent scroll in states 0 and 1
-    function blockScroll(e) { if (mhState < 2) e.preventDefault(); }
-    window.addEventListener('touchmove', blockScroll, { passive: false });
+    // CSS scroll lock — touch-action can be cleared mid-gesture on iOS, no touchmove needed
+    document.body.style.touchAction   = 'none';
+    document.body.style.overflow      = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
 
-    function advanceHero() {
-      if (mhBusy) return;
-      mhBusy = true;
+    function unlockScroll() {
+      document.body.style.touchAction        = '';
+      document.body.style.overflow           = '';
+      document.documentElement.style.overflow = '';
+      mhero.style.overflow = 'visible';
+      ScrollTrigger.refresh();
+    }
 
-      if (mhState === 0) {
-        // Intro → devices
-        mhState = 1;
-        mhIntro.classList.add('swiped');
-        mhDevices.classList.add('revealed');
-        setTimeout(function() { mhBusy = false; }, 950);
-
-      } else if (mhState === 1) {
-        // Devices → scroll unlocked; hero stays in flow at top
+    function revealDevices() {
+      if (mhBusy || mhState !== 0) return;
+      mhBusy  = true;
+      mhState = 1;
+      mhIntro.classList.add('swiped');
+      mhDevices.classList.add('revealed');
+      // Auto-unlock after animation completes — no second swipe needed
+      setTimeout(function() {
         mhState = 2;
         mhIntro.style.display = 'none';
-        ScrollTrigger.refresh();
+        unlockScroll();
         mhBusy = false;
-      }
+      }, 1300);
     }
 
     var mhTouchY = 0;
@@ -2088,11 +2092,11 @@
       mhTouchY = e.touches[0].clientY;
     }, { passive: true });
     window.addEventListener('touchend', function(e) {
-      if (mhState === 2) return;
-      if (mhTouchY - e.changedTouches[0].clientY > 30) advanceHero();
+      if (mhState !== 0) return;
+      if (mhTouchY - e.changedTouches[0].clientY > 30) revealDevices();
     }, { passive: true });
     window.addEventListener('wheel', function(e) {
-      if (mhState < 2 && e.deltaY > 0) advanceHero();
+      if (mhState === 0 && e.deltaY > 0) revealDevices();
     }, { passive: true });
 
   } else {
