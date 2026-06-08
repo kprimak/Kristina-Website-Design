@@ -675,7 +675,7 @@
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
       /* Hero — swap out the GSAP device-scene for mobile hero */
-      #main-section { height: 200vh; }
+      #main-section { height: 0 !important; }
       #main-viewport { display: none; }
 
       /* Mobile hero: fixed overlay, two panels */
@@ -731,12 +731,12 @@
         display: flex;
         -webkit-flex-direction: row;
         flex-direction: row;
-        -webkit-align-items: flex-end;
-        align-items: flex-end;
+        -webkit-align-items: center;
+        align-items: center;
         -webkit-justify-content: center;
         justify-content: center;
-        padding-bottom: 5vh;
-        gap: 4vw;
+        gap: 5vw;
+        padding: 0 4vw;
         z-index: 1;
         -webkit-transition: -webkit-transform 0.9s cubic-bezier(0.76,0,0.24,1);
         transition: transform 0.9s cubic-bezier(0.76,0,0.24,1);
@@ -1151,15 +1151,14 @@
 
   <!-- Panel 1: slogan (white) -->
   <div id="mh-intro">
-    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.18em;color:#000;margin-bottom:2.5rem;display:flex;flex-direction:column;align-items:center;line-height:1;gap:0;">
+    <!-- Logo top-left -->
+    <div style="position:absolute;top:1.4rem;left:1.4rem;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.18em;color:#000;display:flex;flex-direction:column;line-height:1;gap:0;">
       <span>KIPODE</span>
-      <span style="transform:scaleX(-1);opacity:0.3;">KIPODE</span>
+      <span style="-webkit-transform:scaleX(-1);transform:scaleX(-1);opacity:0.3;">KIPODE</span>
     </div>
-    <p class="eyebrow">Blueprint to Reality</p>
-    <h1 class="headline">Not just a<br>website —<br>a story.</h1>
+    <p class="eyebrow" style="margin-bottom:1.2rem;">Blueprint to Reality</p>
+    <h1 class="headline" style="font-size:clamp(2.4rem,10vw,3.4rem);line-height:1.22;margin-bottom:0;">Not just a<br>website —<br>a story.</h1>
     <p id="mh-hint">swipe up</p>
-  </div>
-
   <!-- Panel 2: devices on magenta -->
   <div id="mh-devices">
     <!-- Tablet -->
@@ -2072,9 +2071,11 @@
       setTimeout(function() {
         window.removeEventListener('touchmove', blockScroll);
         document.body.classList.remove('scroll-locked');
-        mhero.style.position = 'absolute';
-        mhero.style.top = '0';
-        mhero.style.zIndex = '1';
+        // Put hero back in normal document flow so page scrolls past it
+        mhero.style.position = 'relative';
+        mhero.style.height = '100vh';
+        mhero.style.zIndex = 'auto';
+        mhIntro.style.display = 'none';
         ScrollTrigger.refresh();
       }, 950);
     }
