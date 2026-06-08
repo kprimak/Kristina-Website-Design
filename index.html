@@ -671,22 +671,15 @@
 
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
-      /* Fixed viewport is the ONLY reliable full-screen overlay on iOS Safari.
-         Sticky inside overflow:hidden causes compositing failures on iPhone. */
-      #main-viewport {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        z-index: 100;
-      }
-      /* Spacer so page content starts after the hero */
-      #main-section { height: 100vh; position: relative; }
+      /* Hero — static layout on mobile */
+      #main-section { height: auto; position: relative; }
+      #main-viewport { position: relative; }
 
-      /* Hero */
       .headline { font-size: clamp(1.6rem, 7vw, 2.4rem); }
       .sub { font-size: 0.65rem; }
-      /* Hide side devices — laptop fills screen solo */
-      .device.tablet, .device.phone { display: none !important; }
+      /* Show phone + tablet, hide laptop */
+      .device.laptop { display: none !important; }
+      #device-scene { opacity: 1 !important; transform: scale(0.78) !important; }
 
       #site-logo { top: 1.2rem; left: 1.2rem; z-index: 50; }
       #site-logo span { font-size: 0.85rem; }
@@ -1914,105 +1907,14 @@
   var initialScale = computeInitialScale();
 
   if (isMobile) {
-    // ── Mobile: 3-swipe state machine ────────────────────────────────────
-    // Strategy: laptop is ALWAYS rendered at final size (no opacity/transform
-    // tricks on deviceScene). White cover sits on top and fades out on swipe 1.
-    // This avoids every iOS Safari rendering bug with transitions on hidden elements.
-    var mState = 0;
-    var mBusy  = false;
-    document.body.classList.add('scroll-locked');
-
-    // Laptop: make it fully opaque at final scale — white cover hides it initially
+    // ── Mobile: static phone + tablet display, no animation ──────────────
     deviceScene.style.opacity = '1';
-    deviceScene.style.webkitTransform = 'scale(0.82)';
-    deviceScene.style.transform = 'scale(0.82)';
-
-    // White cover sits on top hiding the laptop — will fade out on swipe 1
-    whiteCover.style.cssText = 'opacity:1;visibility:visible;pointer-events:none;'
-      + '-webkit-transition:opacity 0.55s ease;transition:opacity 0.55s ease;';
-
-    // Headline fades out on swipe 1
-    headlineWrap.style.cssText = '-webkit-transition:opacity 0.35s ease;transition:opacity 0.35s ease;';
-
-    // Viewport bg changes on swipe 1
-    viewport.style.cssText = '-webkit-transition:background-color 0.5s ease;transition:background-color 0.5s ease;';
-
-    // Screen content fades in on swipe 2
-    lsFo.style.cssText = 'opacity:0;-webkit-transition:opacity 0.6s ease;transition:opacity 0.6s ease;';
-
-    function advanceMobile() {
-      if (mBusy) return;
-      mBusy = true;
-      if (mState === 0) {
-        // Swipe 1: bg → magenta, headline out, white cover lifts → laptop revealed
-        mState = 1;
-        viewport.style.backgroundColor = '#FF007F';
-        headlineWrap.style.opacity     = '0';
-        whiteCover.style.opacity       = '0';
-        setTimeout(function() {
-          whiteCover.style.visibility = 'hidden';
-          mBusy = false;
-        }, 600);
-      } else if (mState === 1) {
-        // Swipe 2: screen content lights up
-        mState = 2;
-        lsFo.style.opacity = '1';
-        setTimeout(function() { mBusy = false; }, 650);
-      } else if (mState === 2) {
-        // Swipe 3: unlock scroll, return viewport to normal flow so it scrolls away
-        mState = 3;
-        window.removeEventListener('touchmove', blockScroll);
-        document.body.classList.remove('scroll-locked');
-        viewport.style.position = 'absolute';
-        viewport.style.zIndex   = '';
-        // Refresh ScrollTrigger so it recalculates all trigger positions
-        // after the scroll lock is lifted (iOS doesn't update positions while locked)
-        setTimeout(function() { ScrollTrigger.refresh(); }, 50);
-        mBusy = false;
-      } else {
-        mBusy = false;
-      }
-    }
-
-    function reverseMobile() {
-      if (mBusy) return;
-      mBusy = true;
-      if (mState === 2) {
-        mState = 1;
-        lsFo.style.opacity = '0';
-        setTimeout(function() { mBusy = false; }, 650);
-      } else if (mState === 1) {
-        mState = 0;
-        viewport.style.backgroundColor = '#ffffff';
-        headlineWrap.style.opacity     = '1';
-        whiteCover.style.visibility    = 'visible';
-        whiteCover.style.opacity       = '1';
-        setTimeout(function() { mBusy = false; }, 600);
-      } else {
-        mBusy = false;
-      }
-    }
-
-    // iOS Safari ignores overflow:hidden on body — block touchmove explicitly
-    function blockScroll(e) { e.preventDefault(); }
-    window.addEventListener('touchmove', blockScroll, { passive: false });
-
-    var touchStartY = 0;
-    window.addEventListener('touchstart', function(e) {
-      touchStartY = e.touches[0].clientY;
-    }, { passive: true });
-
-    window.addEventListener('touchend', function(e) {
-      if (mState === 3) return;
-      var dy = touchStartY - e.changedTouches[0].clientY;
-      if      (dy >  30) advanceMobile();
-      else if (dy < -30) reverseMobile();
-    }, { passive: true });
-
-    window.addEventListener('wheel', function(e) {
-      if (mState === 3) return;
-      if (e.deltaY > 0) advanceMobile();
-    }, { passive: true });
+    // Show phone and tablet with their covers removed; hide white overlay
+    if (tabletCover) tabletCover.style.opacity = '0';
+    if (phoneCover)  phoneCover.style.opacity  = '0';
+    whiteCover.style.opacity    = '0';
+    whiteCover.style.visibility = 'hidden';
+    lsFo.style.opacity = '1';
 
   } else {
     // ── Desktop: GSAP scrub timeline ───────────────────────────────────
