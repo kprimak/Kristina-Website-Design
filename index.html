@@ -674,34 +674,78 @@
 
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
-      /* Hero — swap out the GSAP device-scene for simple static layout */
-      #main-section { height: auto; }
-      #main-viewport { position: relative; height: auto; min-height: 100vh; overflow: visible; }
-      /* Hide the animated hero entirely */
-      #device-scene { display: none !important; }
-      #headline-wrap { display: none !important; }
-      #white-cover { display: none !important; }
+      /* Hero — swap out the GSAP device-scene for mobile hero */
+      #main-section { height: 200vh; }
+      #main-viewport { display: none; }
 
-      /* Show mobile hero */
+      /* Mobile hero: fixed overlay, two panels */
       #mobile-hero {
+        display: block;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 100;
+        overflow: hidden;
+      }
+
+      /* Panel 1: slogan */
+      #mh-intro {
+        position: absolute;
+        inset: 0;
+        background: #ffffff;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        min-height: 100vh;
-        padding: 5rem 1.5rem 3rem;
         text-align: center;
-        gap: 2.5rem;
+        padding: 2rem;
+        z-index: 2;
+        -webkit-transition: -webkit-transform 0.9s cubic-bezier(0.76,0,0.24,1);
+        transition: transform 0.9s cubic-bezier(0.76,0,0.24,1);
       }
-      #mobile-hero-text .headline { font-size: clamp(1.6rem, 7vw, 2.4rem); margin: 0.5rem 0 0; }
-      #mobile-hero-text .eyebrow { margin-bottom: 0; }
-      #mobile-devices {
+      #mh-intro.swiped {
+        -webkit-transform: translateY(-100%);
+        transform: translateY(-100%);
+      }
+      #mh-intro .headline { font-size: clamp(2rem, 9vw, 3rem); margin: 0.6rem 0 0; }
+      #mh-intro .eyebrow { margin-bottom: 0; }
+      #mh-hint {
+        margin-top: 2.5rem;
+        font-family: 'Archivo', sans-serif;
+        font-size: 0.6rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: rgba(0,0,0,0.3);
+        animation: mh-pulse 2s ease-in-out infinite;
+      }
+      @keyframes mh-pulse {
+        0%, 100% { opacity: 0.3; transform: translateY(0); }
+        50%       { opacity: 0.8; transform: translateY(4px); }
+      }
+
+      /* Panel 2: magenta + devices */
+      #mh-devices {
+        position: absolute;
+        inset: 0;
+        background: #FF007F;
         display: flex;
         flex-direction: row;
         align-items: flex-end;
         justify-content: center;
-        gap: 1.2rem;
+        padding-bottom: 5vh;
+        gap: 4vw;
+        z-index: 1;
+        -webkit-transition: -webkit-transform 0.9s cubic-bezier(0.76,0,0.24,1);
+        transition: transform 0.9s cubic-bezier(0.76,0,0.24,1);
+        -webkit-transform: translateY(8%);
+        transform: translateY(8%);
       }
+      #mh-devices.revealed {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+      }
+      .mh-tablet-svg { width: 44vw; max-width: 200px; height: auto; filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); }
+      .mh-phone-svg  { width: 21vw; max-width: 96px;  height: auto; filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); }
 
       .headline { font-size: clamp(1.6rem, 7vw, 2.4rem); }
       .sub { font-size: 0.65rem; }
@@ -1280,74 +1324,84 @@
       <p class="sub">1 big scroll to watch it come alive</p>
     </div>
 
-    <!-- Mobile-only static hero -->
+    <!-- Mobile-only hero: two-panel cinematic swipe -->
     <div id="mobile-hero">
-      <div id="mobile-hero-text">
+
+      <!-- Panel 1: slogan (white) -->
+      <div id="mh-intro">
         <p class="eyebrow">Blueprint to Reality</p>
-        <h1 class="headline">Not just a website —<br>a story.</h1>
+        <h1 class="headline">Not just a<br>website —<br>a story.</h1>
+        <p id="mh-hint">swipe up</p>
       </div>
-      <div id="mobile-devices">
+
+      <!-- Panel 2: devices on magenta -->
+      <div id="mh-devices">
         <!-- Tablet -->
-        <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg" style="width:42vw;max-width:180px;height:auto;filter:drop-shadow(0 12px 28px rgba(0,0,0,0.28))">
-          <defs><clipPath id="mh-tcc0"><rect x="12" y="20" width="176" height="226" rx="3"/></clipPath></defs>
+        <svg viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg" class="mh-tablet-svg">
           <rect x="2" y="2" width="196" height="266" rx="18" fill="#1e1e22"/>
           <rect x="2" y="2" width="196" height="266" rx="18" fill="none" stroke="#38383c" stroke-width="1.2"/>
           <circle cx="100" cy="258" r="8" fill="#2a2a2e" stroke="#3a3a3e" stroke-width="1"/>
+          <!-- screen -->
           <rect x="12" y="20" width="176" height="226" rx="3" fill="#FAF7F2"/>
-          <rect x="12" y="20" width="176" height="44" fill="#FAF7F2"/>
-          <rect x="12" y="63" width="176" height="1" fill="rgba(28,28,30,0.08)"/>
-          <text x="22" y="43" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#1C1C1E">Your Future</text>
-          <text x="22" y="56" font-family="Space Grotesk,sans-serif" font-size="10" font-weight="700" fill="#2563EB">Website.</text>
-          <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=75" x="12" y="64" width="176" height="110" clip-path="url(#mh-tcc0)" preserveAspectRatio="xMidYMid slice"/>
-          <rect x="12" y="64" width="176" height="110" fill="rgba(12,15,20,0.58)"/>
-          <text x="22" y="106" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Crafting Digital</text>
-          <text x="22" y="120" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white">Luxuries.</text>
-          <rect x="22" y="128" width="52" height="14" rx="7" fill="#2563EB"/>
-          <text x="30" y="138" font-family="Archivo,sans-serif" font-size="6" fill="white">View Work</text>
-          <rect x="12" y="174" width="176" height="72" fill="#FAF7F2"/>
-          <text x="18" y="184" font-family="Archivo,sans-serif" font-size="6" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
-          <rect x="14" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
-          <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=200&q=70" x="14" y="190" width="52" height="50" clip-path="url(#mh-tcc1)" preserveAspectRatio="xMidYMid slice"/>
-          <defs><clipPath id="mh-tcc1"><rect x="14" y="190" width="52" height="50" rx="3"/></clipPath></defs>
-          <rect x="72" y="190" width="52" height="50" rx="3" fill="#e8e2d8"/>
-          <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=200&q=70" x="72" y="190" width="52" height="50" clip-path="url(#mh-tcc2)" preserveAspectRatio="xMidYMid slice"/>
-          <defs><clipPath id="mh-tcc2"><rect x="72" y="190" width="52" height="50" rx="3"/></clipPath></defs>
-          <rect x="130" y="190" width="58" height="50" rx="3" fill="#e8e2d8"/>
-          <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=200&q=70" x="130" y="190" width="58" height="50" clip-path="url(#mh-tcc3)" preserveAspectRatio="xMidYMid slice"/>
-          <defs><clipPath id="mh-tcc3"><rect x="130" y="190" width="58" height="50" rx="3"/></clipPath></defs>
+          <!-- nav bar -->
+          <rect x="12" y="20" width="176" height="28" fill="#FAF7F2"/>
+          <rect x="12" y="47" width="176" height="1" fill="rgba(28,28,30,0.08)"/>
+          <text x="22" y="38" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="#1C1C1E">kipode</text>
+          <!-- hero image area -->
+          <defs><clipPath id="mh-tc"><rect x="12" y="48" width="176" height="116" rx="0"/></clipPath></defs>
+          <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=75" x="12" y="48" width="176" height="116" clip-path="url(#mh-tc)" preserveAspectRatio="xMidYMid slice"/>
+          <rect x="12" y="48" width="176" height="116" fill="rgba(12,15,20,0.62)"/>
+          <!-- KIPODE logo centred in hero -->
+          <text x="100" y="100" font-family="Space Grotesk,sans-serif" font-size="18" font-weight="700" fill="white" text-anchor="middle" letter-spacing="4">KIPODE</text>
+          <text x="100" y="118" font-family="Space Grotesk,sans-serif" font-size="18" font-weight="700" fill="white" text-anchor="middle" letter-spacing="4" transform="rotate(180,100,118)">KIPODE</text>
+          <!-- portfolio strip -->
+          <rect x="12" y="164" width="176" height="82" fill="#FAF7F2"/>
+          <text x="18" y="174" font-family="Archivo,sans-serif" font-size="6" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
+          <rect x="14" y="178" width="52" height="62" rx="3" fill="#e8e2d8"/>
+          <defs><clipPath id="mh-tc1"><rect x="14" y="178" width="52" height="62" rx="3"/></clipPath></defs>
+          <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=200&q=70" x="14" y="178" width="52" height="62" clip-path="url(#mh-tc1)" preserveAspectRatio="xMidYMid slice"/>
+          <rect x="72" y="178" width="52" height="62" rx="3" fill="#e8e2d8"/>
+          <defs><clipPath id="mh-tc2"><rect x="72" y="178" width="52" height="62" rx="3"/></clipPath></defs>
+          <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=200&q=70" x="72" y="178" width="52" height="62" clip-path="url(#mh-tc2)" preserveAspectRatio="xMidYMid slice"/>
+          <rect x="130" y="178" width="58" height="62" rx="3" fill="#e8e2d8"/>
+          <defs><clipPath id="mh-tc3"><rect x="130" y="178" width="58" height="62" rx="3"/></clipPath></defs>
+          <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=200&q=70" x="130" y="178" width="58" height="62" clip-path="url(#mh-tc3)" preserveAspectRatio="xMidYMid slice"/>
         </svg>
+
         <!-- Phone -->
-        <svg viewBox="0 0 108 218" xmlns="http://www.w3.org/2000/svg" style="width:20vw;max-width:86px;height:auto;filter:drop-shadow(0 12px 28px rgba(0,0,0,0.28))">
-          <defs><clipPath id="mh-ph2"><rect x="7" y="14" width="94" height="190" rx="8"/></clipPath></defs>
+        <svg viewBox="0 0 108 218" xmlns="http://www.w3.org/2000/svg" class="mh-phone-svg">
+          <defs><clipPath id="mh-pc"><rect x="7" y="42" width="94" height="100" rx="0"/></clipPath></defs>
           <rect x="0" y="0" width="108" height="218" rx="20" fill="#1a1a1e"/>
           <rect x="0" y="0" width="108" height="218" rx="20" fill="none" stroke="#333" stroke-width="1.2"/>
           <rect x="38" y="6" width="32" height="8" rx="4" fill="#111"/>
+          <!-- screen -->
           <rect x="7" y="14" width="94" height="190" rx="8" fill="#FAF7F2"/>
+          <!-- nav -->
           <rect x="7" y="14" width="94" height="28" fill="#FAF7F2"/>
           <rect x="7" y="41" width="94" height="1" fill="rgba(28,28,30,0.08)"/>
-          <text x="14" y="30" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="#1C1C1E">Your Future</text>
-          <text x="14" y="40" font-family="Space Grotesk,sans-serif" font-size="8" font-weight="700" fill="#2563EB">Website.</text>
-          <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=75" x="7" y="42" width="94" height="100" clip-path="url(#mh-ph2)" preserveAspectRatio="xMidYMid slice"/>
-          <rect x="7" y="42" width="94" height="100" fill="rgba(12,15,20,0.58)"/>
-          <text x="14" y="80" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Crafting</text>
-          <text x="14" y="92" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Digital</text>
-          <text x="14" y="104" font-family="Space Grotesk,sans-serif" font-size="9" font-weight="700" fill="white">Luxuries.</text>
-          <rect x="14" y="112" width="44" height="12" rx="6" fill="#2563EB"/>
-          <text x="20" y="121" font-family="Archivo,sans-serif" font-size="5.5" fill="white">View Work</text>
+          <text x="13" y="31" font-family="Space Grotesk,sans-serif" font-size="7" font-weight="700" fill="#1C1C1E">kipode</text>
+          <!-- hero image -->
+          <image href="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=75" x="7" y="42" width="94" height="100" clip-path="url(#mh-pc)" preserveAspectRatio="xMidYMid slice"/>
+          <rect x="7" y="42" width="94" height="100" fill="rgba(12,15,20,0.62)"/>
+          <!-- KIPODE logo centred in hero -->
+          <text x="54" y="87" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white" text-anchor="middle" letter-spacing="3">KIPODE</text>
+          <text x="54" y="102" font-family="Space Grotesk,sans-serif" font-size="11" font-weight="700" fill="white" text-anchor="middle" letter-spacing="3" transform="rotate(180,54,102)">KIPODE</text>
+          <!-- portfolio -->
           <rect x="7" y="142" width="94" height="62" fill="#FAF7F2"/>
-          <text x="13" y="153" font-family="Archivo,sans-serif" font-size="5" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
-          <rect x="9" y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
-          <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=100&q=70" x="9" y="158" width="28" height="40" clip-path="url(#mh-pcc1)" preserveAspectRatio="xMidYMid slice"/>
-          <defs><clipPath id="mh-pcc1"><rect x="9" y="158" width="28" height="40" rx="2"/></clipPath></defs>
-          <rect x="41" y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
-          <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=100&q=70" x="41" y="158" width="28" height="40" clip-path="url(#mh-pcc2)" preserveAspectRatio="xMidYMid slice"/>
-          <defs><clipPath id="mh-pcc2"><rect x="41" y="158" width="28" height="40" rx="2"/></clipPath></defs>
-          <rect x="73" y="158" width="28" height="40" rx="2" fill="#e8e2d8"/>
-          <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=100&q=70" x="73" y="158" width="28" height="40" clip-path="url(#mh-pcc3)" preserveAspectRatio="xMidYMid slice"/>
-          <defs><clipPath id="mh-pcc3"><rect x="73" y="158" width="28" height="40" rx="2"/></clipPath></defs>
+          <text x="13" y="152" font-family="Archivo,sans-serif" font-size="5" fill="#6B6B70" letter-spacing="0.08em">SELECTED WORK</text>
+          <rect x="9" y="156" width="27" height="42" rx="2" fill="#e8e2d8"/>
+          <defs><clipPath id="mh-pc1"><rect x="9" y="156" width="27" height="42" rx="2"/></clipPath></defs>
+          <image href="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=100&q=70" x="9" y="156" width="27" height="42" clip-path="url(#mh-pc1)" preserveAspectRatio="xMidYMid slice"/>
+          <rect x="40" y="156" width="27" height="42" rx="2" fill="#e8e2d8"/>
+          <defs><clipPath id="mh-pc2"><rect x="40" y="156" width="27" height="42" rx="2"/></clipPath></defs>
+          <image href="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=100&q=70" x="40" y="156" width="27" height="42" clip-path="url(#mh-pc2)" preserveAspectRatio="xMidYMid slice"/>
+          <rect x="71" y="156" width="27" height="42" rx="2" fill="#e8e2d8"/>
+          <defs><clipPath id="mh-pc3"><rect x="71" y="156" width="27" height="42" rx="2"/></clipPath></defs>
+          <image href="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=100&q=70" x="71" y="156" width="27" height="42" clip-path="url(#mh-pc3)" preserveAspectRatio="xMidYMid slice"/>
           <rect x="39" y="206" width="30" height="3" rx="1.5" fill="#333"/>
         </svg>
       </div>
+
     </div>
 
   </div>
@@ -2002,14 +2056,43 @@
   var initialScale = computeInitialScale();
 
   if (isMobile) {
-    // ── Mobile: static phone + tablet display, no animation ──────────────
-    deviceScene.style.opacity = '1';
-    // Show phone and tablet with their covers removed; hide white overlay
-    if (tabletCover) tabletCover.style.opacity = '0';
-    if (phoneCover)  phoneCover.style.opacity  = '0';
-    whiteCover.style.opacity    = '0';
-    whiteCover.style.visibility = 'hidden';
-    lsFo.style.opacity = '1';
+    // ── Mobile: cinematic two-panel swipe ────────────────────────────────
+    var mhIntro   = document.getElementById('mh-intro');
+    var mhDevices = document.getElementById('mh-devices');
+    var mhero     = document.getElementById('mobile-hero');
+    var mhDone    = false;
+
+    // Lock scroll while intro is showing
+    function blockScroll(e) { e.preventDefault(); }
+    window.addEventListener('touchmove', blockScroll, { passive: false });
+
+    function revealDevices() {
+      if (mhDone) return;
+      mhDone = true;
+      mhIntro.classList.add('swiped');
+      mhDevices.classList.add('revealed');
+      // After animation: unlock scroll; hero scrolls with page
+      setTimeout(function() {
+        window.removeEventListener('touchmove', blockScroll);
+        document.body.classList.remove('scroll-locked');
+        mhero.style.position = 'absolute';
+        mhero.style.top = '0';
+        mhero.style.zIndex = '1';
+        ScrollTrigger.refresh();
+      }, 950);
+    }
+
+    var mhTouchY = 0;
+    window.addEventListener('touchstart', function(e) {
+      mhTouchY = e.touches[0].clientY;
+    }, { passive: true });
+    window.addEventListener('touchend', function(e) {
+      if (mhDone) return;
+      if (mhTouchY - e.changedTouches[0].clientY > 30) revealDevices();
+    }, { passive: true });
+    window.addEventListener('wheel', function(e) {
+      if (!mhDone && e.deltaY > 0) revealDevices();
+    }, { passive: true });
 
   } else {
     // ── Desktop: GSAP scrub timeline ───────────────────────────────────
