@@ -670,7 +670,7 @@
 
 
     /* Mobile-only hero — hidden on desktop */
-    #mobile-hero { display: none; }
+    @media (min-width: 769px) { #mobile-hero { display: none; } }
 
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
@@ -691,11 +691,15 @@
       /* Panel 1: slogan */
       #mh-intro {
         position: absolute;
-        inset: 0;
+        top: 0; left: 0; right: 0; bottom: 0;
         background: #ffffff;
+        display: -webkit-flex;
         display: flex;
+        -webkit-flex-direction: column;
         flex-direction: column;
+        -webkit-align-items: center;
         align-items: center;
+        -webkit-justify-content: center;
         justify-content: center;
         text-align: center;
         padding: 2rem;
@@ -716,21 +720,20 @@
         letter-spacing: 0.25em;
         text-transform: uppercase;
         color: rgba(0,0,0,0.3);
-        animation: mh-pulse 2s ease-in-out infinite;
-      }
-      @keyframes mh-pulse {
-        0%, 100% { opacity: 0.3; transform: translateY(0); }
-        50%       { opacity: 0.8; transform: translateY(4px); }
       }
 
       /* Panel 2: magenta + devices */
       #mh-devices {
         position: absolute;
-        inset: 0;
+        top: 0; left: 0; right: 0; bottom: 0;
         background: #FF007F;
+        display: -webkit-flex;
         display: flex;
+        -webkit-flex-direction: row;
         flex-direction: row;
+        -webkit-align-items: flex-end;
         align-items: flex-end;
+        -webkit-justify-content: center;
         justify-content: center;
         padding-bottom: 5vh;
         gap: 4vw;
@@ -744,8 +747,8 @@
         -webkit-transform: translateY(0);
         transform: translateY(0);
       }
-      .mh-tablet-svg { width: 44vw; max-width: 200px; height: auto; filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); }
-      .mh-phone-svg  { width: 21vw; max-width: 96px;  height: auto; filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); }
+      .mh-tablet-svg { width: 44vw; max-width: 200px; height: auto; -webkit-filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); }
+      .mh-phone-svg  { width: 21vw; max-width: 96px;  height: auto; -webkit-filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); }
 
       .headline { font-size: clamp(1.6rem, 7vw, 2.4rem); }
       .sub { font-size: 0.65rem; }
@@ -1148,6 +1151,10 @@
 
   <!-- Panel 1: slogan (white) -->
   <div id="mh-intro">
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.9rem;letter-spacing:0.18em;color:#000;margin-bottom:2.5rem;display:flex;flex-direction:column;align-items:center;line-height:1;gap:0;">
+      <span>KIPODE</span>
+      <span style="transform:scaleX(-1);opacity:0.3;">KIPODE</span>
+    </div>
     <p class="eyebrow">Blueprint to Reality</p>
     <h1 class="headline">Not just a<br>website —<br>a story.</h1>
     <p id="mh-hint">swipe up</p>
