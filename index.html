@@ -1157,7 +1157,7 @@
       <span style="-webkit-transform:scaleX(-1);transform:scaleX(-1);opacity:0.3;">KIPODE</span>
     </div>
     <p class="eyebrow" style="margin-bottom:1.2rem;">Blueprint to Reality</p>
-    <h1 class="headline" style="font-size:clamp(2.4rem,10vw,3.4rem);line-height:1.22;margin-bottom:0;">Not just a<br>website —<br>a story.</h1>
+    <h1 class="headline" style="font-size:clamp(2.4rem,10vw,3.4rem);line-height:1.22;margin-bottom:0;">Not just a website —<br>a story.</h1>
     <p id="mh-hint">swipe up</p>
   </div>
 
@@ -2084,7 +2084,15 @@
         mhero.style.webkitTransform  = 'translateY(-100%)';
         mhero.style.transform        = 'translateY(-100%)';
         setTimeout(function() {
-          mhero.style.display = 'none';
+          // Put back in document flow so user can scroll up to devices
+          mhero.style.webkitTransition = 'none';
+          mhero.style.transition       = 'none';
+          mhero.style.webkitTransform  = 'none';
+          mhero.style.transform        = 'none';
+          mhero.style.position         = 'relative';
+          mhero.style.height           = '100vh';
+          mhIntro.style.display        = 'none';
+          window.scrollTo(0, 0);
           ScrollTrigger.refresh();
           mhBusy = false;
         }, 800);
