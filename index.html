@@ -1295,7 +1295,7 @@
                   <div style="position:relative;z-index:2;padding:1.4rem 1.4rem 1rem;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;">
                     <div style="display:flex;align-items:center;gap:1.6rem;width:100%;justify-content:center;">
                       <div style="text-align:center;">
-                        <p style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:700;color:rgba(255,255,255,0.75);line-height:1;margin:0 0 0.6rem;letter-spacing:0.01em;">Crafting digital luxuries with</p>
+                        <p style="font-family:'Space Grotesk',sans-serif;font-size:0.7rem;font-weight:700;color:rgba(255,255,255,0.75);line-height:1;margin:0 0 0.6rem;letter-spacing:0.01em;">Build your first today with</p>
                         <!-- KIPODE logo using CSS so rotation is perfectly centered -->
                         <div style="display:inline-block;position:relative;margin-bottom:36px;">
                           <div style="font-family:'Space Grotesk',sans-serif;font-size:2.6rem;font-weight:700;color:#fff;letter-spacing:0.22em;line-height:1.05;white-space:nowrap;margin-left:14px;">KIPODE</div>
@@ -2060,8 +2060,8 @@
     var mhero     = document.getElementById('mobile-hero');
     var mhDone    = false;
 
-    // Lock scroll while intro is showing
-    function blockScroll(e) { e.preventDefault(); }
+    // Lock scroll while intro is showing — use flag so removal is guaranteed
+    function blockScroll(e) { if (!mhDone) e.preventDefault(); }
     window.addEventListener('touchmove', blockScroll, { passive: false });
 
     function revealDevices() {
@@ -2071,9 +2071,7 @@
       mhDevices.classList.add('revealed');
       // After animation: unlock scroll; hero scrolls with page
       setTimeout(function() {
-        window.removeEventListener('touchmove', blockScroll);
-        document.body.classList.remove('scroll-locked');
-        // Put hero back in normal document flow so page scrolls past it
+        // blockScroll is now a no-op (mhDone=true); put hero in document flow
         mhero.style.position = 'relative';
         mhero.style.height = '100vh';
         mhero.style.zIndex = 'auto';
