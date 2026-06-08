@@ -679,7 +679,25 @@
       .sub { font-size: 0.65rem; }
       /* Show phone + tablet, hide laptop */
       .device.laptop { display: none !important; }
-      #device-scene { opacity: 1 !important; transform: scale(0.78) !important; }
+      #device-scene { opacity: 1 !important; transform: none !important; }
+      /* Reposition tablet + phone as a normal flex row without the laptop anchor */
+      #lateral-wrap { flex-direction: row; gap: 1.5rem; align-items: center; justify-content: center; }
+      .device.tablet {
+        position: relative;
+        right: auto; top: auto;
+        transform: none;
+        width: 38vw;
+        max-width: 180px;
+        min-width: 0;
+      }
+      .device.phone {
+        position: relative;
+        left: auto; top: auto;
+        transform: none;
+        width: 18vw;
+        max-width: 86px;
+        min-width: 0;
+      }
 
       #site-logo { top: 1.2rem; left: 1.2rem; z-index: 50; }
       #site-logo span { font-size: 0.85rem; }
