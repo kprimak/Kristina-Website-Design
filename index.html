@@ -675,8 +675,6 @@
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
       html, body { height: auto; min-height: 100%; }
-      /* Scroll-snap for cinematic swipe between panels */
-      html { scroll-snap-type: y mandatory; -webkit-scroll-snap-type: y mandatory; }
 
       #main-section { height: 0 !important; }
       #main-viewport { display: none; }
@@ -695,7 +693,6 @@
         -webkit-justify-content: center; justify-content: center;
         text-align: center;
         padding: 2rem;
-        scroll-snap-align: start;
       }
       #mh-intro .headline { font-size: clamp(2rem, 9vw, 3rem); margin: 0.6rem 0 0; }
       #mh-intro .eyebrow { margin-bottom: 0; }
@@ -722,7 +719,6 @@
         -webkit-justify-content: center; justify-content: center;
         gap: 5vw;
         padding: 0 4vw;
-        scroll-snap-align: start;
       }
       .mh-tablet-svg { width: 44vw; max-width: 200px; height: auto; -webkit-filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); }
       .mh-phone-svg  { width: 21vw; max-width: 96px;  height: auto; -webkit-filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); }
