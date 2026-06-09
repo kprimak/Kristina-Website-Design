@@ -674,6 +674,8 @@
 
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
+      /* Let window be the scroll container, not body */
+      html, body { height: auto; min-height: 100%; }
       /* Hero — swap out the GSAP device-scene for mobile hero */
       #main-section { height: 0 !important; }
       #main-viewport { display: none; }
@@ -2059,16 +2061,11 @@
     var mhState = 0; // 0=intro  1=devices(locked)  2=free
     var mhBusy  = false;
 
-    // CSS scroll lock — touch-action can be cleared mid-gesture on iOS, no touchmove needed
-    document.body.style.touchAction   = 'none';
-    document.body.style.overflow      = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
+    // Lock scroll via touch-action only — no overflow changes (avoids iOS scroll-container bugs)
+    document.body.style.touchAction = 'none';
 
     function unlockScroll() {
-      document.body.style.touchAction        = '';
-      document.body.style.overflow           = '';
-      document.documentElement.style.overflow = '';
-      mhero.style.overflow = 'visible';
+      document.body.style.touchAction = '';
       ScrollTrigger.refresh();
     }
 
