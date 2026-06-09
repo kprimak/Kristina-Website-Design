@@ -683,7 +683,7 @@
       /* Hero container — two panels stacked in normal flow */
       #mobile-hero { display: block; width: 100%; }
 
-      /* Panel 1: slogan (white) — full viewport, snaps */
+      /* Panel 1: slogan (white) */
       #mh-intro {
         position: relative;
         width: 100%; height: 100vh;
@@ -694,6 +694,9 @@
         -webkit-justify-content: center; justify-content: center;
         text-align: center;
         padding: 2rem;
+        will-change: transform, opacity;
+        -webkit-transform-origin: center center;
+        transform-origin: center center;
       }
       #mh-intro .headline { font-size: clamp(2rem, 9vw, 3rem); margin: 0.6rem 0 0; }
       #mh-intro .eyebrow { margin-bottom: 0; }
@@ -706,14 +709,12 @@
         color: rgba(0,0,0,0.3);
       }
 
-      /* Panel 2: magenta + devices — full viewport, snaps */
+      /* Panel 2: magenta + devices */
       #mh-devices {
         position: relative;
         width: 100%; height: 100vh;
         background: #FF007F;
-        opacity: 0;
-        -webkit-transition: opacity 0.5s ease;
-        transition: opacity 0.5s ease;
+        will-change: transform, opacity;
         display: -webkit-flex; display: flex;
         -webkit-flex-direction: row; flex-direction: row;
         -webkit-align-items: center; align-items: center;
@@ -2032,18 +2033,35 @@
     var mhIntro   = document.getElementById('mh-intro');
     var mhDevices = document.getElementById('mh-devices');
     var mhero     = document.getElementById('mobile-hero');
-    var mhState = 0; // 0=intro  1=devices(locked)  2=free
-    var mhBusy  = false;
+    var vh = window.innerHeight;
 
-    // No scroll locking — scroll-snap CSS handles the cinematic feel.
-    // Animate devices in when they scroll into view.
-    var mhDevicesObserver = new IntersectionObserver(function(entries) {
-      if (entries[0].isIntersecting) {
-        mhDevices.style.opacity = '1';
-        mhDevicesObserver.disconnect();
-      }
-    }, { threshold: 0.3 });
-    mhDevicesObserver.observe(mhDevices);
+    // Initial state — devices hidden below
+    mhDevices.style.opacity = '0';
+    mhDevices.style.webkitTransform = 'translateY(60px)';
+    mhDevices.style.transform = 'translateY(60px)';
+
+    function updateHeroAnim() {
+      var scrollY = window.pageYOffset;
+      var progress = Math.min(Math.max(scrollY / vh, 0), 1);
+
+      // Intro: scale up + fade out (dramatic zoom-out-and-vanish)
+      var introOpacity = Math.max(0, 1 - progress * 2.2);
+      var introScale = 1 + progress * 0.08;
+      mhIntro.style.opacity = introOpacity.toString();
+      mhIntro.style.webkitTransform = 'scale(' + introScale + ')';
+      mhIntro.style.transform = 'scale(' + introScale + ')';
+
+      // Devices: rise up + fade in (starts after 10% scroll)
+      var devProgress = Math.max(0, (progress - 0.1) / 0.9);
+      var devEased = devProgress < 0.5 ? 2 * devProgress * devProgress : -1 + (4 - 2 * devProgress) * devProgress;
+      mhDevices.style.opacity = Math.min(1, devEased * 1.4).toString();
+      var devY = (1 - Math.min(devEased, 1)) * 60;
+      mhDevices.style.webkitTransform = 'translateY(' + devY + 'px)';
+      mhDevices.style.transform = 'translateY(' + devY + 'px)';
+    }
+
+    window.addEventListener('scroll', updateHeroAnim, { passive: true });
+    updateHeroAnim();
 
 } else {
     // ── Desktop: GSAP scrub timeline ───────────────────────────────────
