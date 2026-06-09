@@ -674,7 +674,8 @@
 
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
-      html, body { height: auto; min-height: 100%; }
+      /* Single scroll container — remove nested overflow-x:hidden containers */
+      html, body { height: auto; min-height: 100%; overflow: visible; }
 
       #main-section { height: 0 !important; }
       #main-viewport { display: none; }
