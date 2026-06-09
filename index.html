@@ -2061,12 +2061,21 @@
     var mhState = 0; // 0=intro  1=devices(locked)  2=free
     var mhBusy  = false;
 
-    function blockScroll(e) { if (mhState < 2) e.preventDefault(); }
-    window.addEventListener('touchmove', blockScroll, { passive: false });
+    // body position:fixed is the only 100% reliable iOS scroll lock
+    document.body.style.position = 'fixed';
+    document.body.style.top      = '0';
+    document.body.style.left     = '0';
+    document.body.style.right    = '0';
+    document.body.style.width    = '100%';
 
     function unlockScroll() {
-      window.removeEventListener('touchmove', blockScroll, { passive: false });
-      mhero.style.overflow = 'visible';
+      document.body.style.position = '';
+      document.body.style.top      = '';
+      document.body.style.left     = '';
+      document.body.style.right    = '';
+      document.body.style.width    = '';
+      mhero.style.overflow         = 'visible';
+      window.scrollTo(0, 0);
       ScrollTrigger.refresh();
     }
 
