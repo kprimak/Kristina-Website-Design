@@ -2061,21 +2061,12 @@
     var mhState = 0; // 0=intro  1=devices(locked)  2=free
     var mhBusy  = false;
 
-    // body position:fixed is the only 100% reliable iOS scroll lock
-    document.body.style.position = 'fixed';
-    document.body.style.top      = '0';
-    document.body.style.left     = '0';
-    document.body.style.right    = '0';
-    document.body.style.width    = '100%';
+    // html overflow:hidden — no layout shift, works on iOS Safari
+    document.documentElement.style.overflow = 'hidden';
 
     function unlockScroll() {
-      document.body.style.position = '';
-      document.body.style.top      = '';
-      document.body.style.left     = '';
-      document.body.style.right    = '';
-      document.body.style.width    = '';
-      mhero.style.overflow         = 'visible';
-      window.scrollTo(0, 0);
+      document.documentElement.style.overflow = '';
+      mhero.style.overflow = 'visible';
       ScrollTrigger.refresh();
     }
 
@@ -2085,13 +2076,13 @@
       mhState = 1;
       mhIntro.classList.add('swiped');
       mhDevices.classList.add('revealed');
-      // Auto-unlock after animation completes — no second swipe needed
+      // Unlock exactly when animation finishes
       setTimeout(function() {
         mhState = 2;
         mhIntro.style.display = 'none';
         unlockScroll();
         mhBusy = false;
-      }, 1300);
+      }, 950);
     }
 
     var mhTouchY = 0;
