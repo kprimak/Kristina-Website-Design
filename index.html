@@ -2061,11 +2061,11 @@
     var mhState = 0; // 0=intro  1=devices(locked)  2=free
     var mhBusy  = false;
 
-    // Lock scroll via touch-action only — no overflow changes (avoids iOS scroll-container bugs)
-    document.body.style.touchAction = 'none';
+    function blockScroll(e) { if (mhState < 2) e.preventDefault(); }
+    window.addEventListener('touchmove', blockScroll, { passive: false });
 
     function unlockScroll() {
-      document.body.style.touchAction = '';
+      window.removeEventListener('touchmove', blockScroll, { passive: false });
       ScrollTrigger.refresh();
     }
 
