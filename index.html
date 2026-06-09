@@ -674,42 +674,28 @@
 
     /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
-      /* Let window be the scroll container, not body */
       html, body { height: auto; min-height: 100%; }
-      /* Hero — swap out the GSAP device-scene for mobile hero */
+      /* Scroll-snap for cinematic swipe between panels */
+      html { scroll-snap-type: y mandatory; -webkit-scroll-snap-type: y mandatory; }
+
       #main-section { height: 0 !important; }
       #main-viewport { display: none; }
 
-      /* Mobile hero: fixed overlay, two panels */
-      #mobile-hero {
-        display: block;
+      /* Hero container — two panels stacked in normal flow */
+      #mobile-hero { display: block; width: 100%; }
+
+      /* Panel 1: slogan (white) — full viewport, snaps */
+      #mh-intro {
         position: relative;
         width: 100%; height: 100vh;
-        overflow: hidden; /* cleared by JS after unlock */
-      }
-
-      /* Panel 1: slogan */
-      #mh-intro {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
         background: #ffffff;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-flex-direction: column;
-        flex-direction: column;
-        -webkit-align-items: center;
-        align-items: center;
-        -webkit-justify-content: center;
-        justify-content: center;
+        display: -webkit-flex; display: flex;
+        -webkit-flex-direction: column; flex-direction: column;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
         text-align: center;
         padding: 2rem;
-        z-index: 2;
-        -webkit-transition: -webkit-transform 0.9s cubic-bezier(0.76,0,0.24,1);
-        transition: transform 0.9s cubic-bezier(0.76,0,0.24,1);
-      }
-      #mh-intro.swiped {
-        -webkit-transform: translateY(-100%);
-        transform: translateY(-100%);
+        scroll-snap-align: start;
       }
       #mh-intro .headline { font-size: clamp(2rem, 9vw, 3rem); margin: 0.6rem 0 0; }
       #mh-intro .eyebrow { margin-bottom: 0; }
@@ -722,30 +708,21 @@
         color: rgba(0,0,0,0.3);
       }
 
-      /* Panel 2: magenta + devices */
+      /* Panel 2: magenta + devices — full viewport, snaps */
       #mh-devices {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
+        position: relative;
+        width: 100%; height: 100vh;
         background: #FF007F;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-flex-direction: row;
-        flex-direction: row;
-        -webkit-align-items: center;
-        align-items: center;
-        -webkit-justify-content: center;
-        justify-content: center;
+        opacity: 0;
+        -webkit-transition: opacity 0.5s ease;
+        transition: opacity 0.5s ease;
+        display: -webkit-flex; display: flex;
+        -webkit-flex-direction: row; flex-direction: row;
+        -webkit-align-items: center; align-items: center;
+        -webkit-justify-content: center; justify-content: center;
         gap: 5vw;
         padding: 0 4vw;
-        z-index: 1;
-        -webkit-transition: -webkit-transform 0.9s cubic-bezier(0.76,0,0.24,1);
-        transition: transform 0.9s cubic-bezier(0.76,0,0.24,1);
-        -webkit-transform: translateY(8%);
-        transform: translateY(8%);
-      }
-      #mh-devices.revealed {
-        -webkit-transform: translateY(0);
-        transform: translateY(0);
+        scroll-snap-align: start;
       }
       .mh-tablet-svg { width: 44vw; max-width: 200px; height: auto; -webkit-filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); }
       .mh-phone-svg  { width: 21vw; max-width: 96px;  height: auto; -webkit-filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); filter: drop-shadow(0 16px 40px rgba(0,0,0,0.4)); }
@@ -2061,43 +2038,17 @@
     var mhState = 0; // 0=intro  1=devices(locked)  2=free
     var mhBusy  = false;
 
-    // html overflow:hidden — no layout shift, works on iOS Safari
-    document.documentElement.style.overflow = 'hidden';
+    // No scroll locking — scroll-snap CSS handles the cinematic feel.
+    // Animate devices in when they scroll into view.
+    var mhDevicesObserver = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) {
+        mhDevices.style.opacity = '1';
+        mhDevicesObserver.disconnect();
+      }
+    }, { threshold: 0.3 });
+    mhDevicesObserver.observe(mhDevices);
 
-    function unlockScroll() {
-      document.documentElement.style.overflow = '';
-      mhero.style.overflow = 'visible';
-      ScrollTrigger.refresh();
-    }
-
-    function revealDevices() {
-      if (mhBusy || mhState !== 0) return;
-      mhBusy  = true;
-      mhState = 1;
-      mhIntro.classList.add('swiped');
-      mhDevices.classList.add('revealed');
-      // Unlock exactly when animation finishes
-      setTimeout(function() {
-        mhState = 2;
-        mhIntro.style.display = 'none';
-        unlockScroll();
-        mhBusy = false;
-      }, 950);
-    }
-
-    var mhTouchY = 0;
-    window.addEventListener('touchstart', function(e) {
-      mhTouchY = e.touches[0].clientY;
-    }, { passive: true });
-    window.addEventListener('touchend', function(e) {
-      if (mhState !== 0) return;
-      if (mhTouchY - e.changedTouches[0].clientY > 30) revealDevices();
-    }, { passive: true });
-    window.addEventListener('wheel', function(e) {
-      if (mhState === 0 && e.deltaY > 0) revealDevices();
-    }, { passive: true });
-
-  } else {
+} else {
     // ── Desktop: GSAP scrub timeline ───────────────────────────────────
     gsap.set(deviceScene, { scale: initialScale, transformOrigin: 'center center', opacity: 1, immediateRender: true });
     gsap.set([tablet, phone], { autoAlpha: 0, immediateRender: true });
