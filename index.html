@@ -2044,18 +2044,20 @@
       var scrollY = window.pageYOffset;
       var progress = Math.min(Math.max(scrollY / vh, 0), 1);
 
-      // Intro: scale up + fade out (dramatic zoom-out-and-vanish)
-      var introOpacity = Math.max(0, 1 - progress * 2.2);
-      var introScale = 1 + progress * 0.08;
+      // Intro: blasts away — scales up big AND fades out hard within first 35% of scroll
+      var introProgress = Math.min(progress / 0.35, 1);
+      var introOpacity = Math.max(0, 1 - introProgress * introProgress * 1.4);
+      var introScale = 1 + introProgress * 0.18;
       mhIntro.style.opacity = introOpacity.toString();
       mhIntro.style.webkitTransform = 'scale(' + introScale + ')';
       mhIntro.style.transform = 'scale(' + introScale + ')';
 
-      // Devices: rise up + fade in (starts after 10% scroll)
-      var devProgress = Math.max(0, (progress - 0.1) / 0.9);
-      var devEased = devProgress < 0.5 ? 2 * devProgress * devProgress : -1 + (4 - 2 * devProgress) * devProgress;
-      mhDevices.style.opacity = Math.min(1, devEased * 1.4).toString();
-      var devY = (1 - Math.min(devEased, 1)) * 60;
+      // Devices: slam in from below — starts immediately, arrives fast
+      var devProgress = Math.min(progress / 0.55, 1);
+      // Cubic ease-out: decelerates into final position
+      var devEased = 1 - Math.pow(1 - devProgress, 3);
+      mhDevices.style.opacity = Math.min(1, devEased * 1.3).toString();
+      var devY = (1 - devEased) * 90;
       mhDevices.style.webkitTransform = 'translateY(' + devY + 'px)';
       mhDevices.style.transform = 'translateY(' + devY + 'px)';
     }
