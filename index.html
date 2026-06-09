@@ -2066,6 +2066,7 @@
 
     function unlockScroll() {
       window.removeEventListener('touchmove', blockScroll, { passive: false });
+      mhero.style.overflow = 'visible';
       ScrollTrigger.refresh();
     }
 
